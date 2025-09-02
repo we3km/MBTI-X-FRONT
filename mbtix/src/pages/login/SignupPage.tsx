@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../../features/authSlice";
 import { signup, checkId, checkNickname, sendCode, verifyEmail } from "../../api/authApi"; 
-import type { SignupRequest } from "../../type/type";
+import type { SignupRequest } from "../../type/logintype";
 
 const SignupPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,23 +26,29 @@ const SignupPage: React.FC = () => {
   const allAgreed = agree1 && agree2 && agree3;
 
   // 아이디 중복 확인
-  const handleIdCheck = async () => {
-    try {
-      await checkId(loginId);
-      alert("사용 가능한 아이디입니다.");
-    } catch (err: any) {
-      alert(err.response?.data || "이미 존재하는 아이디입니다.");
-    }
-  };
+const handleIdCheck = async () => {
+  try {
+    const id = loginId.trim();
+    if (!id) return alert("아이디를 입력해 주세요.");
+
+    const available = await checkId(id);
+    alert(available ? "사용 가능한 아이디입니다." : "이미 존재하는 아이디입니다.");
+  } catch (err: any) {
+    alert(err.response?.data || "아이디 확인 중 오류가 발생했습니다.");
+  }
+};
 
   // 닉네임 중복 확인
   const handleNicknameCheck = async () => {
     try {
-      await checkNickname(nickname);
-      alert("사용 가능한 닉네임입니다.");
-    } catch (err: any) {
-      alert(err.response?.data || "이미 존재하는 닉네임입니다.");
-    }
+      const nick = nickname.trim();
+      if(!nickname) return alert("닉네임을 입력해 주세요.");
+      
+      const available = await checkNickname(nick);
+      alert(available ? "사용 가능한 닉네임입니다." : "이미 존재하는 닉네임입니다.");
+  }catch(err:any) {
+    alert(err.response?.data || "닉네임 확인 중 오류가 발생했습니다.");
+  }
   };
 
   // 이메일 인증 코드 발송
@@ -115,37 +121,37 @@ const SignupPage: React.FC = () => {
       </div>
 
       {/* 아이디 & 닉네임 */}
-      <div>
+      <div className="input-check">
         <input value={loginId} onChange={e => setLoginId(e.target.value)} placeholder="아이디" />
         <button type="button" onClick={handleIdCheck}>중복 확인</button>
       </div>
-      <div>
+      <div className="input-check">
         <input value={nickname} onChange={e => setNickname(e.target.value)} placeholder="닉네임" />
         <button type="button" onClick={handleNicknameCheck}>중복 확인</button>
       </div>
 
       {/* 이메일 */}
-      <div>
+      <div className="email-input">
         <input value={email} onChange={e => setEmail(e.target.value)} placeholder="이메일" />
         <button type="button" onClick={handleSendCode} disabled={codeSent}>인증 코드 발송</button>
       </div>
 
       {/* 인증 코드 */}
       {codeSent && (
-        <div>
+        <div className="emali-check">
           <input value={verificationCode} onChange={e => setVerificationCode(e.target.value)} placeholder="인증 코드" />
           <button type="button" onClick={handleEmailVerify} disabled={emailVerified}>확인</button>
         </div>
       )}
 
       {/* 비밀번호 */}
-      <div>
+      <div className="input-password">
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="비밀번호" />
         <input type="password" value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} placeholder="비밀번호 확인" />
       </div>
 
       {/* 이름, MBTI */}
-      <div>
+      <div className="input-nambti">
         <input value={name} onChange={e => setName(e.target.value)} placeholder="이름" />
         <input value={mbtiId} onChange={e => setMbti(e.target.value)} placeholder="MBTI" />
       </div>

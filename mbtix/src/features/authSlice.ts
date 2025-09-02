@@ -1,39 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-
-interface AuthState {
-  accessToken: string | null;
-  refreshToken: string | null;
-  userId: number | null;
-}
-
-const initialState: AuthState = {
-  accessToken: null,
-  refreshToken: null,
-  userId: null,
-};
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {initialAuthState, type AuthState, type SetAuthPayload } from "../type/logintype";
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: initialAuthState,
   reducers: {
-    // 로그인 / 토큰 갱신 시
-    setAuth(state, action: PayloadAction<{ accessToken: string; refreshToken: string; userId: number }>) {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      state.userId = action.payload.userId;
+    /** 로그인 / 토큰 갱신 시 */
+    setAuth(state: AuthState, action: PayloadAction<SetAuthPayload>) {
+      const { accessToken, userId, refreshToken } = action.payload;
+      state.accessToken = accessToken;
+      state.userId = userId;
+      // refreshToken이 오면 교체, 없으면 기존값 유지
+      state.refreshToken = refreshToken ?? state.refreshToken ?? null;
+      state.user = action.payload.user ?? state.user
+      state.isAuthenticated = !!accessToken;
     },
-    // 로그아웃 시
-    logout(state) {
+
+    /** 로그아웃 */
+    logout(state: AuthState) {
       state.accessToken = null;
       state.refreshToken = null;
       state.userId = null;
+      state.isAuthenticated = false;
     },
-    // 기존 clearAuth와 동일
-    clearAuth(state) {
+
+    /** 전부 초기화 */
+    clearAuth(state: AuthState) {
       state.accessToken = null;
       state.refreshToken = null;
       state.userId = null;
+      state.isAuthenticated = false;
     },
   },
 });

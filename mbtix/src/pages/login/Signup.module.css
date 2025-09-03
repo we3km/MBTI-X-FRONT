@@ -1,0 +1,228 @@
+
+/* 회원가입 nav*/
+
+.stepProgress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+/* 현재 단계 이하 (이미 지난 단계 포함) 모두 검은색 원 */
+.completed .circle {
+  background: #000;
+}
+
+/* 라인 (단계 간 연결) */
+.line {
+  width: 100px;
+  height: 6px;
+  background: #d3cdcd;
+  margin: 0 8px;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* 완료된 단계 뒤의 라인 색상 */
+.completed + .line {
+  background: #000;
+}
+
+.step span {
+  margin-left: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+
+/* 약관동의 css */
+
+.signupBox h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 약관 하나 묶음 */
+.termsGroup {
+  margin-bottom: 25px;
+}
+
+.termsGroup label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.termsGroup textarea {
+  width: 100%;
+  height: 140px;
+  resize: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 6px; /* 체크박스와 간격 */
+}
+
+/* 체크박스 줄 */
+.checkBoxRow {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center;
+  font-size: 13px;
+}
+
+.checkBoxRow input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.nextBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.nextBtn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+
+/* 회원가입 정보입력란 */
+
+
+.signupBox {
+  background: #cedfb9;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 700px;
+  margin: 30px auto;
+  font-family: "Noto Sans KR", sans-serif;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.signupBox h2 {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 입력 라인 (인풋 + 버튼 조합) */
+.inputCheck {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.inputCheck input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.2s ease;
+}
+
+.inputCheck input:focus {
+  outline: none;
+  border: 1px solid #000;
+}
+
+/* 버튼 스타일 */
+.inputCheck button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.inputCheck button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* 비밀번호 2개 나란히 */
+.inputCheck input[type="password"] {
+  flex: 1;
+}
+
+/* 이름, MBTI 같이 표시 */
+.inputCheck input:last-child {
+  margin-left: 6px;
+}
+
+/* 회원가입 버튼 */
+.submitBtn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submitBtn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* 인증완료 css */
+.signupBox p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.completeBtn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.completeBtn:hover {
+  background: #333;
+}
+

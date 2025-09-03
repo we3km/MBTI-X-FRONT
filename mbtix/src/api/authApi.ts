@@ -16,19 +16,40 @@ export const authApi = axios.create({
   timeout: 10000,
 });
 
-// ===== request interceptor: Bearer 붙이기 =====
+const noAuthUrls = [
+  "/login",
+  "/signup",
+  "/logout",
+  "/refresh",
+  "/checkId",
+  "/checkNickname",
+  "/send-code",
+  "/verify-code",
+  "/checkemail",
+];
+
+// ===== request interceptor: Bearer 토큰 붙이기 =====
 authApi.interceptors.request.use((config) => {
   const token = getAccessToken();
-  if (token) {
-    if (!config.headers) config.headers = new AxiosHeaders();
+
+  // permitAll 엔드포인트에는 토큰 안 붙임
+  const isNoAuthUrl = noAuthUrls.some((url) =>
+    config.url?.startsWith(url)
+  );
+
+  if (!isNoAuthUrl && token) {
+    if (!config.headers) {
+      config.headers = new AxiosHeaders();
+    }
     (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
   }
+
   return config;
 });
-
-// ===== response interceptor: 401 -> refresh(AuthResult 전체) -> retry =====
+ 
+// ===== response interceptor: 401 발생 시 refresh 시도 후 재요청 =====
 let isRefreshing = false;
-let waiters: Array<() => void> = [];
+let waiters: Array<(token?: string) => void> = [];
 
 authApi.interceptors.response.use(
   (res) => res,
@@ -36,14 +57,26 @@ authApi.interceptors.response.use(
     const original = err.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined;
     const status = err.response?.status ?? 0;
     const url = original?.url ?? "";
-    const isAuthCall = url.includes("/refresh") || url.includes("/login");
+
+    // 로그인/회원가입/인증 관련 요청은 refresh 로직 제외
+    const isAuthCall = noAuthUrls.some((u) => url.includes(u));
 
     if (status === 401 && original && !original._retry && !isAuthCall) {
       if (isRefreshing) {
+        // 이미 refresh 중이면 큐에 쌓았다가 끝나면 다시 시도
         return new Promise((resolve, reject) => {
-          waiters.push(() => authApi(original).then(resolve).catch(reject));
+          waiters.push((newToken) => {
+            if (newToken) {
+              if (!original.headers) original.headers = new AxiosHeaders();
+              (original.headers as AxiosHeaders).set("Authorization", `Bearer ${newToken}`);
+              resolve(authApi(original));
+            } else {
+              reject(err);
+            }
+          });
         });
       }
+
       original._retry = true;
       isRefreshing = true;
 
@@ -51,24 +84,29 @@ authApi.interceptors.response.use(
         const { data } = await authApi.post<AuthResult>("/refresh");
         const accessToken = data.accessToken;
         const refreshToken = data.refreshToken ?? null;
-        // 서버가 refresh에서 user를 안 줄 수도 있음 → 기존 유지
         const nextUser = data.user ?? getUser();
         const uid = (data.user?.userId ?? getUserId() ?? 0);
 
+        // 새 토큰 저장
         store.dispatch(
           setAuth({
             accessToken,
-            userId: uid,
             refreshToken,
+            userId: uid,
             user: nextUser ?? null,
           })
         );
 
-        waiters.forEach((fn) => fn());
+        // 대기중인 요청들 재시도
+        waiters.forEach((cb) => cb(accessToken));
         waiters = [];
+
+        if (!original.headers) original.headers = new AxiosHeaders();
+        (original.headers as AxiosHeaders).set("Authorization", `Bearer ${accessToken}`);
 
         return authApi(original);
       } catch (refreshErr) {
+        waiters.forEach((cb) => cb(undefined));
         waiters = [];
         store.dispatch(logoutAction());
         return Promise.reject(refreshErr);
@@ -80,6 +118,7 @@ authApi.interceptors.response.use(
     return Promise.reject(err);
   }
 );
+
 
 // =============== API functions ===============
 export const signup = async (data: SignupRequest): Promise<AuthResult> => {
@@ -97,6 +136,11 @@ export const checkNickname = async (nickname: string) => {
   return res.data;
 };
 
+export const checkEmail = async (email:string) => {
+  const res = await authApi.get<boolean>("/checkemail",{params:{ email }});
+  return res.data;
+}
+
 export const sendCode = async (email: string) => {
   const res = await authApi.post("/send-code", null, { params: { email } });
   return res.data;
@@ -107,15 +151,17 @@ export const verifyEmail = async (email: string, code: string) => {
   return res.data;
 };
 
+
+
 export const login = async (
   loginId: string,
   password: string,
-  rememberMe: boolean // ✅ 추가
+  rememberMe: boolean 
 ) => {
   const res = await authApi.post<AuthResult>("/login", {
     loginId,
     password,
-    rememberMe, // ✅ 서버로 전달
+    rememberMe, 
   });
 
   const { accessToken, refreshToken, user } = res.data;

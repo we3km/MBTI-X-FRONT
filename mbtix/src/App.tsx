@@ -11,33 +11,22 @@ import { setAuth } from './features/authSlice';
 import AuthGate from './components/AuthGate';
 
 function App() {
-  const dispatch = useDispatch();
-  useEffect(()=>{
-    authApi.post("/refresh")
-    .then( res => {
-      dispatch(setAuth(res.data));
-    })
-  })
+   const dispatch = useDispatch();
+   useEffect(()=>{
+     authApi.post("/refresh")
+     .then( res => {
+       dispatch(setAuth(res.data));
+     })
+   })
 
 return (
   <AuthGate>
     {/* <Header /> */}
     <section id="content">
       <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <MainPage />
-            </ProtectedRoute>
-          }
-        />
+        {/* <Route path="/" element={<MainPage />}/> */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={
-          <ProtectedRoute requiredRoles={['ROLE_USER']}>
-          <SignupPage />
-          </ProtectedRoute>
-        } />
+        <Route path="/signup" element={<SignupPage />} />
       </Routes>
     </section>
   </AuthGate>

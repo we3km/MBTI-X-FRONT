@@ -9,10 +9,11 @@ interface ChatProps {
   mbti: string;
 }
 
-export default function Chat({ mbti }: ChatProps) {
+export default function Chat( { mbti }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   useEffect(scrollToBottom, [messages]);

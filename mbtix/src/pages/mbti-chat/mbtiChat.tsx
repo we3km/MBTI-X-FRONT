@@ -1,51 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chat from "./chat";
 import ChatBotInfo from "./chatBotInfo";
 import ChatList from "./chatList";
-import CreateChat from "./createChat";
 import './MbtiChat.css'
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
-const mbtiList = [
-  "ESTJ","ESTP","ESFJ","ESFP"
-  ,"ENTJ","ENTP","ENFJ","ENFP"
-  ,"ISTJ","ISTP","ISFJ","ISFP"
-  ,"INTJ","INTP","INFJ","INFP" // 필요한 MBTI 모두
-];
+interface ChatRoom{
+  roomId:number;
+  userId:number;
+  botMbti:string;
+  botName:string;
+  createdAt:string;
+}
 
 export default function MbtiChat() {
-  const [selectedMBTI, setSelectedMBTI] = useState<string | null>(null);
-
-  if (!selectedMBTI) {
-    // MBTI 선택 화면
-    return (
-      <div>
-        <h2>챗봇 성격(MBTI)을 선택해주세요</h2>
-        {mbtiList.map(mbti => (
-          <button
-            key={mbti}
-            onClick={() => setSelectedMBTI(mbti)}
-            style={{ margin: 5 }}
-          >
-            {mbti}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
+  const [rooms, setRooms] = useState<ChatRoom[]>([]);
+  const { mbti } = useParams<{ mbti: string }>();
+  const userId = 1;
+  // // 채팅방 목록 불러오기
+  useEffect(()=>{
+    axios.get(`http://localhost:8085/api/chatbot/rooms/${userId}`)
+      .then((res)=>{
+        setRooms(res.data)
+      })
+      .catch((err)=>{
+          console.log(err)
+      })
+  },[])
   return (
     <>
         <div className="mbti-chat-container">
             <div className="mbti-chat-side-bar">
                 <ChatBotInfo/>
-                <CreateChat/>
+                <Link to={"/createChat"}>챗봇 만들기</Link>
+                <ul>
+                  {rooms.map(r => (
+                    <li key={r.roomId}>
+                      {r.botName} ({r.botMbti})
+                    </li>
+                  ))}
+                </ul>
                 <ChatList/>
             </div>
             <div className="chat-main">
-                <Chat mbti={selectedMBTI} />
-                <button onClick={() => setSelectedMBTI(null)} style={{ marginTop: 10 }}>
-                  MBTI 변경
-                </button>
+                {mbti ? (
+                  <Chat mbti={mbti} />
+                ) : (
+                  <div>좌측에서 챗봇을 선택하거나 만들기를 눌러주세요.</div>
+                )}
             </div>
         </div>
     </>

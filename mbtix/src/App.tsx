@@ -1,15 +1,18 @@
 import './App.css'
-import { Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import MbtiChat from './pages/mbti-chat/mbtiChat'
+import CreateChat from './pages/mbti-chat/createChat'
+
 
 function App() {
 
   return (
     <>
-      <MbtiChat/>
+      {/* <MbtiChat/> */}
       <Routes>
-
-
+        <Route path='/chat' element={<MbtiChat />}/>
+        <Route path='/createChat' element={<CreateChat/>}/>
+        <Route path="/chat/:mbti" element={<MbtiChat />} />
       </Routes>
     </>
   )

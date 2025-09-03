@@ -22,7 +22,7 @@ export default function MbtiChat() {
   useEffect(()=>{
     axios.get(`http://localhost:8085/api/chatbot/rooms/${userId}`)
       .then((res)=>{
-        setRooms(res.data)
+          setRooms(res.data)
       })
       .catch((err)=>{
           console.log(err)

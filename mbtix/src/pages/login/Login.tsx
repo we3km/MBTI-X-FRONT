@@ -46,11 +46,13 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleKakaoLogin = () => {
-
+  const handleKakaoLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    location.href = "http://localhost:8085/api/oauth2/authorization/kakao";
+    console.log("카카오 로그인 시도");
   }
-  const handleNaverLogin =() => {
-
+  const handleNaverLogin =(e: React.MouseEvent<HTMLButtonElement>) => {
+     e.preventDefault();
   }
 
 return (

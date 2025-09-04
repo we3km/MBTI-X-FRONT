@@ -32,7 +32,7 @@ return (
         <Route path="/signup" element={<SignupPage />} />
         <Route path='/chat' element={<MbtiChat />}/>
         <Route path='/createChat' element={<CreateChat/>}/>
-        <Route path="/chat/:mbti" element={<MbtiChat />} />
+        <Route path="/chat/:roomId" element={<MbtiChat />} />
 
       </Routes>
     </section>

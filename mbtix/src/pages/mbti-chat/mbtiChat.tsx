@@ -3,8 +3,9 @@ import Chat from "./chat";
 import ChatBotInfo from "./chatBotInfo";
 import ChatList from "./chatList";
 import './MbtiChat.css'
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
+import { store } from "../../store/store";
 
 interface ChatRoom{
   roomId:number;
@@ -16,13 +17,17 @@ interface ChatRoom{
 
 export default function MbtiChat() {
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
-  const { mbti } = useParams<{ mbti: string }>();
-  const userId = 1;
+  const { roomId } = useParams<{ roomId: string }>();
+  const { state } = useLocation();
+ const getUserId = () => store.getState().auth.userId;
+
+  const userId = getUserId();
   // // 채팅방 목록 불러오기
   useEffect(()=>{
     axios.get(`http://localhost:8085/api/chatbot/rooms/${userId}`)
       .then((res)=>{
           setRooms(res.data)
+          console.log("state"+state)
       })
       .catch((err)=>{
           console.log(err)
@@ -37,15 +42,18 @@ export default function MbtiChat() {
                 <ul>
                   {rooms.map(r => (
                     <li key={r.roomId}>
-                      {r.botName} ({r.botMbti})
+                      <Link to={`/chat/${r.roomId}`}
+                      state={{mbti:r.botMbti, botName:r.botName }} >
+                        {r.botName} ({r.botMbti})
+                      </Link>
                     </li>
                   ))}
                 </ul>
                 <ChatList/>
             </div>
             <div className="chat-main">
-                {mbti ? (
-                  <Chat mbti={mbti} />
+                {roomId ? (
+                  <Chat roomId={roomId} state={state} />
                 ) : (
                   <div>좌측에서 챗봇을 선택하거나 만들기를 눌러주세요.</div>
                 )}

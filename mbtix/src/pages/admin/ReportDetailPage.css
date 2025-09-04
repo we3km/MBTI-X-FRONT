@@ -1,0 +1,88 @@
+.report-detail-container {
+    padding: 40px;
+    background-color: #e3f2fd; /* 피그마와 비슷한 배경색 */
+    font-family: 'Pretendard', sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    border-radius: 12px;
+}
+
+.report-detail-container .page-icon {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.report-detail-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.report-info-box, .report-content-box {
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.info-header, .content-header {
+    background-color: #d0e8fb;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid #b3d7f9;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr 120px 1fr;
+    align-items: center;
+}
+
+.info-grid div {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-grid div:nth-child(4n-3), 
+.info-grid div:nth-child(4n-1) {
+    font-weight: 500;
+    background-color: #f9f9f9;
+}
+
+.report-content-box textarea {
+    width: 100%;
+    min-height: 150px;
+    border: none;
+    padding: 20px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.report-action-box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.report-action-box select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.report-action-box button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #888;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

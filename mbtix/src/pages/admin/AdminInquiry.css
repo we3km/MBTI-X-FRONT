@@ -1,0 +1,165 @@
+.admin-inquiry-container {
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.inquiry-filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.inquiry-filters button {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.inquiry-filters button.active {
+    background-color: #5D9CEC;
+    color: white;
+    border-color: #5D9CEC;
+}
+
+
+.admin-inquiry-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-inquiry-table th, .admin-inquiry-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-inquiry-table th {
+    background-color: #f5f5f5;
+}
+
+.admin-inquiry-table tbody tr {
+    cursor: pointer;
+}
+
+.admin-inquiry-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.admin-inquiry-table .inquiry-title {
+    text-align: left;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.status-badge.status-N {
+    background-color: #f44336;
+}
+
+.status-badge.status-Y {
+    background-color: #4CAF50;
+}
+
+
+/* 상세 페이지 */
+.detail-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    background-color: #fff;
+}
+
+.detail-header {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.detail-header h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.detail-header .meta-info {
+    font-size: 14px;
+    color: #666;
+}
+
+.detail-header .meta-info span {
+    margin-right: 15px;
+}
+
+.detail-content {
+    padding: 20px;
+    line-height: 1.7;
+}
+
+.detail-content textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.detail-content textarea:disabled {
+    background-color: #f5f5f5;
+    color: #555;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+.form-actions .submit-btn {
+    background-color: #5D9CEC;
+}
+.form-actions .submit-btn:hover {
+    background-color: #4a8cd8;
+}
+
+.form-actions .cancel-btn {
+    background-color: #888;
+    color: white;
+}
+.form-actions .cancel-btn:hover {
+    background-color: #666;
+}

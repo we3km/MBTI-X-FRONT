@@ -1,0 +1,137 @@
+/* CustomerServicePage */
+.cs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 40px;
+    background-color: #f4f6f8;
+}
+
+.cs-menu-box {
+    display: flex;
+    gap: 40px;
+}
+
+.cs-menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cs-menu-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.cs-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+/* FAQ 공통 */
+.faq-container {
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-icon-circle {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e3f2fd;
+    margin-bottom: 10px;
+}
+
+.page-icon {
+    font-size: 40px;
+    line-height: 80px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* FaqListPage */
+.faq-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.faq-table th, .faq-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.faq-table th {
+    background-color: #5D9CEC;
+    color: white;
+}
+
+.faq-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.faq-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* FaqDetailPage */
+.faq-detail-box {
+    border-top: 2px solid #5D9CEC;
+    border-bottom: 1px solid #ddd;
+}
+
+.faq-question {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.faq-question h3 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.faq-answer {
+    padding: 30px 20px;
+    min-height: 200px;
+    line-height: 1.8;
+}
+
+.faq-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.faq-actions button {
+    padding: 10px 30px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.faq-actions button:hover {
+    background-color: #f5f5f5;
+}

@@ -1,38 +1,23 @@
-import React from 'react';
-import './App.css';
-import { Routes, Route } from 'react-router-dom';
-
-// 공통
-import Header from './components/Header';
-
-// 인증 관리
-import AuthGate from './components/AuthGate';
+import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import SignupPage from './pages/login/SignupPage'
+import LoginPage from './pages/login/Login'
 import ProtectedRoute from './components/ProtectedRoute';
-
-// 공개 페이지
-import LoginPage from './pages/login/Login';
-import SignupPage from './pages/login/SignupPage';
-import CustomerServicePage from './pages/faq/CustomerServicePage';
-import FaqListPage from './pages/faq/FaqListPage';
-import FaqDetailPage from './pages/faq/FaqDetailPage';
-
-// 보호된 페이지
 import MainPage from './pages/mainpage';
-
-import CsInquiryFormPage from './pages/cs/CsInquiryFormPage';
-import CsInquiryHistoryPage from './pages/cs/CsInquiryHistoryPage';
-import CsInquiryDetailPage from './pages/cs/CsInquiryDetailPage';
-
-// 관리자 전용 페이지
-import UserManagementPage from './pages/admin/UserManagementPage';
-import ReportManagementPage from './pages/admin/ReportManagementPage';
-import ReportDetailPage from './pages/admin/ReportDetailPage';
-import AdminFaqListPage from './pages/admin/AdminFaqListPage';
-import AdminFaqFormPage from './pages/admin/AdminFaqFormPage';
-import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
-import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { authApi } from './api/authApi';
+import { setAuth } from './features/authSlice';
+import AuthGate from './components/AuthGate';
 
 function App() {
+   const dispatch = useDispatch();
+   useEffect(()=>{
+     authApi.post("/refresh")
+     .then( res => {
+       dispatch(setAuth(res.data));
+     })
+   })
 
   return (
     <AuthGate>
@@ -40,6 +25,7 @@ function App() {
       <section id="content">
         <Routes>
           {/* --- 1. 공개 경로 (로그인 없이 접근 가능) --- */}
+          {/* <Route path="/" element={<MainPage />}/> */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} /> {/* ProtectedRoute 제거 */}
           

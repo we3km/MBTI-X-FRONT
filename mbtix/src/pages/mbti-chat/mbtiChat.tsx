@@ -4,8 +4,8 @@ import ChatBotInfo from "./chatBotInfo";
 import ChatList from "./chatList";
 import './MbtiChat.css'
 import { Link, useLocation, useParams } from "react-router-dom";
-import axios from "axios";
 import { store } from "../../store/store";
+import { chatbotApi } from "../../api/chatbot/catbotApi";
 
 interface ChatRoom{
   roomId:number;
@@ -24,15 +24,17 @@ export default function MbtiChat() {
   const userId = getUserId();
   // // 채팅방 목록 불러오기
   useEffect(()=>{
-    axios.get(`http://localhost:8085/api/chatbot/rooms/${userId}`)
+    chatbotApi
+      .get(`/rooms/${userId}`)
       .then((res)=>{
-          setRooms(res.data)
-          console.log("state"+state)
+        setRooms(res.data)
+        console.log("state"+state)
       })
       .catch((err)=>{
-          console.log(err)
+        console.log(err)
       })
   },[])
+
   return (
     <>
         <div className="mbti-chat-container">

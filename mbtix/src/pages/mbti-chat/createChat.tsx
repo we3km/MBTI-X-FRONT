@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { store } from "../../store/store";
@@ -43,7 +42,7 @@ export default function CreateChat(){
         navigate(`/chat/${roomId}`, {state:{mbti:selectedMBTI, botName:botName}});
       }).catch((err)=>{
         console.log(err)
-    })
+      })
 
 
     // axios.post("http://localhost:8085/api/chatbot", room)

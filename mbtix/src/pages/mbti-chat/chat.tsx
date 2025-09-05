@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useState, useEffect, useRef } from "react";
+import { chatbotApi } from "../../api/chatbot/catbotApi";
 
 interface ChatMessage {
   // messageId: number;
@@ -31,9 +31,10 @@ export default function Chat( { roomId, state }: ChatProps) {
 console.log("??"+ roomId, state)
   useEffect(() => {
     // DB에서 지난 메시지 불러오기
-    axios.get(`http://localhost:8085/api/chatbot/${roomId}/messages`)
+    chatbotApi
+      .get(`/${roomId}/messages`)
       .then(res => setMessages(res.data))
-      .catch(err => console.error(err));
+      .catch(err => console.log(err))
   }, [roomId]);
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,7 +58,10 @@ const sendMessage = async (e: React.FormEvent) => {
   setMessages(prev => [...prev, userMessage]);
 
   // 3. 사용자 메시지 DB 저장
-  await axios.post(`http://localhost:8085/api/chatbot/${roomId}/message`, userMessage);
+  await chatbotApi
+    .post(`/${roomId}/message`, userMessage)
+    .then()
+    .catch(err => console.log(err))
 
   try {
     // 4. FastAPI 서버에 요청 (스트리밍 응답)
@@ -97,8 +101,10 @@ const sendMessage = async (e: React.FormEvent) => {
       sender: "bot",
       content: botText,
     };
-    await axios.post(`http://localhost:8085/api/chatbot/${roomId}/message`, botMessage);
-
+    await chatbotApi
+      .post(`/${roomId}/message`, botMessage)
+      .then()
+      .catch(err => console.log(err))
   } catch (err) {
     console.error(err);
   }

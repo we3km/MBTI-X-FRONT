@@ -1,6 +1,6 @@
 // src/pages/TodayGame.tsx (또는 그냥 src/TodayGame.tsx)
 import { useEffect, useState, useMemo } from "react";
-import http from "../../api/BalGameapi"
+import http from "../../api/BalGameApi"
 import styles from "./TodayGame.module.css"; // CSS는 나중에 적용
 
 

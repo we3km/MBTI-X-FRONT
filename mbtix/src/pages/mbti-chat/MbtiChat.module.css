@@ -1,0 +1,134 @@
+/* 뷰포트 기준 80% 폭 + 가운데 정렬 + 확장 방지 */
+.container {
+  width: 80vw;                /* 윈도우(뷰포트) 폭의 80% */
+  max-width: 1400px;          /* 선택: 너무 넓어지는 것 방지 */
+  min-width: 900px;           /* 선택: 너무 좁아지는 것 방지 */
+  height: 90vh;
+  margin: 5vh auto 0;         /* 수평 가운데 + 위에 약간 여백 */
+  box-sizing: border-box;
+
+  /* 부모가 flex여도 강제 확장되지 않도록 */
+  flex: 0 0 auto;
+
+  /* 레이아웃: 좌측 사이드바 / 우측 메인 */
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0;
+
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* 왼쪽 사이드바 */
+.sidebar {
+  background: #2c3e50;
+  color: #ecf0f1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,0.08);
+
+  height: 100%;          /* 🔥 컨테이너 높이 채우기 */
+  box-sizing: border-box;
+  overflow: hidden;      /* 🔥 sidebar 자체가 넘치지 않도록 */
+}
+
+.createBtn {
+  display: block;
+  text-align: center;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #3498db;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .06s ease, background .2s ease;
+}
+.createBtn:hover { background: #2980b9; transform: translateY(-1px); }
+
+.roomList {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 0 0;
+  overflow-y: auto;
+  min-height: 0;   
+}
+.roomItem { margin: 2px 0; }
+.roomLink {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: background .15s ease;
+}
+.roomLink:hover { background: rgba(255,255,255,0.08); }
+.mbti { font-size: 12px; opacity: .8; }
+
+/* 오른쪽 메인 영역 */
+.main {
+  background: #f5f6fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  height: 100%;           /* 부모(container)의 높이를 꽉 채움 */
+  overflow: hidden;       /* 자식이 넘쳐도 스크롤 안 뜨게 */
+  padding: 0;             /* 패딩은 안쪽 요소에서 조정 */
+}
+.placeholder {
+  margin: auto;
+  text-align: center;
+  color: #555;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* 스크롤바 살짝 정리(선택) */
+.roomList::-webkit-scrollbar { width: 8px; }
+.roomList::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 8px; }
+
+/* ChatRoom.module.css */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  animation: modal-fadein 0.3s ease-out;
+}
+
+@keyframes modal-fadein {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}

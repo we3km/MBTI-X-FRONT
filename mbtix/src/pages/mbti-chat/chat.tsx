@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { chatbotApi } from "../../api/chatbot/catbotApi";
-
+import styles from "./Chat.module.css";
+import { store } from "../../store/store";
 interface ChatMessage {
   // messageId: number;
   roomId: number;
@@ -28,7 +29,11 @@ export default function Chat( { roomId, state }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-console.log("??"+ roomId, state)
+  const getAccessToken = () => store.getState().auth.accessToken;
+  const token = getAccessToken();
+  const getNickname = () => store.getState().auth.user?.nickname
+  const nickName = getNickname();
+console.log("??"+ roomId, state, nickName)
   useEffect(() => {
     // DB에서 지난 메시지 불러오기
     chatbotApi
@@ -68,7 +73,7 @@ const sendMessage = async (e: React.FormEvent) => {
     const response = await fetch(`http://localhost:8000/chat/${roomId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userInput, mbti:state.mbti }),
+      body: JSON.stringify({ message: userInput, mbti:state.mbti, botName:state.botName, token:token, nickname:nickName }),
     });
 
     const reader = response.body?.getReader();
@@ -113,18 +118,31 @@ const sendMessage = async (e: React.FormEvent) => {
 
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: 10, maxWidth: 500 }}>
-      <div style={{ height: 400, overflowY:   "auto", marginBottom: 10 }}>
+    <div className={styles.chatContainer}>
+      <div className={styles.messages}>
         {messages.map((m, i) => (
-          <div key={i} style={{ textAlign: m.sender === "user" ? "right" : "left", margin: "5px 0" }}>
-            <b>{m.sender === "user" ? "You" : state.botName}:</b> {m.content}
+          <div key={`${m.roomId}-${i}`} className={m.sender === "user" ? styles.userWrapper : styles.botWrapper}>
+            {/* 챗봇 메시지일 때만 이름 표시 */}
+            {m.sender === "bot" && (
+              <div className={styles.botName}>{state.botName}</div>
+            )}
+
+            {/* 메시지 말풍선 */}
+            <div className={`${styles.message} ${m.sender === "user" ? styles.user : styles.bot}`}>
+              <p className={styles.content}>{m.content}</p>
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={sendMessage}>
-        <input value={input} onChange={e => setInput(e.target.value)} style={{ width: "80%" }} />
-        <button type="submit" style={{ width: "18%" }}>Send</button>
+      <form onSubmit={sendMessage} className={styles.inputArea}>
+        <input 
+          value={input}
+          onChange={e => setInput(e.target.value)} 
+          className={styles.input}
+          placeholder="메시지를 입력하세요..."
+        />
+        <button type="submit" className={styles.sendBtn}>보내기</button>
       </form>
     </div>
   );

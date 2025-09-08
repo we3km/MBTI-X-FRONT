@@ -49,30 +49,32 @@ const AdminInquiryDetailPage = () => {
     }
 
     return (
-        <div className="admin-inquiry-container">
+        <div className="admin-page-container"> {/* --- [수정] 클래스명 변경 --- */}
             <div className="page-header">
                 <div className="page-icon">📨</div>
                 <h1>1:1 문의 상세</h1>
             </div>
 
-            <div className="detail-box inquiry-question-box">
-                <div className="detail-header">
+            {/* --- [수정] 질문 영역을 카드로 감싸기 --- */}
+            <div className="detail-card">
+                <div className="card-header">
                     <h3>{inquiry.inquiryTitle}</h3>
                     <div className="meta-info">
                         <span>작성자: {inquiry.userNickname} ({inquiry.userLoginId})</span>
                         <span>작성일: {new Date(inquiry.createdAt).toLocaleString()}</span>
                     </div>
                 </div>
-                <div className="detail-content">
+                <div className="card-content">
                     <p>{inquiry.inquiryContent}</p>
                 </div>
             </div>
 
-            <div className="detail-box inquiry-answer-box">
-                <div className="detail-header">
+            {/* --- [수정] 답변 영역을 카드로 감싸기 --- */}
+            <div className="detail-card">
+                <div className="card-header">
                     <h3>답변하기</h3>
                 </div>
-                <div className="detail-content">
+                <div className="card-content">
                     {inquiry.status === 'Y' ? (
                         <textarea
                             value={inquiry.answer || ''}
@@ -89,9 +91,9 @@ const AdminInquiryDetailPage = () => {
                                 rows={10}
                                 required
                             />
-                            <div className="form-actions">
-                                <button type="submit" className="submit-btn">답변 등록</button>
+                            <div className="action-box">
                                 <button type="button" className="cancel-btn" onClick={() => navigate('/admin/inquiries')}>목록으로</button>
+                                <button type="submit" className="submit-btn">답변 등록</button>
                             </div>
                         </form>
                     )}

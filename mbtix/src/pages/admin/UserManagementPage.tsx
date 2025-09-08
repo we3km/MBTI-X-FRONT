@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import apiClient from '../../api/apiClient';
 import './UserManagementPage.css';
+import { useNavigate } from 'react-router-dom';
 
 interface PageInfo {
     listCount: number;
@@ -26,6 +27,7 @@ const UserManagementPage = () => {
     const [userList, setUserList] = useState<UserEntity[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const navigate = useNavigate();
 
     useEffect(() => {
         apiClient.get(`/admin/users?cpage=${currentPage}`)
@@ -57,12 +59,19 @@ const UserManagementPage = () => {
         }
     }
 
-    return (
-        <div className="user-management-container">
-            <div className="page-icon">🔔</div>
-            <h1>회원 내역 관리</h1>
+    const handleRowClick = (userId: number) => {
+        navigate(`/admin/users/${userId}`);
+    };
 
-            <table className="user-table">
+    return (
+    <div className="admin-page-container"> 
+        <div className="page-header">
+            <div className="page-icon">👥</div>
+            <h1>회원 내역 관리</h1>
+        </div>
+        
+        <div className="table-card">
+            <table className="admin-table"> 
                 <thead>
                     <tr>
                         <th>NO</th>
@@ -76,7 +85,7 @@ const UserManagementPage = () => {
                 </thead>
                 <tbody>
                     {userList.map((user: UserEntity) => (
-                        <tr key={user.userId}>
+                        <tr key={user.userId} onClick={() => handleRowClick(user.userId)} className="clickable-row">
                             <td>{user.userId}</td>
                             <td>{user.loginId}</td>
                             <td>{user.nickname}</td>
@@ -88,23 +97,11 @@ const UserManagementPage = () => {
                     ))}
                 </tbody>
             </table>
-
-            <div className="pagination">
-                <button 
-                    onClick={() => handlePageChange(currentPage - 1)} 
-                    disabled={pageInfo?.currentPage === 1}
-                >
-                    &lt;
-                </button>
-                {pageButtons}
-                <button 
-                    onClick={() => handlePageChange(currentPage + 1)} 
-                    disabled={pageInfo?.currentPage === pageInfo?.maxPage}
-                >
-                    &gt;
-                </button>
-            </div>
         </div>
+
+        <div className="pagination">
+        </div>
+    </div>
     );
 };
 

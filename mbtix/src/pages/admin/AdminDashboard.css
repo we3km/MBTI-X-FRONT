@@ -1,0 +1,56 @@
+/* src/pages/admin/AdminDashboard.css */
+
+.admin-dashboard-container {
+    padding: 50px 40px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 80px);
+}
+
+.dashboard-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 50px;
+    color: #343a40;
+}
+
+.dashboard-menu-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.dashboard-menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 12px; /* 둥근 사각형 */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    text-align: center;
+    padding: 30px 20px;
+    border: 1px solid #e9ecef;
+}
+
+.dashboard-menu-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(93, 156, 236, 0.15);
+    border-color: #5D9CEC;
+}
+
+.dashboard-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #5D9CEC;
+}
+
+.dashboard-menu-item h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #495057;
+}

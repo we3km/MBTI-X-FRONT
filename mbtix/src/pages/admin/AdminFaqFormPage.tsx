@@ -59,55 +59,58 @@ const AdminFaqFormPage = () => {
     };
 
     return (
-        <div className="admin-faq-container">
+        <div className="admin-page-container"> {/* --- [수정] 클래스명 변경 --- */}
             <div className="page-header">
                 <div className="page-icon">✍️</div>
                 <h1>{isEditMode ? 'FAQ 수정' : 'FAQ 작성'}</h1>
             </div>
 
-            <form className="admin-faq-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="faqCategory">문의유형</label>
-                    <input
-                        type="text"
-                        id="faqCategory"
-                        name="faqCategory"
-                        value={formData.faqCategory}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="question">제목 (질문)</label>
-                    <input
-                        type="text"
-                        id="question"
-                        name="question"
-                        value={formData.question}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="answer">답변</label>
-                    <textarea
-                        id="answer"
-                        name="answer"
-                        value={formData.answer}
-                        onChange={handleChange}
-                        required
-                        rows={10}
-                    />
-                </div>
-                <div className="form-actions">
-                    <button type="submit" className="submit-btn">
-                        {isEditMode ? '수정하기' : '등록하기'}
-                    </button>
-                    <button type="button" className="cancel-btn" onClick={() => navigate('/admin/faqs')}>
-                        취소
-                    </button>
-                </div>
-            </form>
+            {/* --- [수정] form을 카드로 감싸기 --- */}
+            <div className="detail-card">
+                <form className="admin-faq-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="faqCategory">문의유형</label>
+                        <input
+                            type="text"
+                            id="faqCategory"
+                            name="faqCategory"
+                            value={formData.faqCategory}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="question">제목 (질문)</label>
+                        <input
+                            type="text"
+                            id="question"
+                            name="question"
+                            value={formData.question}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="answer">답변</label>
+                        <textarea
+                            id="answer"
+                            name="answer"
+                            value={formData.answer}
+                            onChange={handleChange}
+                            required
+                            rows={10}
+                        />
+                    </div>
+                    <div className="form-actions">
+                        <button type="button" className="cancel-btn" onClick={() => navigate('/admin/faqs')}>
+                            취소
+                        </button>
+                        <button type="submit" className="submit-btn">
+                            {isEditMode ? '수정하기' : '등록하기'}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

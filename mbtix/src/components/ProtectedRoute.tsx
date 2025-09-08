@@ -4,31 +4,29 @@ import type { RootState } from "../store/store";
 import { Navigate } from "react-router-dom";
 
 interface Props {
-    children : ReactNode; //자식 컴포넌트
+    children: ReactNode;
     requiredRoles?: string[];
-    redirectTo?:string;
+    redirectTo?: string;
 }
 
 export default function ProtectedRoute({
     children,
-    requiredRoles=[],
-    redirectTo="/login"}:Props){
+    requiredRoles = [],
+    redirectTo = "/login"
+}: Props) {
+    const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
-        const {isAuthenticated,user} = useSelector( (state:RootState) => state.auth);
-        //로그인하지 않은 경우
-        if(!isAuthenticated){
-            alert("로그인 후 이용해주세요")
-            return <Navigate to={redirectTo} replace/>
-        }
-        //권한이 필요한 경우 권한 확인
-        if(requiredRoles.length > 0 && user){
-            const hasRequiredRole = requiredRoles.some( role => user.roles.includes(role));
+    // 로그인하지 않은 경우, 무조건 로그인 페이지로 보내기
+    if (!isAuthenticated) {
+        alert("로그인 후 이용해주세요.");
+        return <Navigate to={redirectTo} replace />;
+    }
 
-            if(!hasRequiredRole){
-                return <Navigate to="/unauthorized" replace />;
-            }
-        }
+    if (requiredRoles.length > 0 && !user?.roles?.some(role => requiredRoles.includes(role))) {
+        alert("접근 권한이 없습니다.");
+        return <Navigate to="/" replace />;
+    }
 
-
-    return <>{children}</>
+    // 위의 모든 검사를 통과한 경우에만 페이지를 보여줌
+    return <>{children}</>;
 }

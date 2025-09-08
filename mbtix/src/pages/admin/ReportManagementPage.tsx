@@ -66,49 +66,40 @@ const ReportManagementPage = () => {
     }
 
     return (
-        <div className="user-management-container"> 
-            <div className="page-icon">🚨</div>
-            <h1>신고 내역 관리</h1>
+        <div className="admin-page-container">
+            <div className="page-header">
+                <div className="page-icon">🚨</div>
+                <h1>신고 내역 관리</h1>
+            </div>
 
-            <table className="user-table">
-                <thead>
-                    <tr>
-                        <th>NO</th>
-                        <th>신고한 회원</th>
-                        <th>신고된 회원</th>
-                        <th>신고 사유</th>
-                        <th>신고 날짜</th>
-                        <th>처리 날짜</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {reportList.map((report) => (
-                        <tr key={report.reportId} onClick={() => handleRowClick(report.reportId)} className="clickable-row">
-                            <td>{report.reportId}</td>
-                            <td>{report.reporterId}</td>
-                            <td>{report.reportedId}</td>
-                            <td>{report.reportCategoryName}</td>
-                            <td>{new Date(report.createdAt).toLocaleDateString()}</td>
-                            <td>{report.processedAt ? new Date(report.processedAt).toLocaleDateString() : '-'}</td>
+            <div className="table-card">
+                <table className="admin-table">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>신고한 회원</th>
+                            <th>신고된 회원</th>
+                            <th>신고 사유</th>
+                            <th>신고 날짜</th>
+                            <th>처리 날짜</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {reportList.map((report) => (
+                            <tr key={report.reportId} onClick={() => handleRowClick(report.reportId)} className="clickable-row">
+                                <td>{report.reportId}</td>
+                                <td>{report.reporterId}</td>
+                                <td>{report.reportedId}</td>
+                                <td>{report.reportCategoryName}</td>
+                                <td>{new Date(report.createdAt).toLocaleDateString()}</td>
+                                <td>{report.processedAt ? new Date(report.processedAt).toLocaleDateString() : '-'}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             <div className="pagination">
-                <button 
-                    onClick={() => handlePageChange(currentPage - 1)} 
-                    disabled={pageInfo?.currentPage === 1}
-                >
-                    &lt;
-                </button>
-                {pageButtons}
-                <button 
-                    onClick={() => handlePageChange(currentPage + 1)} 
-                    disabled={pageInfo?.currentPage === pageInfo?.maxPage}
-                >
-                    &gt;
-                </button>
             </div>
         </div>
     );

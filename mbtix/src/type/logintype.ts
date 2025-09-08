@@ -1,4 +1,3 @@
-// === API payloads ===
 export interface SignupRequest {
   loginId: string;
   email: string;
@@ -18,7 +17,7 @@ export interface User {
   name: string;
   nickname: string;
   mbtiId: number;
-  roles: string;
+  roles: string[];
 }
 
 // 백엔드 로그인/회원가입 응답 형식

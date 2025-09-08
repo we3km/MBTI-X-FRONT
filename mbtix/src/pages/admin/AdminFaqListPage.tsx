@@ -74,7 +74,7 @@ const AdminFaqListPage = () => {
     return (
         <div className="admin-faq-container">
             <div className="page-header">
-                <div className="page-icon">📋</div>
+                <div className="page-icon">❓</div>
                 <h1>FAQ 관리</h1>
             </div>
             <table className="admin-faq-table">

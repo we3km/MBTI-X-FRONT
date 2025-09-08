@@ -1,76 +1,102 @@
-.user-management-container {
-    padding: 40px;
-    background-color: #f4f6f8;
-    font-family: 'Pretendard', sans-serif;
+.admin-page-container {
+    padding: 50px 40px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 80px);
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
 .page-icon {
     font-size: 48px;
-    text-align: center;
     margin-bottom: 10px;
+    color: #5D9CEC;
+    animation: float 3s ease-in-out infinite;
 }
 
-.user-management-container h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 40px;
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
 }
 
-.user-table {
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
+}
+
+.table-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 24px;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.admin-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
 }
 
+.admin-table th, .admin-table td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+}
 
-.user-table th {
-    background-color: #e3f2fd;
-    color: #333;
+.admin-table th {
+    background-color: #f8f9fa;
+    color: #868e96;
     font-weight: 600;
-    padding: 15px;
-    text-align: center;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.user-table td {
-    padding: 15px;
-    text-align: center;
-    color: #555;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.user-table tr:last-child td {
-    border-bottom: none;
-}
-
-.user-table tbody tr:hover {
-    background-color: #f5f5f5;
+.admin-table tbody tr:hover {
+    background-color: #f8f9fa;
 }
 
 .pagination {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 30px;
-    color: #555;
-    font-size: 16px;
+    gap: 8px;
 }
 
 .pagination button {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #dee2e6;
     background-color: #fff;
-    padding: 5px 10px;
-    margin: 0 2px;
+    color: #495057;
+    padding: 8px 12px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .pagination button:hover {
-    background-color: #f5f5f5;
+    background-color: #f1f3f5;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .pagination button.active {
-    background-color: #e3f2fd;
+    background-color: #5D9CEC;
+    color: white;
+    border-color: #5D9CEC;
     font-weight: bold;
-    border-color: #90caf9;
+}
+
+.admin-table .clickable-row {
+    cursor: pointer;
 }

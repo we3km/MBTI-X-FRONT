@@ -1,7 +1,7 @@
-.admin-faq-container {
-    padding: 40px;
-    max-width: 900px;
-    margin: 0 auto;
+.admin-page-container {
+    padding: 50px 40px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 80px);
 }
 
 .page-header {
@@ -12,11 +12,32 @@
 .page-icon {
     font-size: 48px;
     margin-bottom: 10px;
+    color: #5D9CEC;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
 }
 
 .page-header h1 {
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 32px;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
+}
+
+.table-card, .detail-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.table-card {
+    padding: 24px;
 }
 
 .admin-faq-table {
@@ -26,117 +47,170 @@
 }
 
 .admin-faq-table th, .admin-faq-table td {
-    padding: 15px;
+    padding: 18px 16px;
     text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .admin-faq-table th {
-    background-color: #5D9CEC;
-    color: white;
+    background-color: #f8f9fa;
+    color: #868e96;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-faq-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.admin-faq-table tbody tr:hover {
+    background-color: #f8f9fa;
 }
 
 .admin-faq-table .faq-title {
     cursor: pointer;
     text-align: left;
-}
-.admin-faq-table .faq-title:hover {
-    text-decoration: underline;
+    color: #495057;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
+.admin-faq-table .faq-title:hover {
+    color: #5D9CEC;
+}
 
 .admin-faq-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
+    margin-top: 24px;
+    padding: 0 12px;
 }
 
 .admin-faq-actions button {
-    padding: 10px 30px;
+    padding: 12px 28px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 600;
     color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.admin-faq-actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .admin-faq-actions .delete-btn {
-    background-color: #f44336;
+    background-color: #fa5252;
 }
-
 .admin-faq-actions .delete-btn:hover {
-    background-color: #d32f2f;
+    background-color: #f03e3e;
 }
 
 .admin-faq-actions .create-btn {
-    background-color: #4CAF50;
+    background-color: #339af0;
 }
-
 .admin-faq-actions .create-btn:hover {
-    background-color: #43A047;
+    background-color: #1c7ed6;
 }
 
-
-/* Form 스타일 */
-.admin-faq-form {
-    background-color: #fff;
+/* --- Form 페이지 스타일 --- */
+.detail-card {
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.form-group {
-    margin-bottom: 20px;
+.admin-faq-form .form-group {
+    margin-bottom: 25px;
 }
 
-.form-group label {
+.admin-faq-form .form-group label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #495057;
 }
 
-.form-group input,
-.form-group textarea {
+.admin-faq-form .form-group input,
+.admin-faq-form .form-group textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
     font-size: 16px;
     box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-group textarea {
+.admin-faq-form .form-group input:focus,
+.admin-faq-form .form-group textarea:focus {
+    outline: none;
+    border-color: #5D9CEC;
+    box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.25);
+}
+
+.admin-faq-form .form-group textarea {
     resize: vertical;
+    min-height: 150px;
 }
 
-.form-actions {
+.admin-faq-form .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 12px;
     margin-top: 30px;
+    padding: 0;
 }
 
 .form-actions button {
-    padding: 10px 20px;
+    padding: 12px 28px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 600;
     color: white;
+    transition: all 0.2s ease;
+}
+.form-actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .form-actions .submit-btn {
-    background-color: #5D9CEC;
+    background-color: #339af0;
 }
 .form-actions .submit-btn:hover {
-    background-color: #4a8cd8;
+    background-color: #1c7ed6;
 }
 
 .form-actions .cancel-btn {
-    background-color: #888;
+    background-color: #868e96;
 }
 .form-actions .cancel-btn:hover {
-    background-color: #666;
+    background-color: #495057;
+}
+
+@media (max-width: 768px) {
+    .admin-page-container {
+        padding: 40px 20px;
+    }
+    
+    .table-card, .detail-card {
+        padding: 20px;
+    }
+    
+    .admin-faq-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .admin-faq-actions button {
+        width: 100%;
+    }
 }

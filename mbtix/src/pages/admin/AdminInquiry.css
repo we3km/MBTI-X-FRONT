@@ -1,7 +1,7 @@
-.admin-inquiry-container {
-    padding: 40px;
-    max-width: 900px;
-    margin: 0 auto;
+.admin-page-container {
+    padding: 50px 40px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 80px);
 }
 
 .page-header {
@@ -12,13 +12,23 @@
 .page-icon {
     font-size: 48px;
     margin-bottom: 10px;
+    color: #5D9CEC;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
 }
 
 .page-header h1 {
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 32px;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
 }
 
+/* --- 목록 페이지 스타일 --- */
 .inquiry-filters {
     display: flex;
     justify-content: center;
@@ -27,11 +37,19 @@
 }
 
 .inquiry-filters button {
-    padding: 8px 16px;
-    border: 1px solid #ccc;
+    padding: 8px 20px;
+    border: 1px solid #dee2e6;
     background-color: #fff;
     border-radius: 20px;
     cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.inquiry-filters button:hover {
+    border-color: #5D9CEC;
+    color: #5D9CEC;
 }
 
 .inquiry-filters button.active {
@@ -40,126 +58,154 @@
     border-color: #5D9CEC;
 }
 
+.table-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 24px;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
 
-.admin-inquiry-table {
+.admin-table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 15px;
 }
 
-.admin-inquiry-table th, .admin-inquiry-table td {
-    padding: 15px;
+.admin-table th, .admin-table td {
+    padding: 16px;
     text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e9ecef;
 }
 
-.admin-inquiry-table th {
-    background-color: #f5f5f5;
+.admin-table th {
+    background-color: #f8f9fa;
+    color: #868e96;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.admin-inquiry-table tbody tr {
+.admin-table .clickable-row {
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.admin-inquiry-table tbody tr:hover {
-    background-color: #f9f9f9;
+.admin-table .clickable-row:hover {
+    background-color: #f8f9fa;
 }
 
-.admin-inquiry-table .inquiry-title {
+.admin-table .inquiry-title {
     text-align: left;
 }
 
 .status-badge {
-    padding: 4px 10px;
-    border-radius: 12px;
+    padding: 5px 12px;
+    border-radius: 15px;
     font-size: 12px;
     font-weight: bold;
     color: white;
 }
 
 .status-badge.status-N {
-    background-color: #f44336;
+    background-color: #fab005; /* 노란색 */
 }
 
 .status-badge.status-Y {
-    background-color: #4CAF50;
+    background-color: #40c057; /* 초록색 */
 }
 
 
-/* 상세 페이지 */
-.detail-box {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+/* --- 상세 페이지 스타일 --- */
+.detail-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
     margin-bottom: 30px;
-    background-color: #fff;
 }
 
-.detail-header {
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
+.card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
 }
 
-.detail-header h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
+.card-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #343a40;
+    margin: 0;
+    margin-bottom: 8px;
 }
 
-.detail-header .meta-info {
+.card-header .meta-info {
     font-size: 14px;
-    color: #666;
+    color: #868e96;
 }
 
-.detail-header .meta-info span {
-    margin-right: 15px;
+.card-header .meta-info span {
+    margin-right: 20px;
 }
 
-.detail-content {
-    padding: 20px;
+.card-content {
+    padding: 24px;
     line-height: 1.7;
 }
 
-.detail-content textarea {
+.card-content p {
+    margin: 0;
+    white-space: pre-wrap; /* 줄바꿈 적용 */
+}
+
+.card-content textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 15px;
     box-sizing: border-box;
     resize: vertical;
 }
-
-.detail-content textarea:disabled {
-    background-color: #f5f5f5;
-    color: #555;
+.card-content textarea:disabled {
+    background-color: #f1f3f5;
+    color: #495057;
 }
 
-.form-actions {
+.action-box {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     margin-top: 20px;
 }
 
-.form-actions button {
-    padding: 10px 20px;
+.action-box button {
+    padding: 10px 25px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 600;
     color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.action-box button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.form-actions .submit-btn {
-    background-color: #5D9CEC;
+.action-box .submit-btn {
+    background-color: #339af0;
 }
-.form-actions .submit-btn:hover {
-    background-color: #4a8cd8;
+.action-box .submit-btn:hover {
+    background-color: #1c7ed6;
 }
 
-.form-actions .cancel-btn {
-    background-color: #888;
-    color: white;
+.action-box .cancel-btn {
+    background-color: #868e96;
 }
-.form-actions .cancel-btn:hover {
-    background-color: #666;
+.action-box .cancel-btn:hover {
+    background-color: #495057;
 }

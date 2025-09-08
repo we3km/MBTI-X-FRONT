@@ -189,3 +189,64 @@
 .notification-menu {
     min-width: 220px;
 }
+
+
+.notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background-color: #FF4D4F;
+    color: white;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+    border: 1px solid white;
+    box-sizing: border-box;
+}
+
+
+.notification-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    border-bottom: 1px solid #eee;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notification-item.unread {
+    font-weight: bold;
+    background-color: #e6f7ff;
+}
+
+.notification-item {
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+.notification-item:hover {
+    background-color: #f0f0f0;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    color : #333;
+}
+
+.notification-header button {
+    background: none;
+    border: none;
+    color: #5D9CEC;
+    cursor: pointer;
+    font-size: 12px;
+}

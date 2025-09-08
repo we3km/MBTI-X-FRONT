@@ -1,0 +1,75 @@
+/* src/pages/login/FindId.module.css */
+.signupBox {
+  background: #f9fafb;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 480px;
+  margin: 50px auto;
+  font-family: "Noto Sans KR", sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.signupBox h2 {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.inputCheck {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.inputCheck input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputCheck input:focus {
+  outline: none;
+  border: 1px solid #000;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+.inputCheck button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.inputCheck button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.inputCheck button:hover:not(:disabled) {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.nicknameMessage {
+  font-size: 13px;
+  margin: 4px 0 0 0;
+  text-align: right;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 13px;
+  margin: 6px 0;
+  text-align: right;
+}

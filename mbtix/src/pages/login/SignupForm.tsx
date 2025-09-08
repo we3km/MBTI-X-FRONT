@@ -19,6 +19,7 @@ export default function SignupForm({ onNext }: { onNext: () => void }) {
   const [idMessage, setIdMessage] = useState("");
   const [idMessageColor, setIdMessageColor] = useState("red");
 
+  //닉네임
   const [nickCheck,setnickCheck] = useState(false);
   const [nickMessage, setnickMessage] = useState("");
   const [nickMessageColor, setnickMessageColor] = useState("red");
@@ -147,7 +148,7 @@ const handleSendCode = async () => {
       <button type="button" onClick={handleIdCheck} disabled={idCheck}>중복 확인</button>
     </div>
    
-    { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
+     { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
     <div className={styles.inputCheck}>
       <input value={nickname} onChange={e => {setNickname(e.target.value); setnickCheck(false); setnickMessage("")}} placeholder="닉네임" />
       <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>

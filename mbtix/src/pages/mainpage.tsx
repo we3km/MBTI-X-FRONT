@@ -52,8 +52,12 @@ const handleLogout = async () => {
         </Link>
         {!isLoggedIn && (
           <div className={styles.authButtons}>
+            <Link to="/login">
             <button className={styles.authButton}>로그인</button>
+            </Link>
+            <Link to="/signup">
             <button className={styles.authButton}>회원가입</button>
+            </Link>
           </div>
         )}
 

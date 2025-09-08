@@ -16,6 +16,8 @@ import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
 import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
+import Findid from './pages/login/FindId';
+import Findpw from './pages/login/findpw';
 function App() {
   // const dispatch = useDispatch();
   // useEffect(() => {
@@ -31,7 +33,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}
           />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />}/>
+          <Route path="find-pw" element={<Findpw />} />
+          <Route path="/find-id" element={<Findid/>} />
+           
           <Route path="/signup" element={<SignupPage />} />
           {/* <Route path="/miniGame" element={<GameMenu />} />
           <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />

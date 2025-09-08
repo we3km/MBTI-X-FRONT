@@ -32,10 +32,10 @@ const noAuthUrls = [
 authApi.interceptors.request.use((config) => {
   const token = getAccessToken();
 
-  // permitAll 엔드포인트에는 토큰 안 붙임
-  const isNoAuthUrl = noAuthUrls.some((url) =>
-    config.url?.startsWith(url)
-  );
+  // permitAll 엔드포인트 + /refresh 요청에는 토큰 안 붙임
+  const isNoAuthUrl =
+    (config.url && noAuthUrls.some((url) => config.url?.startsWith(url))) ||
+    config.url?.includes("/refresh");
 
   if (!isNoAuthUrl && token) {
     if (!config.headers) {
@@ -150,6 +150,16 @@ export const verifyEmail = async (email: string, code: string) => {
   const res = await authApi.post("/verify-code", { email, code });
   return res.data;
 };
+
+export const nameMatch = async (name:string) => {
+  const res = await authApi.get<boolean>("/namematch", {params:{name}})
+  return res.data
+}
+
+export const idMatch = async (loginId:string) =>{
+  const res = await authApi.get<boolean>("/idmatch", {params:{loginId}})
+  return res.data
+}
 
 
 

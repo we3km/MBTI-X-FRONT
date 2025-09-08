@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setAuth } from "../../features/authSlice";
+import { checkNickname } from "../../api/authApi";
+import styles from "./Signup.module.css";
 
 export default function SocialSignup() {
   const [nickname, setNickname] = useState("");
@@ -20,6 +22,11 @@ export default function SocialSignup() {
   const name = params.get("name") ?? "";   // 카카오 프로필 닉네임
   const profileImageUrl = params.get("profileImageUrl") ?? "";
   const accessToken = params.get("accessToken") ?? "";
+
+  //닉네임
+  const [nickCheck,setnickCheck] = useState(false);
+  const [nickMessage, setnickMessage] = useState("");
+  const [nickMessageColor, setnickMessageColor] = useState("red");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,28 +67,48 @@ export default function SocialSignup() {
     }
   };
 
+  const handleNicknameCheck = async () => {
+     if(!nickname.trim()){
+      setnickMessage("닉네임을 입력해 주세요.");
+      setnickMessageColor("red")
+      return;
+     }
+  
+     const available = await checkNickname(nickname);
+     if(available) {
+      setnickCheck(true);
+      setnickMessage("사용 가능한 닉네임입니다.");
+      setnickMessageColor("green");
+     }else{
+      setnickCheck(false);
+      setnickMessage("이미 존재하는 닉네임입니다.");
+      setnickMessageColor("red");
+     }
+    };
   // ✅ JSX 반드시 반환
   return (
-    <div style={{ maxWidth: 400, margin: "50px auto" }}>
+    <form className={styles.signupBox} onSubmit={handleSubmit}>
       <h2>소셜 회원가입</h2>
-      <p>소셜 로그인 이메일: <b>{email}</b></p>
-      <p>이름(프로필): <b>{name}</b></p>
+      <div className={styles.inputCheck}>
+        <p>이메일</p>
+        <input value={email} readOnly/>
+        <p>이름</p>
+        <input value={name} readOnly/>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>닉네임</label>
-          <input
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            required
-          />
-        </div>
+      </div>
+
+    
+       { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
+    <div className={styles.inputCheck}>
+      <input value={nickname} onChange={e => {setNickname(e.target.value); setnickCheck(false); setnickMessage("")}} placeholder="닉네임" />
+      <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
+    </div>
 
         <div>
           <label>MBTI</label>
           <select value={mbtiId} onChange={(e) => setMbtiId(e.target.value)} required>
             <option value="">선택하세요</option>
-            <option value="ENFP">ENFP</option>
+            <option value="1">ENFP</option>
             <option value="ISTJ">ISTJ</option>
             <option value="ENTP">ENTP</option>
             <option value="INFJ">INFJ</option>
@@ -91,8 +118,8 @@ export default function SocialSignup() {
 
         {error && <div style={{ color: "red" }}>{error}</div>}
 
-        <button type="submit">회원가입 완료</button>
+        <button type="submit" className={styles.submitBtn} disabled={!nickCheck}>회원가입 완료</button>
       </form>
-    </div>
+    
   );
 }

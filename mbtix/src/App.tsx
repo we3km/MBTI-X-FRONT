@@ -10,6 +10,8 @@ import { useEffect } from 'react';
 import { authApi } from './api/authApi';
 import { setAuth } from './features/authSlice';
 import AuthGate from './components/AuthGate';
+import TodayGame from './pages/balGame/TodayGame';
+
 
 function App() {
    const dispatch = useDispatch();
@@ -28,6 +30,7 @@ return (
         {/* <Route path="/" element={<MainPage />}/> */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/BalGame" element={<TodayGame/>}/>
       </Routes>
     </section>
   </AuthGate>

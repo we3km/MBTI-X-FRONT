@@ -4,7 +4,6 @@ import SignupPage from './pages/login/SignupPage'
 import LoginPage from './pages/login/Login'
 import ProtectedRoute from './components/ProtectedRoute';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
 import { authApi } from './api/authApi';
 import { setAuth } from './features/authSlice';
 import AuthGate from './components/AuthGate';
@@ -17,7 +16,8 @@ import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
-import Findpw from './pages/login/findpw';
+import Findpw from './pages/login/Findpw';
+import SignupComplete from './pages/login/SignupComplete';
 function App() {
   // const dispatch = useDispatch();
   // useEffect(() => {
@@ -45,6 +45,7 @@ function App() {
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
+          <Route path="/signup-complete" element={<SignupComplete />} />
         </Routes>
       </section>
     </AuthGate>

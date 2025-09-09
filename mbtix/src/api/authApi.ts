@@ -156,8 +156,8 @@ export const nameMatch = async (name:string) => {
   return res.data
 }
 
-export const idMatch = async (loginId:string) =>{
-  const res = await authApi.get<boolean>("/idmatch", {params:{loginId}})
+export const idMatch = async (name:string ,loginId:string) =>{
+  const res = await authApi.get<boolean>("/idmatch", {params:{name,loginId}})
   return res.data
 }
 
@@ -201,22 +201,3 @@ export const refreshToken = async () => {
   return res.data;
 };
 
-/** 앱 시작 시 한 번 호출해서 새로고침 로그인 유지 + user 복구 */
-export const bootstrapAuth = async () => {
-  try {
-    const { data } = await authApi.post<AuthResult>("/refresh");
-    const uid = data.user?.userId ?? getUserId() ?? 0;
-    const nextUser = data.user ?? getUser();
-
-    store.dispatch(
-      setAuth({
-        accessToken: data.accessToken,
-        userId: uid,
-        refreshToken: data.refreshToken ?? null,
-        user: nextUser ?? null,
-      })
-    );
-  } catch {
-    store.dispatch(logoutAction());
-  }
-};

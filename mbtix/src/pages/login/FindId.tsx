@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { nameMatch ,sendCode, verifyEmail } from "../../api/authApi";
+import { nameMatch , verifyEmail } from "../../api/authApi";
 import styles from "./Find.module.css";
 
 export default function Findid() {
@@ -58,7 +58,7 @@ export default function Findid() {
       setCodeSent(true);
       setMessage("인증 코드가 이메일로 발송되었습니다.");
       setMessageColor("green");
-      setCooldown(180); // 3분
+      setCooldown(15); 
 
       // 타이머 시작
       const timer = setInterval(() => {
@@ -123,56 +123,21 @@ export default function Findid() {
 
       {/* 이메일 입력 */}
       {message && (
-        <p
-          style={{
-            color: messageColor,
-            fontSize: "13px",
-            margin: "4px 0 0 0",
-            textAlign: "right",
-          }}
-        >
-          {message}
-        </p>
+        <p style={{ color: messageColor, fontSize: "13px", margin: "4px 0 0 0", textAlign: "right", }}>{message}</p>
       )}
       <div className={styles.inputCheck}>
-        <input
-          value={email}
-          onChange={e => {
-            setEmail(e.target.value);
-            setCodeSent(false);
-            setCooldown(0);
-            setMessage("");
-            setEmailVerified(false);
-          }}
-          placeholder="이메일"
-        />
-        <button
-          type="button"
-          onClick={handleSendCode}
-          disabled={cooldown > 0}
-        >
-          {cooldown > 0
-            ? `재발송 (${Math.floor(cooldown / 60)}:${String(
-                cooldown % 60
-              ).padStart(2, "0")})`
-            : "코드 발송"}
+        <input value={email} onChange={e => { setEmail(e.target.value); setCodeSent(false); setCooldown(0); setMessage(""); setnameMessage(""); setEmailVerified(false);
+      }}placeholder="이메일"/>
+        <button type="button" onClick={handleSendCode} disabled={cooldown > 0}>
+          {cooldown > 0 ? `재발송 (${Math.floor(cooldown / 60)}:${String( cooldown % 60 ).padStart(2, "0")})` : "코드 발송"}
         </button>
       </div>
 
       {/* 코드 입력 */}
       {codeSent && (
         <div className={styles.inputCheck}>
-          <input
-            value={verificationCode}
-            onChange={e => setVerificationCode(e.target.value)}
-            placeholder="인증 코드"
-            disabled={emailVerified}
-          />
-          <button
-            type="button"
-            onClick={handleEmailVerify}
-            disabled={emailVerified}
-          >
+          <input value={verificationCode} onChange={e => setVerificationCode(e.target.value)} placeholder="인증 코드" disabled={emailVerified} />
+          <button type="button" onClick={handleEmailVerify} disabled={emailVerified} >
             {emailVerified ? "인증완료" : "확인"}
           </button>
         </div>
@@ -180,16 +145,14 @@ export default function Findid() {
 
       {/* 아이디 찾기 실행 */}
       {emailVerified && (
-        <button type="button" onClick={handleFindId}>
-          아이디 확인
-        </button>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "16px" }}>
+          <button className={styles.findBtn} type="button" onClick={handleFindId}>아이디 확인</button>
+        </div>
       )}
 
       {/* 최종 결과 출력 */}
       {foundId && (
-        <div className={styles.resultBox}>
-          <p>{foundId}</p>
-        </div>
+        <div className={styles.resultBox}><p>{foundId}</p></div>
       )}
     </div>
   );

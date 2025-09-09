@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { setAuth } from "../../features/authSlice";
 import { checkNickname } from "../../api/authApi";
 import styles from "./Signup.module.css";
 
@@ -10,7 +8,7 @@ export default function SocialSignup() {
   const [nickname, setNickname] = useState("");
   const [mbtiId, setMbtiId] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,7 +31,7 @@ export default function SocialSignup() {
     setError(null);
 
     try {
-      const res = await axios.post("http://localhost:8085/api/auth/social-signup", {
+       await axios.post("http://localhost:8085/api/auth/social-signup", {
         loginId: email,  // 이메일을 loginId로 사용
         email,
         name,
@@ -45,15 +43,7 @@ export default function SocialSignup() {
         profileImageUrl,
       });
 
-      // Redux 상태 저장
-      dispatch(setAuth({
-        accessToken: res.data.accessToken,
-        refreshToken: res.data.refreshToken,
-        userId: res.data.user.userId,
-        user: res.data.user,
-      }));
-
-      navigate("/", { replace: true });
+      navigate("/signup-complete", { replace: true });
     } catch (err: any) {
       console.error(err);
 
@@ -85,34 +75,43 @@ export default function SocialSignup() {
       setnickMessageColor("red");
      }
     };
-  // ✅ JSX 반드시 반환
+
   return (
-    <form className={styles.signupBox} onSubmit={handleSubmit}>
-      <h2>소셜 회원가입</h2>
-      <div className={styles.inputCheck}>
-        <p>이메일</p>
-        <input value={email} readOnly/>
-        <p>이름</p>
-        <input value={name} readOnly/>
+      <form className={styles.signupBox} onSubmit={handleSubmit}>
+        <h2>소셜 회원가입</h2>
+        <div className={styles.inputCheck}>
+          <p>이메일</p>
+          <input value={email} readOnly/>
+          <p>이름</p>
+          <input value={name} readOnly/>
+        </div>
 
-      </div>
-
-    
-       { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
-    <div className={styles.inputCheck}>
-      <input value={nickname} onChange={e => {setNickname(e.target.value); setnickCheck(false); setnickMessage("")}} placeholder="닉네임" />
-      <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
-    </div>
+        { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
+        <div className={styles.inputCheck}>
+          <input value={nickname} onChange={e => {setNickname(e.target.value); setnickCheck(false); setnickMessage("")}} placeholder="닉네임" />
+          <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
+        </div>
 
         <div>
           <label>MBTI</label>
           <select value={mbtiId} onChange={(e) => setMbtiId(e.target.value)} required>
             <option value="">선택하세요</option>
-            <option value="1">ENFP</option>
-            <option value="ISTJ">ISTJ</option>
-            <option value="ENTP">ENTP</option>
-            <option value="INFJ">INFJ</option>
-            {/* TODO: MBTI 전체 타입 추가 */}
+            <option value="1">ISTJ</option>
+            <option value="2">ISFJ</option>
+            <option value="3">INFJ</option>
+            <option value="4">INTJ</option>
+            <option value="5">ISTP</option>
+            <option value="6">ISFP</option>
+            <option value="7">INFP</option>
+            <option value="8">INTP</option>
+            <option value="9">ESTP</option>
+            <option value="10">ESFP</option>
+            <option value="11">ENFP</option>
+            <option value="12">ENTP</option>
+            <option value="13">ESTJ</option>
+            <option value="14">ESFJ</option>
+            <option value="15">ENFJ</option>
+            <option value="16">ENTJ</option>
           </select>
         </div>
 

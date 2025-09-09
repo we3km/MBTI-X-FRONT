@@ -73,3 +73,24 @@
   margin: 6px 0;
   text-align: right;
 }
+
+
+.findBtn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.findBtn:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.resultBox{
+  text-align: center;
+}

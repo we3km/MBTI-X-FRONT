@@ -5,9 +5,10 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { login } from "../../api/authApi";
 import styles from "./login.module.css";
 import Findid from "./FindId";
-// import Findpw from "./Findpw";
+import mainIcon from "../../assets/main-page/메인아이콘.png"
 import Modal from "../login/FindModal";
-import Findpw from "./findpw";
+import Findpw from "./Findpw";
+
 
 const LoginPage: React.FC = () => {
   const nav = useNavigate();
@@ -24,6 +25,7 @@ const LoginPage: React.FC = () => {
 
   const [showFindId, setShowFindId] = useState(false);
   const [showFindPw, setShowFindPw] = useState(false);
+
 
   const canSubmit = useMemo(
     () => loginId.trim().length > 0 && password.length > 0 && !loading,
@@ -63,7 +65,7 @@ const LoginPage: React.FC = () => {
   return (
     <div className={styles.loginContainer}>
       <form onSubmit={handleSubmit}>
-        <h1>MBTI-X</h1>
+        <h1 className={styles.logo}><img src={mainIcon} /></h1>
 
         {err && <div className={styles.errorMsg}>{err}</div>}
 
@@ -104,12 +106,12 @@ const LoginPage: React.FC = () => {
 
         <div className={styles.linkRow}>
           <Link to="/signup">회원가입</Link>
-          <button type="button" onClick={() => setShowFindId(true)}>
+          <span onClick={() => setShowFindId(true)} className={styles.linkBtn}>
             아이디 찾기
-          </button>
-          <button type="button" onClick={() => setShowFindPw(true)}>
+          </span>
+          <span onClick={() => setShowFindPw(true)} className={styles.linkBtn}>
             비밀번호 찾기
-          </button>
+          </span>
         </div>
 
         <div className={styles.socialGroup}>
@@ -137,7 +139,7 @@ const LoginPage: React.FC = () => {
 
       {showFindPw && (
         <Modal onClose={() => setShowFindPw(false)}>
-          <Findpw />
+           <Findpw />
         </Modal>
       )}
     </div>

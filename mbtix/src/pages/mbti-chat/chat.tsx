@@ -22,6 +22,10 @@ interface ChatProps {
   state:{
     mbti:string;
     botName:string;
+    gender:string;
+    talkStyle:string;
+    age:number;
+    features: string; 
   }
 }
 
@@ -33,7 +37,7 @@ export default function Chat( { roomId, state }: ChatProps) {
   const token = getAccessToken();
   const getNickname = () => store.getState().auth.user?.nickname
   const nickName = getNickname();
-console.log("??"+ roomId, state, nickName)
+  console.log("??"+ roomId, state, nickName)
   useEffect(() => {
     // DB에서 지난 메시지 불러오기
     chatbotApi
@@ -73,7 +77,16 @@ const sendMessage = async (e: React.FormEvent) => {
     const response = await fetch(`http://localhost:8000/chat/${roomId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userInput, mbti:state.mbti, botName:state.botName, token:token, nickname:nickName }),
+      body: JSON.stringify({  
+        message: userInput,
+        mbti:state.mbti,
+        botName:state.botName, 
+        token:token, 
+        nickname:nickName, 
+        gender:state.gender, 
+        talkStyle:state.talkStyle,
+        age:state.age,
+        features: state.features }),
     });
 
     const reader = response.body?.getReader();

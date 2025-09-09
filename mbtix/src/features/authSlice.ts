@@ -7,16 +7,13 @@ const authSlice = createSlice({
   reducers: {
     /** 로그인 / 토큰 갱신 시 */
     setAuth(state: AuthState, action: PayloadAction<SetAuthPayload>) {
-      const { accessToken, userId, refreshToken, user } = action.payload;
+      const { accessToken, userId, refreshToken } = action.payload;
       state.accessToken = accessToken;
       state.userId = userId;
       // refreshToken이 오면 교체, 없으면 기존값 유지
       state.refreshToken = refreshToken ?? state.refreshToken ?? null;
       state.user = action.payload.user ?? state.user
       state.isAuthenticated = !!accessToken;
-      if(user != null && state.user != null){
-        state.user.nickname = user.nickname;
-      }
     },
 
     /** 로그아웃 */

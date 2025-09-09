@@ -31,19 +31,16 @@ const noAuthUrls = [
 // ===== request interceptor: Bearer 토큰 붙이기 =====
 authApi.interceptors.request.use((config) => {
   const token = getAccessToken();
-
-  // permitAll 엔드포인트에는 토큰 안 붙임
-  const isNoAuthUrl = noAuthUrls.some((url) =>
-    config.url?.startsWith(url)
-  );
-
+  // permitAll 엔드포인트 + /refresh 요청에는 토큰 안 붙임
+  const isNoAuthUrl =
+    (config.url && noAuthUrls.some((url) => config.url?.startsWith(url))) ||
+    config.url?.includes("/refresh");
   if (!isNoAuthUrl && token) {
     if (!config.headers) {
       config.headers = new AxiosHeaders();
     }
     (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
   }
-
   return config;
 });
  

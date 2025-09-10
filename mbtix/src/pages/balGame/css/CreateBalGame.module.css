@@ -1,0 +1,67 @@
+.container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #3b82f6; /* sky-500 */
+  border-radius: 1rem;
+  color: white;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.optionWrap {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.option {
+  flex: 1;
+}
+
+.optLabel {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+.btnWrap {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitBtn {
+  background: white;
+  color: black;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  background: #f3f4f6; /* hover gray */
+}

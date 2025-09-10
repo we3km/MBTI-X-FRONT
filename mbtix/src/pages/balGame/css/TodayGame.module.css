@@ -42,3 +42,17 @@
 
 .total{ margin-top:.75rem; text-align:center; color:var(--ink-3); }
 .total strong{ color:var(--ink-2); }
+
+.until {
+  margin-top: -4px;
+  color: #6b7280; /* 회색 텍스트 */
+  font-size: 14px;
+}
+.donuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.donutBox {  align-items:center; gap:16px; }
+.legend { font-size:14px; line-height:1.6; }

@@ -1,6 +1,6 @@
 import './App.css'
 
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import SignupPage from './pages/login/SignupPage'
 import LoginPage from './pages/login/Login'
 import ProtectedRoute from './components/ProtectedRoute';
@@ -11,6 +11,9 @@ import { authApi } from './api/authApi';
 import { setAuth } from './features/authSlice';
 import AuthGate from './components/AuthGate';
 import TodayGame from './pages/balGame/TodayGame';
+import BalanceList from './pages/balGame/BalanceList';
+import PastBalance from './pages/balGame/PastBalance';
+import BalanceCreate from './pages/balGame/CreateBalGame';
 
 
 function App() {
@@ -30,7 +33,10 @@ return (
         {/* <Route path="/" element={<MainPage />}/> */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/BalGame" element={<TodayGame/>}/>
+        <Route path="/balance/today" element={<TodayGame />} />
+        <Route path="/balanceList" element={<BalanceList />} />
+        <Route path="/balance/:gameId" element={<PastBalance />} />
+        <Route path="/balance/new" element={<BalanceCreate />} />
       </Routes>
     </section>
   </AuthGate>

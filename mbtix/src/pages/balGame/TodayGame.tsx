@@ -81,10 +81,8 @@ export default function TodayGame() {
     <main className={styles.main}>
       <h1 className={styles.h1}>오늘의 밸런스 게임</h1>
       <p className={styles.subtitle}>단 하나만 고를 수 있다면?</p>
-      <p className={styles.until}>자정까지 {remain} 남음</p>
-      <Link to="/balanceList" className={styles.back}>
-        ← 목록으로
-      </Link>
+      <p className={styles.until}>종료까지 {remain} 남음</p>
+      
 
       <section className={styles.game}>
         <p className={styles.question}>{game.title}</p>
@@ -99,7 +97,7 @@ export default function TodayGame() {
                 <h3 className={styles.optTitle}>{o.textContent}</h3>
               </div>
 
-              <button disabled={!!game.myVote} onClick={() => handleVote(o.label)}>
+              <button className={styles.voteBtn} disabled={!!game.myVote} onClick={() => handleVote(o.label)}>
                 투표하기
               </button>
 
@@ -145,7 +143,11 @@ export default function TodayGame() {
             총 <strong>{totals.total}</strong>명 참여
           </p>
         )}
+        <Link to="/balanceList" className={styles.back}>
+        ← 목록으로
+      </Link>
       </section>
+      
     </main>
   );
 }

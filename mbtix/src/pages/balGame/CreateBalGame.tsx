@@ -23,6 +23,7 @@ export default function BalanceCreate() {
 
    return (
     <div className={styles.container}>
+        
       <h2 className={styles.title}>밸런스 게임 생성</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* 제목 */}
@@ -62,13 +63,19 @@ export default function BalanceCreate() {
             />
           </div>
         </div>
+        
 
         {/* 버튼 */}
         <div className={styles.btnWrap}>
+         <button type="submit" className={styles.goBackBtn} onClick={() => nav("/balanceList")}>
+            돌아가기
+          </button>
+
           <button type="submit" className={styles.submitBtn}>
             생성하기
           </button>
-        </div>
+        </div>  
+        
       </form>
     </div>
   );

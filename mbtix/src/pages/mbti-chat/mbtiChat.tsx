@@ -25,7 +25,7 @@ export default function MbtiChat() {
   const getUserId = () => store.getState().auth.user?.userId;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = getUserId();
-  console.log("회원번호",userId)
+  console.log("회원번호",userId, state)
   // // 채팅방 목록 불러오기
   const fetchRooms = () => {
     chatbotApi
@@ -33,6 +33,7 @@ export default function MbtiChat() {
       .then((res) => {
         setRooms(res.data);
         console.log("state"+state);
+        console.log("rooms"+rooms[1].gender);
       })
       .catch((err) => {
         console.log(err);
@@ -66,7 +67,7 @@ export default function MbtiChat() {
                     <li key={r.roomId} className={styles.roomItem}>
                       <Link 
                         to={`/chat/${r.roomId}`}
-                        state={{mbti:r.botMbti, botName:r.botName, gender:r.gender, talkStyle:r.talkStyle, age:r.age, features: r.features  }}
+                        state={{mbti:r.botMbti, botName:r.botName, gender:r.gender, talkStyle:r.talkStyle, age:r.age, features: r.features}}
                         className={styles.roomLink}
                       >
                         {r.botName} <span className={styles.mbti}>({r.botMbti})</span>

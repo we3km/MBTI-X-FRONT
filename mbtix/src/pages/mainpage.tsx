@@ -19,6 +19,7 @@ export default function Home() {
   const dispatch = useDispatch();
 
   const userId = useSelector((state: RootState) => state.auth.userId);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     setIsLoggedIn(!!userId);
@@ -63,6 +64,11 @@ const handleLogout = async () => {
 
         {isLoggedIn && (
           <div className={styles.authButtons}>
+             <img
+        src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
+        alt="프로필"
+        className={styles.profileImage}
+      />
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}

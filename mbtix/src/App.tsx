@@ -19,13 +19,6 @@ import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
 function App() {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   authApi.post("/refresh")
-  //     .then(res => {
-  //       dispatch(setAuth(res.data));
-  //     })
-  // })
   return (
     <AuthGate>
       {/* <Header /> */}

@@ -129,7 +129,7 @@ export default function Findid() {
         <input value={email} onChange={e => { setEmail(e.target.value); setCodeSent(false); setCooldown(0); setMessage(""); setnameMessage(""); setEmailVerified(false);
       }}placeholder="이메일"/>
         <button type="button" onClick={handleSendCode} disabled={cooldown > 0}>
-          {cooldown > 0 ? `재발송 (${Math.floor(cooldown / 60)}:${String( cooldown % 60 ).padStart(2, "0")})` : "코드 발송"}
+           {codeSent? (cooldown > 0   ? `재발송 (${Math.floor(cooldown / 60)}:${String(cooldown % 60).padStart(2, "0")})`   : "재발송"): "코드 발송"}
         </button>
       </div>
 

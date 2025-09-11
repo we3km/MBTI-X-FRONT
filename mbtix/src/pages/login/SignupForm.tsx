@@ -99,7 +99,7 @@ const handleSendCode = async () => {
   if(available){
   await sendCode(email);
   setCodeSent(true);
-  setCooldown(10);
+  setCooldown(15);
 
   // 타이머 시작
   const timer = setInterval(() => {
@@ -210,7 +210,7 @@ useEffect(() => {
     <div className={styles.inputCheck}>
       <input value={email} onChange={e => {setEmail(e.target.value); setEmailCheck(false); setEmailMessage(""); setCodeSent(false); setCooldown(0); setnickMessage("")}} placeholder="이메일" />
       <button type="button" onClick={handleSendCode} disabled={cooldown > 0 || emailCheck}>
-        {cooldown > 0 ? `재발송 (${Math.floor(cooldown / 60)}:${String(cooldown % 60).padStart(2, "0")})` : "코드 발송"}</button>
+        {codeSent? (cooldown > 0   ? `재발송 (${Math.floor(cooldown / 60)}:${String(cooldown % 60).padStart(2, "0")})`   : "재발송"): "코드 발송"}</button>
     </div>
 
     {codeSent && (

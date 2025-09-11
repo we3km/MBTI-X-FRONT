@@ -13,8 +13,8 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
       .then(res => {
         dispatch(setAuth({
           accessToken: res.data.accessToken,
-          userId: res.data.user.userId,
-          refreshToken: res.data.refreshToken ?? null,
+          userId: res.data.user?.userId ?? 0,
+          user: res.data.user ?? null,
         }));
       })
       .catch(() => {

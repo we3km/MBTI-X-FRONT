@@ -17,7 +17,8 @@ export interface User {
   name: string;
   nickname: string;
   mbtiId: number;
-  roles: string[];
+  profileFileName : string;
+  roles: string;
 }
 
 export interface UserEntity {
@@ -56,7 +57,7 @@ export interface AuthState {
   refreshToken: string | null; // 서버가 응답 안 주면 null 유지
   userId: number | null;
   isAuthenticated: boolean;
-    user: User | null;
+  user: User | null;
 }
 
 export const initialAuthState: AuthState = {

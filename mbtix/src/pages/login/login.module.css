@@ -17,6 +17,13 @@
   max-width: 90%;    /* 모바일에서는 반응형 */
 }
 
+.logo img {
+    width: 400px;
+    height: 100px;
+    object-fit: contain;
+    /* 이미지 비율 깨지지 않게 */
+}
+
 .loginContainer h1 {
   font-size: 48px;
   font-weight: 800;
@@ -89,7 +96,7 @@
 .loginBtn {
   width: 100%;
   padding: 16px;
-  margin-top: 20px;
+  margin-top: 10px;
   background: #4a90e2;
   color: #fff;
   font-size: 18px;
@@ -119,13 +126,18 @@
   gap: 20px;
 }
 
-.linkRow a {
+/* 공통 스타일: a와 span 동일하게 */
+.linkRow a,
+.linkRow span {
   color: #4a90e2;
   text-decoration: none;
-  transition: color 0.2s;
+  cursor: pointer;
+  font: inherit;   /* 폰트 크기/두께 일치 */
 }
 
-.linkRow a:hover {
+/* hover 시 밑줄 */
+.linkRow a:hover,
+.linkRow span:hover {
   text-decoration: underline;
   color: #357ab8;
 }

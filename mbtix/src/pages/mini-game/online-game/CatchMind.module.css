@@ -1,0 +1,157 @@
+.container {
+    background-color: #7d91f7;
+    height: 100vh;
+    width: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #000;
+    font-family: Arial, sans-serif;
+}
+
+/* 상단 바 */
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.timer {
+    font-weight: bold;
+}
+
+.question {
+    font-weight: bold;
+    text-align: center;
+    flex: 1;
+}
+
+.word {
+    margin-left: 10px;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* 메인 영역 */
+.main {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+}
+
+/* 좌측 패널 */
+.leftPanel {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.startBtn {
+    background-color: #9eb6ff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.ranking {
+    width: 100%;
+}
+
+.rankItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.points {
+    font-size: 12px;
+    color: #333;
+}
+
+/* 중앙 */
+.centerPanel {
+    flex: 1;
+    background: white;
+    margin: 0 10px;
+    border-radius: 10px;
+}
+
+/* 우측 */
+.rightPanel {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatBox {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow-y: auto;
+}
+
+/* 채팅 메세지 */
+.chatMessage {
+    margin-bottom: 5px;
+    background-color: #9eb6ff;
+    border-radius: 8px;
+    padding: 5px 10px;
+    display: block;
+    /* 한 줄씩 쌓이게 */
+    width: 80%;
+    /* 내용 크기만큼 */
+}
+
+.chatInput {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+.userPick {
+    background-color: #9eb6ff;
+    color: #333;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.userPick:hover {
+    background-color: #9eb6ff;
+    /* 살짝 진한 노랑 */
+    transform: translateY(-2px);
+    /* 살짝 올라오는 효과 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.userPick:active {
+    background-color: #9eb6ff;
+    /* 클릭 시 더 진하게 */
+    transform: translateY(0);
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+}

@@ -23,7 +23,7 @@ export default function SpeedQuiz() {
 
     // 퀴즈 문제 할당
     const [quizData, setQuizData] = useState<Quiz[] | null>([]);
-    const timerRef = useRef<number | undefined>(undefined);
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     // 로그인 회원 번호
     const userId = useSelector((state: RootState) => state.auth.userId);
@@ -76,9 +76,8 @@ export default function SpeedQuiz() {
             setCount(5);
             timerRef.current = setInterval(() => {
                 setCount(prev => {
-                    if (prev <= 1 && timerRef !== null) {
-                        // 5초 지나면 문제 틀린 것으로 간주
-                        clearInterval(timerRef.current);
+                    if (prev <= 1) {
+                        if (timerRef.current) clearInterval(timerRef.current);
                         setStatus("fail");
                         return 0;
                     }
@@ -88,8 +87,7 @@ export default function SpeedQuiz() {
         }
 
         return () => {
-            if (timerRef != null)
-                clearInterval(timerRef.current); // 상태 바뀌면 기존 타이머 제거
+            if (timerRef.current) clearInterval(timerRef.current);
         };
     }, [status]);
 

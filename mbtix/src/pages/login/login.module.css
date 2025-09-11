@@ -1,0 +1,164 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: white;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.loginContainer form {
+  background: #fff;
+  padding: 60px 70px;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 500px;      /* 데스크탑에서 넉넉하게 */
+  max-width: 90%;    /* 모바일에서는 반응형 */
+}
+
+.loginContainer h1 {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 40px;
+  color: #111;
+  letter-spacing: 2px;
+}
+
+/* 에러 메시지 */
+.errorMsg {
+  color: #e53935;
+  font-size: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 입력 필드 */
+.formGroup {
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.formGroup label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+/* 비밀번호 + 체크박스 */
+.passwordWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxRow {
+  display: inline-flex;   /* 가로로 나란히 */
+  align-items: center;    /* 세로 중앙정렬 */
+  gap: 6px;               /* 텍스트와 체크박스 사이 간격 */
+  font-size: 14px;
+  margin-top: 12px;
+  color: #555;
+  cursor: pointer;
+}
+
+.checkboxRow input[type="checkbox"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* 로그인 버튼 */
+.loginBtn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 20px;
+  background: #4a90e2;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.loginBtn:hover {
+  background: #357ab8;
+}
+
+.loginBtn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+}
+
+/* 하단 링크 */
+.linkRow {
+  margin-top: 24px;
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.linkRow a {
+  color: #4a90e2;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.linkRow a:hover {
+  text-decoration: underline;
+  color: #357ab8;
+}
+
+/* 소셜 로그인 버튼 그룹 */
+.socialGroup {
+  display: grid;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.socialBtn {
+  height: 54px;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform .06s ease, filter .2s ease, opacity .2s ease;
+}
+
+.socialBtn:active {
+  transform: translateY(1px);
+}
+
+/* 카카오 버튼 */
+.kakao {
+  background: #FEE500;
+  color: #191600;
+}
+
+/* 네이버 버튼 */
+.naver {
+  background: #03C75A;
+  color: #fff;
+}

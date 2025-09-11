@@ -6,29 +6,34 @@ import chatIcon from "../assets/main-page/챗봇.png"
 import mainIcon from "../assets/main-page/메인아이콘.png"
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
+import { store } from "../store/store";
+import { useQuery } from "@tanstack/react-query";
+import api from "../api/mainPageApi";
 
 export default function Home() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [balTitle, setBalTitle] = useState("");
 
-  const userId = useSelector((state: RootState) => state.auth.userId);
-
+  const getUserId = () => store.getState().auth.user?.userId;
+  const userId = getUserId();
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
+  }, [userId]);
 
-    // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
-    fetch("http://localhost:8085/api/getQuizTitle")
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.text();
-      })
-      .then(data => setBalTitle(data))
-      .catch(err => console.error(err));
-  }, []);
+  // useQuery로 오늘의 밸런스 게임 제목 가져오기
+  const { data: balTitle, isLoading, isError } = useQuery<string>({
+    queryKey: ["balanceTitle"],
+    queryFn: async () => {
+      const res = await api.get("/getQuizTitle");
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (isError) return <div>데이터 로드 실패</div>;
 
   return (
     <div className={styles.container}>

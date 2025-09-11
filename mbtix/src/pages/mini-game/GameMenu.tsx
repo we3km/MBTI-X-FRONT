@@ -70,9 +70,9 @@ export default function GameMenu() {
                     </div >
 
                     <div className={mini.card}>
-                        < div className={mini.cardtitle}>온라인 게임</div>
+                        < div className={mini.cardtitle}>캐치 마인드</div>
                         <img src={picIcon} alt="틀린 그림 아이콘" className={mini.cardicon} />
-                        < Link to="/miniGame/GameTest" >
+                        < Link to="/miniGame/OnlineGame" >
                             < button className={mini.startbutton}>게임 시작</button>
                         </Link >
                         <div className={mini.ranking}>

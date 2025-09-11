@@ -14,6 +14,8 @@ import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
 import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
 import GameRank from './pages/mini-game/Ranking';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
+import OnlineGame from './pages/mini-game/online-game/OnlineGame';
+import CatchMind from './pages/mini-game/online-game/CatchMind';
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +44,8 @@ function App() {
           <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
           <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
           <Route path="/miniGame/GameRank" element={<GameRank />} />
+          <Route path="/miniGame/OnlineGame" element={<OnlineGame />} />
+          <Route path="/miniGame/CatchMind/:roomId" element={<CatchMind />} />
 
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
 

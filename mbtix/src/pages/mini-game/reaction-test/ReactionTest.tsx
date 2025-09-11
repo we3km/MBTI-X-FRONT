@@ -105,7 +105,6 @@ export default function ReactionTest() {
             const end = performance.now();
             const reaction = Math.round(end - startRef.current);
 
-            // setLastTime(reaction);
             setBestTime(prev => (prev === null || reaction < prev ? reaction : prev));
             setHistory(prev => [...prev, reaction]);
 
@@ -189,7 +188,6 @@ export default function ReactionTest() {
             console.error(err);
         }
     };
-
 
     return (
         <div className={Reaction.reactionGameWrapper} onClick={handleClickArea}>

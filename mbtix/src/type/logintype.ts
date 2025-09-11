@@ -18,7 +18,9 @@ export interface User {
   name: string;
   nickname: string;
   mbtiId: number;
+  mbtiName : string;
   profileFileName : string;
+  point : number;
   roles: string;
 }
 
@@ -50,7 +52,7 @@ export const initialAuthState: AuthState = {
 
 // setAuth 액션 payload 타입
 export type SetAuthPayload = {
-  accessToken: string;
+  accessToken?: string | null;
   userId: number;
   refreshToken?: string | null; // 없으면 기존 state 유지
   user?: User | null;

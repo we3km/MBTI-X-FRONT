@@ -18,6 +18,7 @@ import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
+import MyPage from './pages/myPage/myPage';
 function App() {
   return (
     <AuthGate>
@@ -29,7 +30,7 @@ function App() {
           <Route path="/login" element={<LoginPage />}/>
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
-           
+       
           <Route path="/signup" element={<SignupPage />} />
           {/* <Route path="/miniGame" element={<GameMenu />} />
           <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
@@ -39,6 +40,7 @@ function App() {
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path='/mypage' element={<MyPage/>}/>
         </Routes>
       </section>
     </AuthGate>

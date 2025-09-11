@@ -1,0 +1,174 @@
+/* 전체 레이아웃 */
+.container {
+  display: grid;
+  grid-template-columns: 280px 1fr; /* 좌측 사이드, 우측 본문 */
+  background-color: #ebf4fd;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 사이드바 */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.profileImg {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+}
+
+.editBtnGroup {
+  display: flex;
+  gap: 10px;           /* 버튼 사이 간격 */
+  width: 100%;         /* 전체 폭 */
+  justify-content: center; /* 가운데 정렬 */
+  margin-top: 10px;
+}
+
+.editBtn {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+}
+.editBtn:hover {
+  background-color: #357abd;
+}
+
+/* MBTI 카드 */
+.mbtiCard {
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.mbtiCard h3 {
+  margin-bottom: 8px;
+}
+
+.mbtiValue {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 8px 0 12px 0;
+}
+
+.smallBtn {
+  display: block;
+  width: 100%;
+  margin: 6px 0;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+}
+.smallBtn:hover {
+  background-color: #357abd;
+}
+
+/* 메인 영역 */
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 계정 정보 + 미니게임 박스 */
+.accountBox {
+  margin-top: 70px;
+  margin-left: 50px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.accountBox p {
+  margin: 6px 0;
+  font-size: 1rem;
+}
+
+.accountBox strong {
+  margin-right: 8px;
+  color: #4a90e2;
+}
+
+.gameTitle {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 미니게임 점수 */
+.gameScores {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 16px;
+}
+
+.gameCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #4a90e2;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.gameCircle span {
+  font-size: 0.9rem;
+}
+
+.gameCircle strong {
+  font-size: 1.3rem;
+}
+
+/* 게시글 영역 */
+.postsSection {
+  grid-column: 1 / -1; /* 좌+우 전체 */
+  margin-top: 20px;
+}
+
+.postsSection h3 {
+  margin-bottom: 12px;
+}
+
+.postItem {
+  background-color: #aaccff;
+  padding: 14px 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between; /* 좌우 정렬 */
+  align-items: center;           /* 수직 가운데 정렬 */
+  margin-bottom: 10px;
+}
+
+.postTitle {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.postMeta {
+  font-size: 0.9rem;
+  color: #333;
+}

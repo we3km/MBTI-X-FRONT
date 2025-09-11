@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./css/BalanceList.module.css";
 import { getToday, getPast, type TodayGameRes, type PastListRes, type PastCard } from "../../api/BalGameApi";
 
@@ -36,7 +36,9 @@ export default function BalanceList() {
   console.log("[BalanceList] 렌더링 - today:", today, "past:", past);
 
   return (
+    
     <main className={styles.main}>
+       
       {/* 오늘의 밸런스게임 카드 */}
       <section className={styles.todayWrap}>
         <div
@@ -46,6 +48,7 @@ export default function BalanceList() {
           onClick={() => nav("/balance/today")}
           onKeyDown={(e) => e.key === "Enter" && nav("/balance/today")}
         >
+          
           <h2 className={styles.todayTitle}>오늘의 밸런스게임</h2>
           <p className={styles.todaySubtitle}>
             {today ? today.title : "오늘의 밸런스게임이 없습니다"}
@@ -72,6 +75,10 @@ export default function BalanceList() {
           ))}
         </div>
       </section>
+
+      <Link to="/">
+  <button className={styles.topLeftFab}>메인으로</button>
+</Link>
 
       {/* 우하단: 게임생성 버튼 (라우팅은 원하는 주소로 바꿔줘) */}
       <button className={styles.fab} onClick={() => nav("/balance/new")}>

@@ -60,3 +60,24 @@
   cursor: pointer;
 }
 .fab:hover { transform: translateY(-1px); }
+
+.topLeftFab {
+    font-size: 14px;
+    background: #fff;
+    color: #6a8cff;
+    border: 2px solid #6a8cff;
+    border-radius: 20px;
+    padding: 5px 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    left: 50px;       /* 좌측 고정 */
+    top: 50px;
+    position: fixed;
+}
+
+.topLeftFab:hover {
+    background: #6a8cff;
+    color: #fff;
+}
+

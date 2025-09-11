@@ -3,12 +3,14 @@ import { api } from "../../api/boardApi";
 import styles from "./Board.module.css";
 import { Link } from "react-router-dom";
 import type { Board } from "../../type/board";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 
 export default function List() {
-  const [nickname, setNickname] = useState("닉네임");
   const [boardData, setBoardData] = useState<Board[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState<"latest" | "views">("latest");
+  const nickname = useSelector((state: RootState) => state.auth.user?.nickname);
 
   // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,8 +18,6 @@ export default function List() {
 
   // 닉네임 로컬스토리지에서 불러오기
   useEffect(() => {
-    const savedNickname = localStorage.getItem("nickname") || "닉네임";
-    setNickname(savedNickname);
   }, []);
 
   // 게시글 불러오기

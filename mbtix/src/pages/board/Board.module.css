@@ -55,24 +55,30 @@
   border-radius: 8px;
 }
 
-/* ---------------- 게시글 제목/본문 크기 ---------------- */
-#postTitle {
-  font-size: 10px;   /* 제목 크기 */
+/* ---------------- 게시글 제목/메타정보 ---------------- */
+.postHeader {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.postTitle {
+  font-size: 18px;    /* 제목 크기 (본문과 비슷하게 조정) */
   font-weight: bold;
-  margin-bottom: 10px;
+  margin: 0;
+  margin-bottom: 4px;
+  margin-top: 10px;
 }
 
-#postContent {
-  font-size: 18px;   /* 본문 크기 */
-  line-height: 1.6;
-  white-space: pre-wrap;
-  margin-bottom: 20px;
+.postMeta {
+  font-size: 14px;
+  color: #666;
 }
 
-#postInfo {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 15px;
+.postMeta span {
+  margin-right: 8px;
 }
 
 /* ---------------- 메인 콘텐츠 ---------------- */
@@ -212,6 +218,14 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.commentDate {
+  text-align: right;
+  font-size: 12px;
+  color: gray;
+  margin-top: 2px;
+}
+
 .commentSection button:hover { background-color: #1a6fb3; }
 
 .commentList { margin-top: 20px; }
@@ -238,7 +252,7 @@
   display: flex;
   justify-content: space-between; 
   align-items: center;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 .centerButtons {
   flex: 1;
@@ -308,6 +322,20 @@
 .modalButtons button:last-child { background-color: #ccc; }
 
 /* ------------ 글쓰기 폼 ----------------*/
+.imageList {
+  margin-top: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.postImage {
+  max-width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
 .container input,
 .container textarea {
   display: block;       
@@ -320,15 +348,7 @@
   border-radius: 4px;
   resize: none;     
 }
-.container button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #2699E6;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
 .container button:hover { background-color: #1a6fb3; }
 
 /* ---------------- QuestionMain 전용 ---------------- */
@@ -357,3 +377,61 @@
 }
 .qbtn:hover { background: #eee; }
 .qactive { background: #007bff; color: white; font-weight: bold; }
+
+/*------- 이미지 첨부 -----*/
+.previewContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.previewItem {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: transparent;  
+  color: white;              
+  border: none;            
+  cursor: pointer;
+  font-size: 18px;         
+  font-weight: bold;        
+  line-height: 1;
+  padding: 0;
+}
+
+.flexRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.imageUpload input {
+  margin-left: 10px;
+}
+
+.previewContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.previewImage {
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}

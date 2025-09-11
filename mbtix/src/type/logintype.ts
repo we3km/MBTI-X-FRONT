@@ -18,6 +18,7 @@ export interface User {
   name: string;
   nickname: string;
   mbtiId: number;
+  profileFileName : string;
   roles: string;
 }
 

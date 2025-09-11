@@ -158,3 +158,28 @@
 .admin-answer {
     background-color: #f9f9f9;
 }
+.file-name {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+.attachment-box {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.attachment-box h4 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.attached-image {
+    max-width: 100%;
+    max-height: 500px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}

@@ -100,6 +100,19 @@ const ReportManagementPage = () => {
             </div>
 
             <div className="pagination">
+                <button 
+                    onClick={() => handlePageChange(currentPage - 1)} 
+                    disabled={pageInfo?.currentPage === 1}
+                >
+                    &lt;
+                </button>
+                {pageButtons}
+                <button 
+                    onClick={() => handlePageChange(currentPage + 1)} 
+                    disabled={pageInfo?.currentPage === pageInfo?.maxPage}
+                >
+                    &gt;
+                </button>
             </div>
         </div>
     );

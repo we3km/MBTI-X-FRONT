@@ -13,12 +13,6 @@
     font-size: 48px;
     margin-bottom: 10px;
     color: #5D9CEC;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
 }
 
 .page-header h1 {
@@ -30,14 +24,13 @@
 
 .detail-card {
     background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     border: 1px solid #e9ecef;
-    margin-bottom: 30px;
 }
 
 .card-header {
-    padding: 16px 24px;
+    padding: 16px 20px;
     border-bottom: 1px solid #e9ecef;
 }
 
@@ -48,53 +41,96 @@
     margin: 0;
 }
 
-.info-grid {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 1px;
-    background-color: #e9ecef;
-    overflow: hidden;
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+.card-content {
+    padding: 20px;
 }
 
-.info-label, .info-value {
-    padding: 16px;
-    background-color: #ffffff;
+/* 새로운 레이아웃을 위한 Grid */
+.report-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.user-card {
+    grid-column: span 1;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    font-size: 15px;
+    border-bottom: 1px solid #f1f3f5;
+}
+.info-row:last-child {
+    border-bottom: none;
 }
 
 .info-label {
     font-weight: 500;
-    background-color: #f8f9fa;
+    color: #868e96;
+}
+
+.info-value {
+    font-weight: 500;
     color: #495057;
 }
 
-.card-content textarea {
+/* 뱃지 스타일 */
+.report-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+}
+.report-badge.category { background-color: #5D9CEC; }
+.report-badge.status-Y { background-color: #40c057; }
+.report-badge.status-N { background-color: #fab005; }
+
+
+/* 상세 사유 영역 */
+.reason-box {
+    margin-top: 20px;
+}
+
+.reason-box .info-label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.reason-box textarea {
     width: 100%;
-    min-height: 120px;
-    border: none;
-    padding: 24px;
+    min-height: 100px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px;
     font-family: inherit;
     font-size: 15px;
     line-height: 1.6;
     resize: vertical;
     box-sizing: border-box;
-    background-color: transparent;
-}
-.card-content textarea:focus {
-    outline: none;
+    background-color: #f8f9fa;
 }
 
+/* 하단 액션 박스 */
 .action-box {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     gap: 12px;
     margin-top: 30px;
     padding: 20px;
     background-color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .action-box select {
@@ -112,21 +148,15 @@
     font-size: 15px;
     font-weight: 600;
     color: white;
-    background-color: #339af0;
+    background-color: #fa5252;
     transition: all 0.2s ease;
 }
 
 .action-box button:hover {
-    background-color: #1c7ed6;
+    background-color: #e03131;
 }
 
 .action-box button:disabled {
     background-color: #adb5bd;
     cursor: not-allowed;
-}
-
-.processed-status-text {
-    font-size: 15px;
-    font-weight: 500;
-    color: #40c057;
 }

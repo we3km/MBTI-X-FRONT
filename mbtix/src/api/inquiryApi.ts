@@ -1,4 +1,5 @@
 import apiClient from './apiClient';
+import { type PageInfo } from '../type/logintype';
 
 export interface Inquiry {
     inquiryId: number;
@@ -12,12 +13,19 @@ export interface Inquiry {
     csCategory: number;
     userLoginId: string;
     userNickname: string;
+    fileName?: string;
+}
+
+// 페이지네이션
+export interface InquiryPageResponse {
+    pi: PageInfo;
+    list: Inquiry[];
 }
 
 // 목록 조회
-export const fetchAllInquiries = async (status?: 'Y' | 'N'): Promise<Inquiry[]> => {
+export const fetchAllInquiries = async (status: 'Y' | 'N' | undefined, cpage: number): Promise<InquiryPageResponse> => {
     const response = await apiClient.get('/admin/inquiries', {
-        params: { status }
+        params: { status, cpage }
     });
     return response.data;
 };

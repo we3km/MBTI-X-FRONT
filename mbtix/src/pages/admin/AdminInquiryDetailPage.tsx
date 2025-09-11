@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchInquiryById, submitAnswer, type Inquiry } from '../../api/inquiryApi';
 import './AdminInquiry.css';
 
+const UPLOADS_BASE_URL = "/uploads/cs/";
+
 const AdminInquiryDetailPage = () => {
     const { inquiryId } = useParams<{ inquiryId: string }>();
     const navigate = useNavigate();
@@ -49,27 +51,34 @@ const AdminInquiryDetailPage = () => {
     }
 
     return (
-        <div className="admin-page-container"> {/* --- [수정] 클래스명 변경 --- */}
+        <div className="admin-page-container">
             <div className="page-header">
                 <div className="page-icon">📨</div>
                 <h1>1:1 문의 상세</h1>
             </div>
 
-            {/* --- [수정] 질문 영역을 카드로 감싸기 --- */}
             <div className="detail-card">
                 <div className="card-header">
                     <h3>{inquiry.inquiryTitle}</h3>
                     <div className="meta-info">
                         <span>작성자: {inquiry.userNickname} ({inquiry.userLoginId})</span>
-                        <span>작성일: {new Date(inquiry.createdAt).toLocaleString()}</span>
+                        <span>작성일: {new Date(inquiry.createdAt).toLocaleDateString()}</span>
                     </div>
                 </div>
                 <div className="card-content">
                     <p>{inquiry.inquiryContent}</p>
+
+                    {inquiry.fileName && (
+                        <div className="attachment-box">
+                            <h4>첨부 파일</h4>
+                            <img src={UPLOADS_BASE_URL + inquiry.fileName}
+                                 alt="첨부 이미지"
+                                 className="attached-image" />
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* --- [수정] 답변 영역을 카드로 감싸기 --- */}
             <div className="detail-card">
                 <div className="card-header">
                     <h3>답변하기</h3>

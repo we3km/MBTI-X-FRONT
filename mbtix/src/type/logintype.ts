@@ -20,6 +20,27 @@ export interface User {
   roles: string[];
 }
 
+export interface UserEntity {
+    userId: number;
+    loginId: string;
+    nickname: string;
+    email: string;
+    createdAt: string;
+    statusName: string;
+    releasaeDate: string | null;
+}
+
+export interface PageInfo {
+    listCount: number;
+    currentPage: number;
+    pageLimit: number;
+    boardLimit: number;
+    maxPage: number;
+    startPage: number;
+    endPage: number;
+}
+
+
 // 백엔드 로그인/회원가입 응답 형식
 export interface AuthResult {
   accessToken: string;
@@ -53,3 +74,5 @@ export type SetAuthPayload = {
   refreshToken?: string | null; // 없으면 기존 state 유지
   user?: User | null;
 };
+
+

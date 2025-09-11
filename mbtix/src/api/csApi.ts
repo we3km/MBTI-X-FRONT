@@ -1,4 +1,5 @@
 import apiClient from './apiClient';
+import { type PageInfo } from '../type/logintype';
 
 // 문의 데이터
 export interface Inquiry {
@@ -11,6 +12,13 @@ export interface Inquiry {
     answerAt: string | null;
     status: 'Y' | 'N';
     csCategory: number;
+    fileName?: string;
+}
+
+// 페이지네이션
+export interface InquiryPageResponse {
+    pi: PageInfo;
+    list: Inquiry[];
 }
 
 // 새 문의 생성 시 보낼 데이터 타입
@@ -21,8 +29,10 @@ export type CreateInquiryData = {
 }
 
 // 내 문의 목록 조회
-export const getMyInquiries = async (): Promise<Inquiry[]> => {
-    const response = await apiClient.get('/cs/inquiries');
+export const getMyInquiries = async (cpage: number): Promise<InquiryPageResponse> => {
+    const response = await apiClient.get('/cs/inquiries', {
+        params: { cpage }
+    });
     return response.data;
 };
 
@@ -33,7 +43,13 @@ export const getMyInquiryById = async (inquiryId: number): Promise<Inquiry> => {
 };
 
 // 새 문의 작성
-export const createInquiry = async (data: CreateInquiryData): Promise<Inquiry> => {
-    const response = await apiClient.post('/cs/inquiries', data);
+export const createInquiry = async (data: CreateInquiryData, file?: File): Promise<Inquiry> => {
+    const formData = new FormData();
+    formData.append('inquiry', new Blob([JSON.stringify(data)], { type: "application/json" }));
+
+    if (file) {
+        formData.append('file', file);
+    }
+    const response = await apiClient.post('/cs/inquiries', formData);
     return response.data;
 };

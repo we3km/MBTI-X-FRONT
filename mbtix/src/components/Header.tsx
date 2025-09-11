@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../store/store';
 import { doLogout } from '../api/authApi';
 import { getMyAlarms, markAlarmAsRead, deleteAllAlarms, type Alarm } from '../api/alarmApi';
+import { FaRegBell } from 'react-icons/fa';
+
 
 const Header = () => {
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
@@ -13,7 +15,29 @@ const Header = () => {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [alarms, setAlarms] = useState<Alarm[]>([]);
 
+    const userMenuRef = useRef<HTMLDivElement>(null);
+    const notificationMenuRef = useRef<HTMLDivElement>(null);
+
     const isAdmin = user?.roles?.includes('ROLE_ADMIN');
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (openMenu === 'user' && userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setOpenMenu(null);
+            }
+            if (openMenu === 'notification' && notificationMenuRef.current && !notificationMenuRef.current.contains(event.target as Node)) {
+                setOpenMenu(null);
+            }
+        };
+
+        if (openMenu === 'user' || openMenu === 'notification') {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [openMenu]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -39,18 +63,20 @@ const Header = () => {
 
     const handleLogout = async () => {
         if (window.confirm("로그아웃 하시겠습니까?")) {
+            setOpenMenu(null);
             await doLogout();
             navigate('/login');
         }
     };
 
     const handleAlarmClick = async (alarm: Alarm) => {
+        setOpenMenu(null);
+        
         setAlarms(prevAlarms =>
             prevAlarms.map(a =>
                 a.alarmId === alarm.alarmId ? { ...a, isRead: 'Y' } : a
             )
         );
-        setOpenMenu(null);
 
         if (alarm.type === 'INQUIRY_ANSWER') {
             navigate(`/cs-history/${alarm.refId}`);
@@ -65,11 +91,10 @@ const Header = () => {
         }
     };
 
-    // --- [최종 수정] '모두 읽음' 버튼 클릭 시, 모든 알림 삭제 ---
     const handleClearAllAlarms = async () => {
         try {
             await deleteAllAlarms();
-            setAlarms([]); // UI 즉시 업데이트
+            setAlarms([]);
         } catch (error) {
             console.error("'모두 읽음' 처리 중 에러 발생:", error);
             alert("알림을 삭제하는 중 오류가 발생했습니다.");
@@ -81,12 +106,34 @@ const Header = () => {
             <div className="header-left">
                 <Link to="/" className="header-logo">MBTI-X</Link>
                 <nav className="header-nav">
-                    <div className="nav-item">
-                        <Link to="/board/all">게시판</Link>
+                    <div 
+                        className="nav-item"
+                        onMouseEnter={() => setOpenMenu('board')}
+                        onMouseLeave={() => setOpenMenu(null)}
+                    >
+                        <span className="nav-link-style">게시판</span>
+                        {openMenu === 'board' && (
+                            <div className="dropdown-menu">
+                                <Link to="/board/all" onClick={() => setOpenMenu(null)}>전체 게시판</Link>
+                                <Link to="/board/mbti" onClick={() => setOpenMenu(null)}>MBTI 게시판</Link>
+                                <Link to="/board/curious" onClick={() => setOpenMenu(null)}>궁금해 게시판</Link>
+                            </div>
+                        )}
                     </div>
                     <Link to="/balance-game">밸런스 게임</Link>
-                    <div className="nav-item">
-                        <Link to="/game/a">미니게임</Link>
+                    <div 
+                        className="nav-item"
+                        onMouseEnter={() => setOpenMenu('minigame')}
+                        onMouseLeave={() => setOpenMenu(null)}
+                    >
+                        <span className="nav-link-style">미니게임</span>
+                        {openMenu === 'minigame' && (
+                            <div className="dropdown-menu">
+                                <Link to="/game/a" onClick={() => setOpenMenu(null)}>미니게임A</Link>
+                                <Link to="/game/b" onClick={() => setOpenMenu(null)}>미니게임B</Link>
+                                <Link to="/game/c" onClick={() => setOpenMenu(null)}>미니게임C</Link>
+                            </div>
+                        )}
                     </div>
                     <Link to="/chatbot">MBTI 챗봇</Link>
                 </nav>
@@ -94,26 +141,26 @@ const Header = () => {
             <div className="header-right">
                 {isAuthenticated && user ? (
                     <>
-                        <div className="nav-item">
+                        <div className="nav-item" ref={userMenuRef}>
                              <button className="user-profile-button" onClick={() => handleMenuToggle('user')}>
                                 <div className="user-icon"></div>
                                 <span>{user.nickname}</span>
                             </button>
                             {openMenu === 'user' && (
                                 <div className="dropdown-menu user-menu">
-                                    <Link to="/mypage">마이페이지</Link>
+                                    <Link to="/mypage" onClick={() => setOpenMenu(null)}>마이페이지</Link>
                                     {isAdmin ? (
-                                        <Link to="/admin">관리자페이지</Link>
+                                        <Link to="/admin" onClick={() => setOpenMenu(null)}>관리자페이지</Link>
                                     ) : (
-                                        <Link to="/cs-center">고객센터</Link>
+                                        <Link to="/cs-center" onClick={() => setOpenMenu(null)}>고객센터</Link>
                                     )}
                                     <a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
                                 </div>
                             )}
                         </div>
-                        <div className="nav-item">
+                        <div className="nav-item" ref={notificationMenuRef}>
                              <button className="notification-button" onClick={() => handleMenuToggle('notification')}>
-                                🔔
+                                <FaRegBell size={24} />
                                 {unreadCount > 0 && (
                                     <span className="notification-dot">
                                         {unreadCount > 9 ? '9+' : unreadCount}
@@ -124,7 +171,7 @@ const Header = () => {
                                 <div className="dropdown-menu notification-menu">
                                    <div className="notification-header">
                                        <span>알림</span>
-                                           <button onClick={handleClearAllAlarms}>모두 읽음</button> 
+                                       <button onClick={handleClearAllAlarms}>모두 읽음</button> 
                                    </div>
                                    {alarms.length > 0 ? (
                                        alarms.map(alarm => (

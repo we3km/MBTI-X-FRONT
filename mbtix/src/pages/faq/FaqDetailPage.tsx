@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchFaqById, type Faq } from '../../api/faqApi';
+import { fetchPublicFaqById, type Faq } from '../../api/faqApi';
 import './Faq.css';
 
 const FaqDetailPage = () => {
@@ -12,7 +12,7 @@ const FaqDetailPage = () => {
         if (faqId) {
             const getFaq = async () => {
                 try {
-                    const data = await fetchFaqById(Number(faqId));
+                    const data = await fetchPublicFaqById(Number(faqId));
                     setFaq(data);
                 } catch (error) {
                     console.error("FAQ 상세 정보를 불러오는 중 에러 발생:", error);
@@ -31,7 +31,7 @@ const FaqDetailPage = () => {
         <div className="faq-container">
              <div className="page-header">
                 <div className="page-icon-circle">
-                    <div className="page-icon">📋</div>
+                    <div className="page-icon">❓</div>
                 </div>
                 <h1>FAQ</h1>
             </div>

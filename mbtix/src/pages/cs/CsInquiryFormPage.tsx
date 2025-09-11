@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createInquiry, type CreateInquiryData } from '../../api/csApi';
+import { createInquiry } from '../../api/csApi';
+import type { CreateInquiryData } from '../../api/csApi';
+import { ClipLoader } from 'react-spinners';
 import './CsInquiry.css';
 
 const CsInquiryFormPage = () => {
@@ -10,11 +12,21 @@ const CsInquiryFormPage = () => {
         inquiryContent: '',
         csCategory: 1
     });
+    
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: name === 'csCategory' ? Number(value) : value }));
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        } else {
+            setSelectedFile(null);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +37,7 @@ const CsInquiryFormPage = () => {
         }
         setIsLoading(true);
         try {
-            await createInquiry(formData);
+            await createInquiry(formData, selectedFile || undefined);
             alert('문의가 성공적으로 등록되었습니다.');
             navigate('/cs-history');
         } catch (error) {
@@ -57,6 +69,7 @@ const CsInquiryFormPage = () => {
                         <option value={4}>기타 건의사항</option>
                     </select>
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="inquiryTitle">제목</label>
                     <input
@@ -69,6 +82,7 @@ const CsInquiryFormPage = () => {
                         required
                     />
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="inquiryContent">내용</label>
                     <textarea
@@ -81,9 +95,19 @@ const CsInquiryFormPage = () => {
                         required
                     />
                 </div>
+                <div className="form-group">
+                    <label htmlFor="file-upload">파일 첨부 (선택)</label>
+                    <input type="file" id="file-upload" onChange={handleFileChange} />
+                    {selectedFile && <p className="file-name">선택된 파일: {selectedFile.name}</p>}
+                </div>
+
                 <div className="form-actions">
                     <button type="submit" className="submit-btn" disabled={isLoading}>
-                        {isLoading ? '제출 중...' : '제출하기'}
+                        {isLoading ? (
+                            <ClipLoader size={16} color={"#ffffff"} />
+                        ) : (
+                            '제출하기'
+                        )}
                     </button>
                     <button type="button" className="cancel-btn" onClick={() => navigate('/cs-center')}>
                         취소

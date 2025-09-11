@@ -17,7 +17,5 @@ chatbotApi.interceptors.request.use((config) => {
       config.headers = new AxiosHeaders();
     }
     (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
-  
-
   return config;
 });

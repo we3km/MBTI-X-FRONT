@@ -5,7 +5,7 @@ import balanceIcon from "../assets/main-page/밸런스 게임 이미지.png"
 import chatIcon from "../assets/main-page/챗봇.png"
 import mainIcon from "../assets/main-page/메인아이콘.png"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
@@ -20,6 +20,8 @@ export default function Home() {
 
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoggedIn(!!userId);
@@ -76,7 +78,10 @@ const handleLogout = async () => {
 
       <h1 className={styles.logo}><img src={mainIcon} /></h1>
       <div className={styles.cardWrapper}>
-        <div className={styles.card}>
+        <div className={styles.card}
+          onClick={() => navigate("/chatbot")}
+          style={{ cursor: "pointer" }}
+        >
           <div className={styles.cardTitle}>MBTI 챗봇</div>
           <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>
           <img src={chatIcon} alt="MBTI 챗봇" />

@@ -43,7 +43,13 @@ return (
         <Route path='/oauth2/success' element={<OAuth2Success/>}/>
         <Route path='/social-signup' element={<SocialSignup/>}/>
         <Route path="/signup-complete" element={<SignupComplete />} />
-        <Route path='/chat' element={<MbtiChat />}/>
+
+        <Route path='/chatbot' element={
+            <ProtectedRoute>
+              <MbtiChat />
+            </ProtectedRoute>
+          }/>
+
         <Route path='/createChat' element={<CreateChat/>}/>
         <Route path="/chat/:roomId" element={<MbtiChat />} />
 

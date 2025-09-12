@@ -38,6 +38,14 @@ export function Donut({
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+       <circle
+  cx={size / 2}
+  cy={size / 2}
+  r={r + stroke / 2}
+  fill="none"
+  stroke="rgba(0,0,0,0.05)"   // 아주 연한 회색
+  strokeWidth="1.5"
+/>
       <g transform={`translate(${size / 2}, ${size / 2}) rotate(-90)`}>
         {data.map((d, i) => {
           const frac = d.value / total;

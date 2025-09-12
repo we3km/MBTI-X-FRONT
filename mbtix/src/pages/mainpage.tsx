@@ -20,6 +20,24 @@ export default function Home() {
 
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
+  const mbtiMap: Record<number, string> = {
+    1: "istj",
+    2: "isfj",
+    3: "infj",
+    4: "intj",
+    5: "istp",
+    6: "isfp",
+    7: "infp",
+    8: "intp",
+    9: "estp",
+    10: "esfp",
+    11: "enfp",
+    12: "entp",
+    13: "estj",
+    14: "esfj",
+    15: "enfj",
+    16: "entj",
+  };
 
   useEffect(() => {
     setIsLoggedIn(!!userId);
@@ -70,10 +88,15 @@ export default function Home() {
         {isLoggedIn && (
           <div className={styles.authButtons}>
             <img
-              src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
+              src={`/profile/default/${mbtiMap[user?.mbtiId || 0] || "default"}.jpg`}
               alt="프로필"
               className={styles.profileImage}
             />
+            {/* <img
+              src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
+              alt="프로필"
+              className={styles.profileImage}
+            /> */}
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}

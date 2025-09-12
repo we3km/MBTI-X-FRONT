@@ -1,20 +1,100 @@
 /* src/pages/balance/PastStats.module.css */
-.main { max-width: 920px; margin: 0 auto; padding: 24px; }
-.head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
-.back { color:#2563eb; text-decoration:none; }
-.panel { background:#fff; border-radius:20px; padding:24px; box-shadow:0 8px 30px rgba(0,0,0,.06); }
-.subtitle { color:#6b7280; margin-bottom:16px; }
-.grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:16px; }
-.card { border:1px solid #e5e7eb; border-radius:16px; padding:20px; }
-.badge { display:inline-block; background:#e0f2fe; color:#2563eb; font-weight:700; padding:6px 10px; border-radius:9999px; margin-bottom:10px; }
-.countLine { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.barWrap { height:10px; background:#e5e7eb; border-radius:9999px; overflow:hidden; }
-.barFill { height:10px; background:#3b82f6; border-radius:9999px; transition: width .35s ease; }
+.main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.back {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.panel {
+  color: #3b82f6;
+  background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .06);
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.grid {
+  
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  background-color: white;
+}
+
+.badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #2563eb;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+}
+
+.countLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.barWrap {
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 10px;
+  background: #3b82f6;
+  border-radius: 9999px;
+  transition: width .35s ease;
+  
+}
+
 .donuts {
   display: grid;
   grid-template-columns: repeat(2, minmax(180px, 1fr));
   gap: 24px;
   margin-bottom: 24px;
+   
 }
-.donutBox {  align-items:center; gap:16px; }
-.legend { font-size:14px; line-height:1.6; }
+
+.donutBox {
+  align-items: center;
+  gap: 16px;
+  
+}
+
+.legend {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.commentSection {
+  margin-top: 3rem; /* ✅ 결과 위와 댓글 사이 간격 */
+}

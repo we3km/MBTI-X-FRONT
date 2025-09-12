@@ -1,14 +1,14 @@
 .page {
-    min-height: 100vh;
+    min-height: 100px;
     background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
     display: flex;
     justify-content: center;
-    padding: 4rem 1rem;
+    padding: 4rem 10rem;
 }
 
 .container {
     width: 100%;
-    max-width: 640px;
+    
     background: #fff;
     border-radius: 1.5rem;
     padding: 2.5rem;

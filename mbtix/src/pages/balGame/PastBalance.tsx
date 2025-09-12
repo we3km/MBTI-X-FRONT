@@ -3,11 +3,16 @@ import { useParams, Link } from "react-router-dom";
 import { getStats, type StatsRes } from "../../api/BalGameApi";
 import styles from "./css/PastBalance.module.css";
 import { Donut, MBTI_COLORS } from "../../components/balGame/Donut";
+import BalGameComment from "../BalGameComment/BalGameComment";
+import type { RootState } from "../../store/store";
+import { useSelector } from "react-redux";
+
 
 
 export default function PastBalance() {
   const { gameId } = useParams<{ gameId: string }>();
   const [stats, setStats] = useState<StatsRes | null>(null);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     if (!gameId) return;
@@ -90,7 +95,7 @@ export default function PastBalance() {
           {rows.map((r) => (
             <article key={r.label} className={styles.card}>
               <div className={styles.badge}>{r.label}</div>
-              
+
               <div className={styles.countLine}>
                 <strong>{r.ratio}%</strong>
                 <span>{r.cnt}표</span>
@@ -102,6 +107,10 @@ export default function PastBalance() {
           ))}
         </div>
       </section>
+      {/* ✅ 댓글 컴포넌트 추가 */}
+      <div className={styles.commentSection}>
+      <BalGameComment balId={Number(gameId)} currentUserId={user?.userId ?? 0} variant="past" />
+      </div>
     </main>
   );
 }

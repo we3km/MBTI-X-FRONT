@@ -4,7 +4,10 @@ import { gameCountdown } from "../../hooks/gameCountdown";
 import styles from "./css/TodayGame.module.css";
 import { Link } from "react-router-dom";
 import { Donut, MBTI_COLORS } from "../../components/balGame/Donut";
+import BalGameComment from "../BalGameComment/BalGameComment"; // ⬅️ 댓글 컴포넌트 import
+import type { RootState } from "../../store/store";
 
+import { useSelector } from "react-redux";
 
 
 export default function TodayGame() {
@@ -12,6 +15,7 @@ export default function TodayGame() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<StatsRes | null>(null); // ✅ 통계 상태
   const remain = gameCountdown();
+  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     getToday()
@@ -82,7 +86,7 @@ export default function TodayGame() {
       <h1 className={styles.h1}>오늘의 밸런스 게임</h1>
       <p className={styles.subtitle}>단 하나만 고를 수 있다면?</p>
       <p className={styles.until}>종료까지 {remain} 남음</p>
-      
+
 
       <section className={styles.game}>
         <p className={styles.question}>{game.title}</p>
@@ -97,9 +101,14 @@ export default function TodayGame() {
                 <h3 className={styles.optTitle}>{o.textContent}</h3>
               </div>
 
-              <button className={styles.voteBtn} disabled={!!game.myVote} onClick={() => handleVote(o.label)}>
-                투표하기
-              </button>
+              {!game.myVote && (
+                <button
+                  className={styles.voteBtn}
+                  onClick={() => handleVote(o.label)}
+                >
+                  투표하기
+                </button>
+              )}
 
 
 
@@ -144,10 +153,15 @@ export default function TodayGame() {
           </p>
         )}
         <Link to="/balanceList" className={styles.back}>
-        ← 목록으로
-      </Link>
+          ← 목록으로
+        </Link>
       </section>
-      
+
+      {/* ✅ 댓글 컴포넌트 추가 */}
+      {game.myVote && (
+       <BalGameComment balId={game.gameId} currentUserId={user?.userId ?? 0} variant="today" />
+      )}
+
     </main>
   );
 }

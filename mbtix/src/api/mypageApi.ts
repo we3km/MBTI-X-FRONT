@@ -41,4 +41,27 @@ export const updatePw = async (newPW : string, userId: number) =>{
     params : { newPW,userId },
   });
   return res.data
+};
+
+export const updateProfileImg = async (userId: number, file: File) => {
+  const formData = new FormData();
+  formData.append("userId", String(userId));
+  formData.append("file", file);
+
+  const res = await mypageApi.put("/updateProfileImg", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+export const getScores = async (userId: number) => {
+  const res = await mypageApi.get(`/score/${userId}`);
+  return res.data;
+};
+
+export const getBoard = async (userId: number) =>{
+  const res = await mypageApi.get(`/myBoard/${userId}`);
+  return res.data
 }

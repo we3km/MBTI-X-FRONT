@@ -18,15 +18,14 @@ import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
-import MyPage from './pages/myPage/myPage';
+import MyPage from './pages/myPage/MyPage';
 function App() {
   return (
     <AuthGate>
       {/* <Header /> */}
       <section id="content">
         <Routes>
-          <Route path="/" element={<Home />}
-          />
+          <Route path="/" element={<Home />}/>
           <Route path="/login" element={<LoginPage />}/>
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />

@@ -26,6 +26,10 @@
   width: 100px;       /* 라벨 고정폭 */
   flex-shrink: 0;    /* 줄어들지 않게 */
 }
+.row input {
+  flex: 1;     /* 남은 공간만 차지 */
+  min-width: 0; /* overflow 방지 */
+}
 
 .currentNick {
   font-weight: bold;

@@ -6,7 +6,7 @@ import { login } from "../../api/authApi";
 import styles from "./login.module.css";
 import Findid from "./FindId";
 import mainIcon from "../../assets/main-page/메인아이콘.png"
-import Modal from "../login/FindModal";
+import Modal from "../../components/FindModal";
 import Findpw from "./Findpw";
 
 

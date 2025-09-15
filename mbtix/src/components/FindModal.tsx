@@ -1,7 +1,7 @@
 // src/components/Modal.tsx
 import React from "react";
 import ReactDOM from "react-dom";
-import styles from "../login/Modal.module.css"
+import styles from "../pages/login/Modal.module.css"
 
 interface ModalProps {
   onClose: () => void;

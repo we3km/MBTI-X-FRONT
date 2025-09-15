@@ -13,11 +13,14 @@ export default function ChangePw() {
   const [passwordConfirm, setPasswordConfirm] = useState(""); // 새 비밀번호 확인
 
   // 유효성 상태
+  const [pwCheck,setPwCheck] = useState("");
+  const [pwCheckColor,setPwCheckColor] = useState("red");
   const [pwMessage, setPwMessage] = useState("");
   const [pwMessageColor, setPwMessageColor] = useState("red");
   const [isPwValid, setIsPwValid] = useState(false);
   const [isPwMatch, setIsPwMatch] = useState(false);
   const [isCurrentPwValid, setIsCurrentPwValid] = useState(false);
+
 
   // 비밀번호 유효성 검사 (6자 이상 + 숫자 + 특수문자 필수)
   const validatePassword = (value: string) => {
@@ -54,7 +57,6 @@ export default function ChangePw() {
       validatePassword(newPw);
     } else {
       setIsPwValid(false);
-      setPwMessage("");
     }
 
     if (newPw && passwordConfirm) {
@@ -66,146 +68,170 @@ export default function ChangePw() {
 
   // 현재 비밀번호 확인 (백엔드 API 연동 예정)
   const handleCheckPw = async () => {
-    if (!currentPw.trim()) {
-      setPwMessage("현재 비밀번호를 입력해 주세요.");
-      setPwMessageColor("red");
-      return;
-    }
-    if (!user || !user.userId) {
+  if (!user || !user.userId) {
     setPwMessage("로그인이 필요합니다.");
     setPwMessageColor("red");
     return;
   }
+
+  // 🔒 소셜 로그인 계정이면 막기
+  if (user.provider) {
+    setPwMessage("❌ 소셜 로그인 계정은 비밀번호를 변경할 수 없습니다.");
+    setPwMessageColor("red");
+    return;
+  }
+
+  if (!currentPw.trim()) {
+    setPwMessage("현재 비밀번호를 입력해 주세요.");
+    setPwMessageColor("red");
+    return;
+  }
+
   try {
     const available = await checkPw(currentPw, user.userId);
 
     if (available) {
-      setPwMessage("✅ 현재 비밀번호가 확인되었습니다.");
-      setPwMessageColor("green");
+      setPwCheck("✅ 현재 비밀번호가 확인되었습니다.");
+      setPwCheckColor("green");
       setIsCurrentPwValid(true);
     } else {
-      setPwMessage("❌ 현재 비밀번호가 올바르지 않습니다.");
-      setPwMessageColor("red");
+      setPwCheck("❌ 현재 비밀번호가 올바르지 않습니다.");
+      setPwCheckColor("red");
       setIsCurrentPwValid(false);
     }
   } catch (err) {
-    setPwMessage("❌ 서버 오류가 발생했습니다.");
+    setPwCheck("❌ 서버 오류가 발생했습니다.");
+    setPwCheckColor("red");
+  }
+};
+
+  const handleChangePw = async () => {
+  if (!user || !user.userId) {
+    setPwMessage("로그인이 필요합니다.");
+    setPwMessageColor("red");
+    return;
+  }
+
+  // 🔒 소셜 로그인 계정이면 막기
+  if (user.provider) {
+    setPwMessage("❌ 소셜 로그인 계정은 비밀번호를 변경할 수 없습니다.");
+    setPwMessageColor("red");
+    return;
+  }
+
+  if (!isPwValid) {
+    setPwMessage("❌ 비밀번호 조건을 만족하지 않습니다.");
+    setPwMessageColor("red");
+    return;
+  }
+  if (!isPwMatch) {
+    setPwMessage("❌ 비밀번호가 일치하지 않습니다.");
+    setPwMessageColor("red");
+    return;
+  }
+
+  try {
+    await updatePw(newPw, user.userId);
+    setPwMessage("🎉 비밀번호가 성공적으로 변경되었습니다.");
+    setPwMessageColor("blue");
+    setCurrentPw("");
+    setNewPw("");
+    setPasswordConfirm("");
+  } catch (err) {
+    setPwMessage("❌ 비밀번호 변경에 실패했습니다.");
     setPwMessageColor("red");
   }
 };
 
-  // 새 비밀번호 변경 요청
-  const handleChangePw = async () => {
-    if (!isPwValid) {
-      setPwMessage("❌ 비밀번호 조건을 만족하지 않습니다.");
-      setPwMessageColor("red");
-      return;
-    }
-    if (!isPwMatch) {
-      setPwMessage("❌ 비밀번호가 일치하지 않습니다.");
-      setPwMessageColor("red");
-      return;
-    }
-    if (!user || !user.userId) {
-    setPwMessage("로그인이 필요합니다.");
-    setPwMessageColor("red");
-    return;
-    }
-    try {
-      // TODO: 실제 API 호출
-      await updatePw(newPw,user?.userId);
-      setPwMessage("🎉 비밀번호가 성공적으로 변경되었습니다.");
-      setPwMessageColor("blue");
-      setCurrentPw("");
-      setNewPw("");
-      setPasswordConfirm("");
-    } catch (err) {
-      setPwMessage("❌ 비밀번호 변경에 실패했습니다.");
-      setPwMessageColor("red");
+return (
+  <div className={styles.wrapper}>
+    <h3 className={styles.title}>비밀번호 변경</h3>
 
-      
-    }
-  };
+    {user?.provider ? (
+      <p style={{ color: "red" }}>❌ 소셜 로그인 계정은 비밀번호를 변경할 수 없습니다.</p>
+    ) : (
+      <>
+        {/* 현재 비밀번호 확인 */}
+        {pwCheck && (
+          <p style={{ color: pwCheckColor, fontSize: "13px", textAlign: "right" }}>
+            {pwCheck}
+          </p>
+        )}
+        <div className={styles.row}>
+          <label>현재 비밀번호 :</label>
+          <input
+            type="password"
+            value={currentPw}
+            onChange={(e) => setCurrentPw(e.target.value)}
+            className={styles.input}
+            disabled={isCurrentPwValid}
+            placeholder="현재 비밀번호 입력"
+          />
+          <button
+            className={styles.btn}
+            onClick={handleCheckPw}
+            disabled={isCurrentPwValid}
+          >
+            확인
+          </button>
+        </div>
 
-  return (
-    <div className={styles.wrapper}>
-      <h3 className={styles.title}>비밀번호 변경</h3>
+        {/* 현재 비밀번호 확인된 경우만 노출 */}
+        {isCurrentPwValid && (
+          <>
+            {/* 새 비밀번호 */}
+            <div className={styles.row}>
+              <label htmlFor="newPw">새 비밀번호 :</label>
+              <input
+                id="newPw"
+                type="password"
+                value={newPw}
+                onChange={(e) => {
+                  setNewPw(e.target.value);
+                  setPwCheck("");
+                }}
+                className={styles.input}
+                placeholder="새 비밀번호 입력"
+              />
+            </div>
 
-      {/* 현재 비밀번호 확인 */}
-      <div className={styles.row}>
-        <label>현재 비밀번호 :</label>
-        <input
-          type="password"
-          value={currentPw}
-          onChange={(e) => setCurrentPw(e.target.value)}
-          className={styles.input}
-          placeholder="현재 비밀번호 입력"
-        />
-        <button className={styles.btn} onClick={handleCheckPw}>
-          확인
-        </button>
-      </div>
+            {/* 새 비밀번호 확인 */}
+            <div className={styles.row}>
+              <label htmlFor="passwordConfirm">비밀번호 확인 :</label>
+              <input
+                id="passwordConfirm"
+                type="password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                className={styles.input}
+                placeholder="비밀번호 다시 입력"
+              />
+            </div>
+            {pwMessage && (
+              <p style={{ color: pwMessageColor, fontSize: "13px", textAlign: "right" }}>
+                {pwMessage}
+              </p>
+            )}
+            {passwordConfirm && !isPwMatch && (
+              <p style={{ color: "red", fontSize: "13px", textAlign: "right" }}>
+                비밀번호가 일치하지 않습니다.
+              </p>
+            )}
 
-      {/* 새 비밀번호 입력 */}
-      <div className={styles.row}>
-        <label htmlFor="newPw">새 비밀번호 :</label>
-        <input
-          id="newPw"
-          type="password"
-          value={newPw}
-          onChange={(e) => setNewPw(e.target.value)} // ✅ 수정
-          className={styles.input}
-          placeholder="새 비밀번호 입력"
-        />
-      </div>
-
-      {/* 새 비밀번호 확인 */}
-      <div className={styles.row}>
-        <label htmlFor="passwordConfirm">비밀번호 확인 :</label>
-        <input
-          id="passwordConfirm"
-          type="password"
-          value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
-          className={styles.input}
-          placeholder="비밀번호 다시 입력"
-        />
-      </div>
-
-      {/* 유효성 메시지 */}
-      {pwMessage && (
-        <p
-          style={{
-            color: pwMessageColor,
-            fontSize: "13px",
-            margin: "4px 0 0 0",
-            textAlign: "right",
-          }}
-        >
-          {pwMessage}
-        </p>
-      )}
-
-      {/* 비밀번호 불일치 메시지 */}
-      {passwordConfirm && !isPwMatch && (
-        <p
-          style={{
-            color: "red",
-            fontSize: "13px",
-            margin: "4px 0 0 0",
-            textAlign: "right",
-          }}
-        >
-          비밀번호가 일치하지 않습니다.
-        </p>
-      )}
-
-      {/* 버튼 그룹 */}
-      <div className={styles.btnGroup}>
-        <button className={styles.btnPrimary} onClick={handleChangePw} disabled={!isPwValid || !isPwMatch}>
-          비밀번호 변경
-        </button>
-      </div>
-    </div>
-  );
+            {/* 변경 버튼 */}
+            <div className={styles.btnGroup}>
+              <button
+                className={styles.btnPrimary}
+                onClick={handleChangePw}
+                disabled={!isPwValid || !isPwMatch}
+              >
+                비밀번호 변경
+              </button>
+            </div>
+          </>
+        )}
+      </>
+    )}
+  </div>
+);
 }

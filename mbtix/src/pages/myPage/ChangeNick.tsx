@@ -51,7 +51,6 @@ export default function ChangeNick() {
     }
 
     try {
-      // ✅ 백엔드가 Long(userId) 받는 경우
       const res = await updateNick(newNickname, user.userId,user.point);
 
     // Redux store 업데이트
@@ -106,7 +105,7 @@ export default function ChangeNick() {
         <button className={styles.btn} onClick={handleCheckNick} disabled={nickCheck}>
           중복 확인
         </button>
-        <button className={styles.btnPrimary} onClick={handleChangeNickname} disabled={!nickCheck}>
+        <button className={styles.btnPrimary} onClick={handleChangeNickname}>
           닉네임 변경
         </button>
       </div>

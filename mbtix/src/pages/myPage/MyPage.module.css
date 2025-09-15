@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 280px 1fr; /* 좌측 사이드, 우측 본문 */
   background-color: #ebf4fd;
-  gap: 30px;
+  gap: 10px;
   max-width: 1200px;
   margin: 40px auto;
   padding: 20px;
@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .profileImg {
@@ -31,7 +31,7 @@
   gap: 10px;           /* 버튼 사이 간격 */
   width: 100%;         /* 전체 폭 */
   justify-content: center; /* 가운데 정렬 */
-  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .editBtn {
@@ -57,7 +57,8 @@
 }
 
 .mbtiCard h3 {
-  margin-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .mbtiValue {
@@ -91,7 +92,7 @@
 /* 계정 정보 + 미니게임 박스 */
 .accountBox {
   margin-top: 70px;
-  margin-left: 50px;
+  margin-left: 80px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -137,19 +138,23 @@
 
 .gameCircle span {
   font-size: 0.9rem;
+  
 }
 
 .gameCircle strong {
+  margin-left: 5px;
   font-size: 1.3rem;
+  text-align: center;
+  color: white;
 }
 
 /* 게시글 영역 */
 .postsSection {
   grid-column: 1 / -1; /* 좌+우 전체 */
-  margin-top: 20px;
 }
 
 .postsSection h3 {
+  margin-top: 4px;
   margin-bottom: 12px;
 }
 
@@ -171,4 +176,48 @@
 .postMeta {
   font-size: 0.9rem;
   color: #333;
+}
+
+/* 프로필 */
+.profileWrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border: 3px solid #ddd;   /* ✅ border를 wrapper로 */
+  border-radius: 50%;
+  overflow: hidden;         /* 이미지/overlay 넘치지 않도록 */
+}
+
+.profileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+  border: none;         
+}
+
+
+/* 오버레이 (hover 시 표시) */
+.profileOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+/* hover 시 overlay 표시 */
+.profileWrapper:hover .profileOverlay {
+  opacity: 1;
 }

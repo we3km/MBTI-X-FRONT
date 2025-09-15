@@ -20,6 +20,8 @@ export interface User {
   mbtiId: number;
   mbtiName : string;
   profileFileName : string;
+  profileType : string;
+  provider : string;
   point : number;
   roles: string;
 }

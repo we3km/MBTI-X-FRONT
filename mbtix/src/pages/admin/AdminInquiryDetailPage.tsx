@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchInquiryById, submitAnswer, type Inquiry } from '../../api/inquiryApi';
+import toast from 'react-hot-toast';
 import './AdminInquiry.css';
 
-const UPLOADS_BASE_URL = "/uploads/cs/";
+const UPLOADS_BASE_URL = "http://localhost:8085/api/uploads/cs/";
 
 const AdminInquiryDetailPage = () => {
     const { inquiryId } = useParams<{ inquiryId: string }>();
@@ -22,7 +23,7 @@ const AdminInquiryDetailPage = () => {
                     }
                 } catch (error) {
                     console.error("문의 상세 정보를 불러오는 중 에러 발생:", error);
-                    alert("데이터를 불러오는데 실패했습니다.");
+                    toast.error("데이터를 불러오는데 실패했습니다.");
                     navigate('/admin/inquiries');
                 }
             };
@@ -33,16 +34,16 @@ const AdminInquiryDetailPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inquiryId || !answer.trim()) {
-            alert("답변 내용을 입력해주세요.");
+            toast.error("답변 내용을 입력해주세요.");
             return;
         }
         try {
             await submitAnswer(Number(inquiryId), answer);
-            alert("답변이 성공적으로 등록되었습니다.");
+            toast.success("답변이 성공적으로 등록되었습니다.");
             navigate('/admin/inquiries');
         } catch (error) {
             console.error("답변 등록 중 에러 발생:", error);
-            alert("답변 등록 중 오류가 발생했습니다.");
+            toast.error("답변 등록 중 오류가 발생했습니다.");
         }
     };
 

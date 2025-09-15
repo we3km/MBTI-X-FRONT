@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/store.ts';
+import { Toaster } from 'react-hot-toast';
+
 
 import { setupInterceptors as setupApiClientInterceptors } from './api/apiClient.ts';
 import { setupAuthApiInterceptors } from './api/authApi.ts';
@@ -21,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
             <Provider store={store}>
                 <BrowserRouter>
                     <App />
+                    <Toaster position='top-center' />
                 </BrowserRouter>
             </Provider>
         </QueryClientProvider>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchAllInquiries, type Inquiry } from '../../api/inquiryApi';
+import { fetchAllInquiries, type Inquiry, type InquiryPageResponse } from '../../api/inquiryApi';
 import { type PageInfo } from '../../type/logintype';
+import Pagination from '../../components/Pagination';
 import './AdminInquiry.css';
 
 const AdminInquiryListPage = () => {
@@ -28,32 +29,11 @@ const AdminInquiryListPage = () => {
     const handleRowClick = (inquiryId: number) => {
         navigate(`/admin/inquiries/${inquiryId}`);
     };
-
-    const handlePageChange = (pageNumber: number) => {
-        if (pageNumber > 0 && pageNumber <= (pageInfo?.maxPage || 1)) {
-            setCurrentPage(pageNumber);
-        }
-    };
     
     const handleFilterChange = (newFilter: 'all' | 'Y' | 'N') => {
         setFilter(newFilter);
         setCurrentPage(1);
     };
-
-    const pageButtons = [];
-    if (pageInfo) {
-        for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
-            pageButtons.push(
-                <button
-                    key={i}
-                    onClick={() => handlePageChange(i)}
-                    className={i === pageInfo.currentPage ? 'active' : ''}
-                >
-                    {i}
-                </button>
-            );
-        }
-    }
 
     return (
         <div className="admin-page-container">
@@ -83,11 +63,7 @@ const AdminInquiryListPage = () => {
                         {inquiries.map((inquiry) => (
                             <tr key={inquiry.inquiryId} onClick={() => handleRowClick(inquiry.inquiryId)} className="clickable-row">
                                 <td>{inquiry.inquiryId}</td>
-                                <td>
-                                    <span className={`status-badge status-${inquiry.status}`}>
-                                        {inquiry.status === 'Y' ? '답변 완료' : '대기중'}
-                                    </span>
-                                </td>
+                                <td><span className={`status-badge status-${inquiry.status}`}>{inquiry.status === 'Y' ? '답변 완료' : '대기중'}</span></td>
                                 <td className="inquiry-title">{inquiry.inquiryTitle}</td>
                                 <td>{inquiry.userLoginId}</td>
                                 <td>{new Date(inquiry.createdAt).toLocaleDateString()}</td>
@@ -97,21 +73,7 @@ const AdminInquiryListPage = () => {
                 </table>
             </div>
             
-            <div className="pagination">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={pageInfo?.currentPage === 1}
-                >
-                    &lt;
-                </button>
-                {pageButtons}
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={pageInfo?.currentPage === pageInfo?.maxPage}
-                >
-                    &gt;
-                </button>
-            </div>
+            {pageInfo && <Pagination pi={pageInfo} onPageChange={setCurrentPage} />}
         </div>
     );
 };

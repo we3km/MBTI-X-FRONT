@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchPublicFaqById, type Faq } from '../../api/faqApi';
 import './Faq.css';
+import './FaqDetailPage.css';
 
 const FaqDetailPage = () => {
     const { faqId } = useParams<{ faqId: string }>();
@@ -28,23 +29,27 @@ const FaqDetailPage = () => {
     }
 
     return (
-        <div className="faq-container">
-             <div className="page-header">
-                <div className="page-icon-circle">
-                    <div className="page-icon">❓</div>
-                </div>
+        <div className="faq-detail-container">
+                <div className="page-header">
+                <div className="page-icon">❓</div>
                 <h1>FAQ</h1>
             </div>
-            <div className="faq-detail-box">
-                <div className="faq-question">
-                    <h3>Q. {faq.question}</h3>
+
+            <div className="faq-detail-card">
+                <div className="faq-question-section">
+                    <span className="faq-category-tag">{faq.faqCategory}</span>
+                    <h2 className="faq-question-title">Q. {faq.question}</h2>
                 </div>
-                <div className="faq-answer">
-                    <p>{faq.answer}</p>
+
+                <div className="faq-answer-section">
+                    <p className="faq-answer-text">{faq.answer}</p>
                 </div>
             </div>
+
             <div className="faq-actions">
-                <button onClick={() => navigate('/faqs')}>목록으로</button>
+                <button className="back-button" onClick={() => navigate('/faqs')}>
+                    목록으로
+                </button>
             </div>
         </div>
     );

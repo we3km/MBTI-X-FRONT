@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createFaq, updateFaq, fetchFaqById, type Faq } from '../../api/faqApi';
+import toast from 'react-hot-toast';
 import './AdminFaq.css';
 
 const AdminFaqFormPage = () => {
@@ -26,7 +27,7 @@ const AdminFaqFormPage = () => {
                     });
                 } catch (error) {
                     console.error("FAQ 데이터를 불러오는 중 에러 발생:", error);
-                    alert("데이터를 불러오는데 실패했습니다.");
+                    toast.error("데이터를 불러오는데 실패했습니다.");
                     navigate('/admin/faqs');
                 }
             };
@@ -45,16 +46,16 @@ const AdminFaqFormPage = () => {
             if (isEditMode && faqId) {
                 // 수정
                 await updateFaq(Number(faqId), formData);
-                alert('FAQ가 성공적으로 수정되었습니다.');
+                toast.success('FAQ가 성공적으로 수정되었습니다.');
             } else {
                 // 생성
                 await createFaq(formData);
-                alert('FAQ가 성공적으로 등록되었습니다.');
+                toast.success('FAQ가 성공적으로 등록되었습니다.');
             }
             navigate('/admin/faqs');
         } catch (error) {
             console.error("FAQ 처리 중 에러 발생:", error);
-            alert('처리 중 오류가 발생했습니다.');
+            toast.error('처리 중 오류가 발생했습니다.');
         }
     };
 

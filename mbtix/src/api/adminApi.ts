@@ -15,7 +15,7 @@ export interface BanHistory {
     bannedId: number;
     reson: string;
     penaltyDate: string;
-    releasaeDate: string;
+    relesaeDate: string;
 }
 
 export interface ReportHistory {

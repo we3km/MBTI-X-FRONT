@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
+import toast from 'react-hot-toast';
 import './ReportDetailPage.css';
 
 interface ReportDetail {
@@ -38,7 +39,7 @@ const ReportDetailPage = () => {
 
     const handleSubmit = () => {
         if (!reportId || selectedBan === 0) {
-            alert("정지 기간을 선택해주세요.");
+            toast.error("정지 기간을 선택해주세요.");
             return;
         }
         
@@ -47,12 +48,12 @@ const ReportDetailPage = () => {
                 adminUserNum: 44 // 실제 관리자 번호로 변경 필요
             })
             .then(response => {
-                alert(response.data);
+                toast.success(response.data);
                 navigate('/admin/reports');
             })
             .catch(error => {
                 console.error("신고 처리 중 에러 발생:", error);
-                alert("신고 처리 중 오류가 발생했습니다.");
+                toast.error("신고 처리 중 오류가 발생했습니다.");
             });
     };
 

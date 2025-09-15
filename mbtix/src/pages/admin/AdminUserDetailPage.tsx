@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserDetail, banUser, updateUserRole, unbanUser, type UserDetail } from '../../api/adminApi';
+import toast from 'react-hot-toast';
 import './AdminUserDetailPage.css';
 
 const AdminUserDetailPage = () => {
@@ -33,17 +34,17 @@ const AdminUserDetailPage = () => {
     // 회원 제재 제출 함수
     const handleBanSubmit = async () => {
         if (!userId || banDuration === 0 || !banReason.trim()) {
-            alert("제재 기간과 사유를 모두 입력해주세요.");
+            toast.error("제재 기간과 사유를 모두 입력해주세요.");
             return;
         }
         try {
             const message = await banUser(Number(userId), banDuration, banReason);
-            alert(message);
+            toast.success(message);
             setIsBanModalOpen(false);
             loadUserDetail();
         } catch (error) {
             console.error("제재 처리 중 에러 발생:", error);
-            alert("제재 처리 중 오류가 발생했습니다.");
+            toast.error("제재 처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -59,26 +60,26 @@ const AdminUserDetailPage = () => {
         if (window.confirm(`${userInfo.nickname}님의 권한을 ${newRoleKorean}(으)로 변경하시겠습니까?`)) {
             try {
                 const message = await updateUserRole(Number(userId), newRole);
-                alert(message);
+                toast.success(message);
                 loadUserDetail();
             } catch (error) {
                 console.error("권한 변경 중 에러 발생:", error);
-                alert("권한 변경 중 오류가 발생했습니다.");
+                toast.error("권한 변경 중 오류가 발생했습니다.");
             }
         }
     };
 
     // 정지 해제 핸들러
     const handleUnban = async () => {
-        if (!userId) return;
+        if (!userId || !userDetail) return;   
         if (window.confirm(`${userDetail.userInfo.nickname}님의 정지를 해제하시겠습니까?`)) {
             try {
                 const message = await unbanUser(Number(userId));
-                alert(message);
+                toast.success(message);
                 loadUserDetail();
             } catch (error) {
                 console.error("정지 해제 중 에러 발생:", error);
-                alert("정지 해제 중 오류가 발생했습니다.");
+                toast.error("정지 해제 중 오류가 발생했습니다.");
             }
         }
     };
@@ -134,7 +135,7 @@ const AdminUserDetailPage = () => {
                         <div className="history-grid">
                             <div className="history-card">
                                 <h4>제재 내역 ({banHistory.length}건)</h4>
-                                <ul>{banHistory.map(b => <li key={b.bannedId}>{b.penaltyDate}: {b.reson} (해제: {b.releasaeDate})</li>)}</ul>
+                                <ul>{banHistory.map(b => <li key={b.bannedId}>{b.penaltyDate}: {b.reson} (해제: {b.relesaeDate})</li>)}</ul>
                             </div>
                             <div className="history-card">
                                 <h4>신고한 내역 ({reportsMade.length}건)</h4>

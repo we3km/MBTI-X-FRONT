@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createInquiry } from '../../api/csApi';
 import type { CreateInquiryData } from '../../api/csApi';
 import { ClipLoader } from 'react-spinners';
+import toast from 'react-hot-toast';
 import './CsInquiry.css';
 
 const CsInquiryFormPage = () => {
@@ -32,17 +33,17 @@ const CsInquiryFormPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.inquiryTitle.trim() || !formData.inquiryContent.trim()) {
-            alert('제목과 내용을 모두 입력해주세요.');
+            toast.error('제목과 내용을 모두 입력해주세요.');
             return;
         }
         setIsLoading(true);
         try {
             await createInquiry(formData, selectedFile || undefined);
-            alert('문의가 성공적으로 등록되었습니다.');
+            toast.success('문의가 성공적으로 등록되었습니다.');
             navigate('/cs-history');
         } catch (error) {
             console.error('문의 등록 중 에러 발생:', error);
-            alert('문의 등록 중 오류가 발생했습니다.');
+            toast.error('문의 등록 중 오류가 발생했습니다.');
         } finally {
             setIsLoading(false);
         }

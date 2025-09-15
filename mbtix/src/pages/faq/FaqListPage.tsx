@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchPublicFaqs, type Faq } from '../../api/faqApi';
 import { type PageInfo } from '../../type/logintype';
+import Pagination from '../../components/Pagination';
 import './Faq.css';
-import '../admin/UserManagementPage.css';
 
 const FaqListPage = () => {
     const [faqs, setFaqs] = useState<Faq[]>([]);
@@ -14,7 +14,7 @@ const FaqListPage = () => {
     useEffect(() => {
         const getFaqs = async () => {
             try {
-                const response = await fetchPublicFaqs(currentPage);
+                const response = await fetchPublicFaqs(currentPage); 
                 setFaqs(response.list);
                 setPageInfo(response.pi);
             } catch (error) {
@@ -27,27 +27,6 @@ const FaqListPage = () => {
     const handleRowClick = (faqId: number) => {
         navigate(`/faqs/${faqId}`);
     };
-
-    const handlePageChange = (pageNumber: number) => {
-        if (pageNumber > 0 && pageNumber <= (pageInfo?.maxPage || 1)) {
-            setCurrentPage(pageNumber);
-        }
-    };
-
-    const pageButtons = [];
-    if (pageInfo) {
-        for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
-            pageButtons.push(
-                <button
-                    key={i}
-                    onClick={() => handlePageChange(i)}
-                    className={i === pageInfo.currentPage ? 'active' : ''}
-                >
-                    {i}
-                </button>
-            );
-        }
-    }
 
     return (
         <div className="faq-container">
@@ -78,21 +57,7 @@ const FaqListPage = () => {
                 </tbody>
             </table>
 
-            <div className="pagination">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={pageInfo?.currentPage === 1}
-                >
-                    &lt;
-                </button>
-                {pageButtons}
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={pageInfo?.currentPage === pageInfo?.maxPage}
-                >
-                    &gt;
-                </button>
-            </div>
+            {pageInfo && <Pagination pi={pageInfo} onPageChange={setCurrentPage} />}
         </div>
     );
 };

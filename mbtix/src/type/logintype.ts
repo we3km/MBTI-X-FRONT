@@ -28,7 +28,7 @@ export interface UserEntity {
     email: string;
     createdAt: string;
     statusName: string;
-    releasaeDate: string | null;
+    relesaeDate: string | null;
 }
 
 export interface PageInfo {

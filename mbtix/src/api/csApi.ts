@@ -53,3 +53,8 @@ export const createInquiry = async (data: CreateInquiryData, file?: File): Promi
     const response = await apiClient.post('/cs/inquiries', formData);
     return response.data;
 };
+
+// 문의 삭제
+export const deleteMyInquiry = async (inquiryId: number): Promise<void> => {
+    await apiClient.delete(`/cs/inquiries/${inquiryId}`);
+}

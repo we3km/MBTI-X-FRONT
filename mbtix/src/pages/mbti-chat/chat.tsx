@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { chatbotApi } from "../../api/chatbot/catbotApi";
 import styles from "./Chat.module.css";
 import { store } from "../../store/store";
+import axios from 'axios'; // axios 라이브러리 import
 
 interface ChatMessage {
   roomId: number;
@@ -24,13 +25,14 @@ interface ChatProps {
     talkStyle: string;
     age: number;
     features: string;
+    botProfileImageUrl?: string; // 👈 이미지 URL 속성 추가
   };
 }
 
 export default function Chat({ roomId, state }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [isBotTyping, setIsBotTyping] = useState(false); // 👈 추가
+  const [isBotTyping, setIsBotTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const getAccessToken = () => store.getState().auth.accessToken;
@@ -75,7 +77,6 @@ export default function Chat({ roomId, state }: ChatProps) {
     try {
       // 4. 봇 타이핑 시작 표시
       setIsBotTyping(true);
-
       // 5. FastAPI 서버에 요청 (스트리밍 응답)
       const response = await fetch(`http://localhost:8000/chat/${roomId}`, {
         method: "POST",
@@ -84,7 +85,7 @@ export default function Chat({ roomId, state }: ChatProps) {
           message: userInput,
           mbti: state.mbti,
           botName: state.botName,
-          token: token,
+          token: token, // 👈 토큰 추가
           nickname: nickName,
           gender: state.gender,
           talkStyle: state.talkStyle,
@@ -92,37 +93,44 @@ export default function Chat({ roomId, state }: ChatProps) {
           features: state.features,
         }),
       });
-
       const reader = response.body?.getReader();
       if (!reader) return;
 
       const decoder = new TextDecoder("utf-8");
       let botText = "";
-
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
           setIsBotTyping(false); // 👈 응답 끝나면 타이핑 종료
           break;
         }
-
         const chunk = decoder.decode(value, { stream: true });
         botText += chunk;
 
-        // 스트리밍된 토큰 UI에 실시간 반영
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          if (last?.sender === "bot") {
-            return [...prev.slice(0, -1), { ...last, content: botText }];
+        // 6. 봇 메시지 실시간 업데이트
+        setMessages((prevMessages) => {
+          const lastMessage = prevMessages[prevMessages.length - 1];
+          if (lastMessage.sender === "bot") {
+            // 마지막 메시지가 봇 메시지면 내용 업데이트
+            const newMessages = [...prevMessages];
+            newMessages[newMessages.length - 1] = {
+              ...lastMessage,
+              content: botText,
+            };
+            return newMessages;
           } else {
+            // 새 봇 메시지 추가
             return [
-              ...prev,
-              { roomId: Number(roomId), sender: "bot", content: botText },
+              ...prevMessages,
+              {
+                roomId: Number(roomId),
+                sender: "bot",
+                content: botText,
+              },
             ];
           }
         });
       }
-
       // 최종 완성된 봇 응답 DB 저장
       const botMessage: SaveChatMessage = {
         roomId: Number(roomId),
@@ -147,7 +155,12 @@ export default function Chat({ roomId, state }: ChatProps) {
             className={m.sender === "user" ? styles.userWrapper : styles.botWrapper}
           >
             {m.sender === "bot" && (
-              <div className={styles.botName}>{state.botName}</div>
+              <div className={styles.botHeader}>
+                {state.botProfileImageUrl && (
+                  <img src={`http://localhost:8085/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> // 👈 포트 번호 8085로 수정
+                )}
+                <div className={styles.botName}>{state.botName}</div>
+              </div>
             )}
             <div
               className={`${styles.message} ${
@@ -162,7 +175,12 @@ export default function Chat({ roomId, state }: ChatProps) {
         {/* 👇 챗봇 타이핑 표시 */}
         {isBotTyping && (
           <div className={styles.botWrapper}>
-            <div className={styles.botName}>{state.botName}</div>
+            <div className={styles.botHeader}>
+              {state.botProfileImageUrl && (
+                <img src={`http://localhost:8085/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> // 👈 포트 번호 8085로 수정
+              )}
+              <div className={styles.botName}>{state.botName}</div>
+            </div>
             <div className={`${styles.message} ${styles.bot}`}>
               <span className={styles.typingIndicator}>
                 <span></span>
@@ -183,7 +201,7 @@ export default function Chat({ roomId, state }: ChatProps) {
           placeholder="메시지를 입력하세요..."
         />
         <button type="submit" className={styles.sendBtn}>
-          보내기
+          전송
         </button>
       </form>
     </div>

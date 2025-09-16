@@ -16,6 +16,7 @@ interface ChatRoom{
   talkStyle:string;
   age:number;
   features: string; 
+  botProfileImageUrl: string; // 👈 이미지 URL 추가
 }
 
 export default function MbtiChat() {
@@ -26,14 +27,13 @@ export default function MbtiChat() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = getUserId();
   console.log("회원번호",userId, state)
-  // // 채팅방 목록 불러오기
+  // 채팅방 목록 불러오기
   const fetchRooms = () => {
+    if (!userId) return; // 로그인 안 되어있으면 호출하지 않음
     chatbotApi
       .get(`/rooms/${userId}`)
       .then((res) => {
         setRooms(res.data);
-        console.log("state"+state);
-        console.log("rooms"+rooms[1].gender);
       })
       .catch((err) => {
         console.log(err);
@@ -51,38 +51,50 @@ export default function MbtiChat() {
   const handleChatCreated = (newRoom: ChatRoom) => {
     // 기존 rooms 배열에 새로운 채팅방을 추가합니다.
     setRooms((prevRooms) => [...prevRooms, newRoom]);
-    // 모달을 닫습니다.
+    // 모달 닫기
     handleCloseModal();
+    // 성공적으로 생성되었으므로 목록을 다시 불러올 필요는 없습니다.
   };
 
   return (
-    <>
-        <div className={styles.container}>
-            <div className={styles.sidebar}>
-                <button onClick={handleOpenModal} className={styles.createBtn}>
-            + 챗봇 만들기
-          </button>
-                <ul className={styles.roomList}>
-                  {rooms.map(r => (
-                    <li key={r.roomId} className={styles.roomItem}>
-                      <Link 
-                        to={`/chat/${r.roomId}`}
-                        state={{mbti:r.botMbti, botName:r.botName, gender:r.gender, talkStyle:r.talkStyle, age:r.age, features: r.features}}
-                        className={styles.roomLink}
-                      >
-                        {r.botName} <span className={styles.mbti}>({r.botMbti})</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-            </div>
-            <div className={styles.main}>
-                {roomId ? (
-                  <Chat roomId={roomId} state={state} />
-                ) : (
-                  <div className={styles.placeholder}>좌측에서 챗봇을 선택하거나 <br /> 챗봇 만들기를 눌러주세요.</div>
-                )}
-            </div>
+    <div className={styles.container}>
+        <div className={styles.sidebar}>
+            <button onClick={handleOpenModal} className={styles.createBtn}>
+                + 챗봇 만들기
+            </button>
+            <ul className={styles.roomList}>
+                {rooms.map(r => (
+                  <li key={r.roomId} className={styles.roomItem}>
+                    <Link 
+                      to={`/chat/${r.roomId}`}
+                      state={{
+                        mbti:r.botMbti,
+                        botName:r.botName,
+                        gender:r.gender, 
+                        talkStyle:r.talkStyle, 
+                        age:r.age, 
+                        features: r.features,
+                        botProfileImageUrl: r.botProfileImageUrl // 👈 이미지 URL 추가
+                      }}
+                      className={styles.roomLink}
+                    >
+                      <div className={styles.roomLinkContent}>
+                        <img src={`http://localhost:8085/api${r.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> {/* 👈 이미지 표시 */}
+                        <div>
+                          {r.botName} <span className={styles.mbti}>({r.botMbti})</span>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+        </div>
+        <div className={styles.main}>
+            {roomId ? (
+              <Chat roomId={roomId} state={state} />
+            ) : (
+              <div className={styles.placeholder}>좌측에서 챗봇을 선택하거나 <br /> 챗봇 만들기를 눌러주세요.</div>
+            )}
         </div>
         {isModalOpen && (
         <div className={styles.modalOverlay}>
@@ -94,6 +106,6 @@ export default function MbtiChat() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

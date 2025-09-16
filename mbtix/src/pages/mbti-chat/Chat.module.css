@@ -1,3 +1,4 @@
+/* chat.module.css */
 .chatContainer {
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -32,12 +33,28 @@
   margin-bottom: 12px;
 }
 
+/* 챗봇 헤더 (이미지 + 이름) */
+.botHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
 /* 챗봇 이름 */
 .botName {
   font-size: 12px;
   font-weight: bold;
-  margin-bottom: 4px; /* 메시지와 이름 간격 */
   color: #555;
+}
+
+/* 챗봇 프로필 이미지 */
+.profileImage {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
 }
 
 .message .sender {
@@ -66,14 +83,12 @@
   color: #333;
   border-bottom-left-radius: 2px;
 }
-
 .user {
   align-self: flex-end;
   background: #4f9aff;
   color: white;
   border-bottom-right-radius: 2px;
 }
-
 /* 입력창 */
 .inputArea {
   display: flex;
@@ -106,38 +121,45 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease;
 }
 
 .sendBtn:hover {
-  background: #3a78c2;
+  background: #3979c9;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* 챗봇 타이핑 애니메이션 */
 .typingIndicator {
-  display: flex;
+  display: inline-flex;
   gap: 4px;
   align-items: center;
+  justify-content: center;
+  height: 10px;
 }
 
 .typingIndicator span {
   width: 6px;
   height: 6px;
-  background: #555;
+  background-color: #999;
   border-radius: 50%;
-  display: inline-block;
-  animation: bounce 1.2s infinite ease-in-out;
+  animation: bounce 1.4s infinite ease-in-out both;
 }
 
-.typingIndicator span:nth-child(1) { animation-delay: 0s; }
-.typingIndicator span:nth-child(2) { animation-delay: 0.2s; }
-.typingIndicator span:nth-child(3) { animation-delay: 0.4s; }
+.typingIndicator span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.typingIndicator span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+.typingIndicator span:nth-child(3) {
+  animation-delay: 0s;
+}
 
 @keyframes bounce {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
 }

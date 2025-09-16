@@ -98,8 +98,6 @@ export default function SignupTerms({ onNext }: Props) {
   />
   <span>모두 동의</span>
 </div>
-
-
       <button className={styles.nextBtn} disabled={!allAgreed} onClick={onNext}>
         다음
       </button>

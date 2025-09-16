@@ -190,54 +190,118 @@ useEffect(() => {
       onNext();
   };
 
-  return (
+return (
   <form className={styles.signupBox} onSubmit={handleSubmit}>
     <h2>정보 입력</h2>
 
-     { idMessage && <p style={{ color: idMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{idMessage}</p> }
-    <div className={styles.inputCheck}>
-      <input value={loginId} onChange={e => {setLoginId(e.target.value); setidCheck(false); setIdMessage("");}} placeholder="아이디" />
-      <button type="button" onClick={handleIdCheck} disabled={idCheck}>중복 확인</button>
-    </div>
-   
-     { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
-    <div className={styles.inputCheck}>
-      <input value={nickname} onChange={e => {setNickname(e.target.value); setnickCheck(false); setnickMessage(""); setIdMessage("")}} placeholder="닉네임" />
-      <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
-    </div>
+    <div className={styles.formFields}>
+      {/* 아이디 */}
+      {idMessage && (
+        <p className={styles.msgRight} style={{ color: idMessageColor }}>{idMessage}</p>
+      )}
+      <div className={styles.inputCheck}>
+        <input
+          value={loginId}
+          type="text"
+          onChange={(e) => { setLoginId(e.target.value); setidCheck(false); setIdMessage(""); }}
+          placeholder="아이디"
+        />
+        <button type="button" onClick={handleIdCheck} disabled={idCheck}>중복 확인</button>
+      </div>
 
-    { emailMessage && <p style={{color : emailMessageColor,fontSize:"13px",margin:"4px 0 0 0",textAlign: "right"}}>{emailMessage}</p>}
-    <div className={styles.inputCheck}>
-      <input value={email} onChange={e => {setEmail(e.target.value); setEmailCheck(false); setEmailMessage(""); setCodeSent(false); setCooldown(0); setnickMessage("")}} placeholder="이메일" />
-      <button type="button" onClick={handleSendCode} disabled={cooldown > 0 || emailCheck}>
-        {codeSent? (cooldown > 0   ? `재발송 (${Math.floor(cooldown / 60)}:${String(cooldown % 60).padStart(2, "0")})`   : "재발송"): "코드 발송"}</button>
-    </div>
+      {/* 닉네임 */}
+      {nickMessage && (
+        <p className={styles.msgRight} style={{ color: nickMessageColor }}>{nickMessage}</p>
+      )}
+      <div className={styles.inputCheck}>
+        <input
+          value={nickname}
+          type="text"
+          onChange={(e) => { setNickname(e.target.value); setnickCheck(false); setnickMessage(""); setIdMessage("") }}
+          placeholder="닉네임"
+        />
+        <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
+      </div>
 
-    {codeSent && (
-    <div className={styles.inputCheck}>
-      <input value={verificationCode} onChange={e => setVerificationCode(e.target.value)} placeholder="인증 코드" disabled={emailVerified} />
-      <button type="button" onClick={handleEmailVerify} disabled={emailVerified}> {emailVerified ? "인증완료" : "확인"}</button>
-    </div>
-    )}
-    {/* 비밀번호 유효성 메시지 */}
-    {password && !isPwValid && (
-    <p style={{ color: "red", fontSize: "13px", margin: "4px 0 0 0", textAlign: "right",}}>{pwMessage}</p>
-    )}
+      {/* 이메일 */}
+      {emailMessage && (
+        <p className={styles.msgRight} style={{ color: emailMessageColor }}>{emailMessage}</p>
+      )}
+      <div className={styles.inputCheck}>
+        <input
+          value={email}
+          type="email"
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailCheck(false);
+            setEmailMessage("");
+            setCodeSent(false);
+            setCooldown(0);
+            setnickMessage("");
+          }}
+          placeholder="이메일"
+        />
+        <button type="button" onClick={handleSendCode} disabled={cooldown > 0 || emailCheck}>
+          {codeSent
+            ? (cooldown > 0 ? `재발송 (${Math.floor(cooldown / 60)}:${String(cooldown % 60).padStart(2, "0")})` : "재발송")
+            : "코드 발송"}
+        </button>
+      </div>
 
-    {/* 비밀번호 확인 일치 여부 */}
-    {passwordConfirm && !isPwMatch && (
-      <p style={{ color: pwMessageColor , fontSize: "13px", margin: "4px 0 0 0", textAlign: "right", }}>비밀번호가 일치하지 않습니다.</p>
-    )}
-    <div className={styles.inputCheck}>
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" />
-      <input type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} placeholder="비밀번호 확인" />
-    </div>
+      {/* 이메일 인증코드 */}
+      {codeSent && (
+        <div className={styles.inputCheck}>
+          <input
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            type="email"
+            placeholder="인증 코드"
+            disabled={emailVerified}
+          />
+          <button type="button" onClick={handleEmailVerify} disabled={emailVerified}>
+            {emailVerified ? "인증완료" : "확인"}
+          </button>
+        </div>
+      )}
 
-    <div className={styles.inputCheck}>
-      <input value={name} onChange={e => setName(e.target.value)} placeholder="이름" />
-        <label>MBTI</label>
-         <select value={mbtiId} onChange={(e) => setMbtiId(e.target.value)} required>
-         <option value="">선택하세요</option>
+      {/* 비밀번호 유효성/일치 메시지 */}
+      {password && !isPwValid && (
+        <p className={styles.msgRight} style={{ color: "red" }}>{pwMessage}</p>
+      )}
+      {passwordConfirm && !isPwMatch && (
+        <p className={styles.msgRight} style={{ color: pwMessageColor }}>비밀번호가 일치하지 않습니다.</p>
+      )}
+
+      {/* 비밀번호 / 비밀번호 확인 (두 칸 동일폭) */}
+      <div className={styles.rowTwo}>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="비밀번호"
+        />
+        <input
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          placeholder="비밀번호 확인"
+        />
+      </div>
+
+      {/* 이름 + MBTI (3열: 입력 | 라벨 | 셀렉트) */}
+      <div className={styles.rowNameMbti}>
+        <input
+          value={name}
+          type="text"
+          onChange={(e) => setName(e.target.value)}
+          placeholder="이름"
+        />
+        <label className={styles.inlineRightLabel}></label>
+        <select
+          value={mbtiId}
+          onChange={(e) => setMbtiId(e.target.value)}
+          required>
+         <option value="">MBTI를 선택하세요</option>
          <option value="1">ISTJ</option>
          <option value="2">ISFJ</option>
          <option value="3">INFJ</option>
@@ -254,12 +318,15 @@ useEffect(() => {
          <option value="14">ESFJ</option>
          <option value="15">ENFJ</option>
          <option value="16">ENTJ</option>
-       </select>
-    </div>
+        </select>
+      </div>
 
-    <button type="submit" className={styles.submitBtn} disabled={!emailVerified || !idCheck || !nickCheck || passwordConfirm && !isPwMatch || !name || !mbtiId}>
-      회원가입
-    </button>
+      <button
+        type="submit"
+        className={styles.submitBtn}
+        disabled={ !emailVerified || !idCheck || !nickCheck || (passwordConfirm && !isPwMatch) ||!name ||!mbtiId}>  
+        회원가입</button>
+    </div>
   </form>
 );
 }

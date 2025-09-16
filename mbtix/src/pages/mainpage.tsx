@@ -5,46 +5,41 @@ import balanceIcon from "../assets/main-page/밸런스 게임 이미지.png"
 import chatIcon from "../assets/main-page/챗봇.png"
 import mainIcon from "../assets/main-page/메인아이콘.png"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
-import {store} from "../store/store"
+import { store } from "../store/store"
 
 export default function Home() {
+
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
-
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
-
+  const navigate = useNavigate();
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
-
     // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
     fetch("http://localhost:8085/api/getQuizTitle")
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.text();
-      })
-      .then(data => setBalTitle(data))
+      .then(res => res.text())
+      .then(data => setBalTitle(data)) // data는 String
       .catch(err => console.error(err));
   }, [userId]);
-
-const handleLogout = async () => {
-  const token = store.getState().auth.accessToken;
-  try {
-    await authApi.post("/logout", {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-  } finally {
-    dispatch(clearAuth());
+  const handleLogout = async () => {
+    const token = store.getState().auth.accessToken;
+    try {
+      await authApi.post("/logout", {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } finally {
+      dispatch(clearAuth());
+    }
   }
-}
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -54,26 +49,30 @@ const handleLogout = async () => {
         {!isLoggedIn && (
           <div className={styles.authButtons}>
             <Link to="/login">
-            <button className={styles.authButton}>로그인</button>
+              <button className={styles.authButton}>로그인</button>
             </Link>
             <Link to="/signup">
-            <button className={styles.authButton}>회원가입</button>
+              <button className={styles.authButton}>회원가입</button>
             </Link>
           </div>
         )}
-
         {isLoggedIn && (
           <div className={styles.authButtons}>
-             <img
-        src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
-        alt="프로필"
-        className={styles.profileImage}
-      />
+            <Link to={`/mypage`}>
+            <img
+          src={
+            user?.profileType === "UPLOAD"
+              ? `http://localhost:8085/api/profile/images/${user?.profileFileName}`
+              : `/profile/default/${user?.profileFileName || "default.jpg"}`
+          }
+          alt="프로필"
+          className={styles.profileImage}
+        />
+        </Link>
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}
       </div>
-
       <h1 className={styles.logo}><img src={mainIcon} /></h1>
       <div className={styles.cardWrapper}>
         <div className={styles.card}>
@@ -81,7 +80,6 @@ const handleLogout = async () => {
           <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>
           <img src={chatIcon} alt="MBTI 챗봇" />
         </div>
-
         <div
           className={!isBoardOpen ? styles.card : styles.boardCard}
           onMouseEnter={() => setIsBoardOpen(true)}
@@ -107,14 +105,11 @@ const handleLogout = async () => {
             </div>
           )}
         </div>
-
         {isLoggedIn ? (
-          <Link to="/miniGame">
-            <div className={styles.card}>
+          <Link to="/miniGame" className={styles.card}>
               <div className={styles.cardTitle}>미니게임</div>
               <div className={styles.cardDesc}>다른 MBTI와 경쟁해보세요!</div>
               <img src={miniIcon} alt="미니게임" />
-            </div>
           </Link>
         ) : (
           <div
@@ -126,7 +121,6 @@ const handleLogout = async () => {
             <img src={miniIcon} alt="미니게임" />
           </div>
         )}
-
         <div className={styles.card}>
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
           <div className={styles.cardDesc}>{balTitle}</div>

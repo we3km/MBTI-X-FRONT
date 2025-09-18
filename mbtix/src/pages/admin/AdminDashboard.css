@@ -54,3 +54,42 @@
     font-weight: 600;
     color: #495057;
 }
+
+.dashboard-menu-item {
+    position: relative; /* 배지 위치 설정을 위해 추가 */
+}
+
+/* 숫자 배지 스타일 */
+.menu-stat-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #5D9CEC;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 신고처럼 중요한 배지는 다른 색으로 표시 */
+.menu-stat-badge.danger {
+    background-color: #fa5252;
+}
+
+/* '오늘 가입' 같은 텍스트 스타일 */
+.menu-stat-label {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #868e96;
+}
+
+.stat-number {
+    font-weight: bold;
+    color: #343a40;
+}

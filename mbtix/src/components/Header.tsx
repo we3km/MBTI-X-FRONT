@@ -7,7 +7,6 @@ import { doLogout } from '../api/authApi';
 import { getMyAlarms, markAlarmAsRead, deleteAllAlarms, type Alarm } from '../api/alarmApi';
 import { FaRegBell } from 'react-icons/fa';
 
-
 const Header = () => {
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
@@ -15,29 +14,21 @@ const Header = () => {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [alarms, setAlarms] = useState<Alarm[]>([]);
 
-    const userMenuRef = useRef<HTMLDivElement>(null);
-    const notificationMenuRef = useRef<HTMLDivElement>(null);
+    const headerRef = useRef<HTMLElement>(null);
 
     const isAdmin = user?.roles?.includes('ROLE_ADMIN');
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (openMenu === 'user' && userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-                setOpenMenu(null);
-            }
-            if (openMenu === 'notification' && notificationMenuRef.current && !notificationMenuRef.current.contains(event.target as Node)) {
+            if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
                 setOpenMenu(null);
             }
         };
-
-        if (openMenu === 'user' || openMenu === 'notification') {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
+        document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [openMenu]);
+    }, []);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -58,7 +49,7 @@ const Header = () => {
     const unreadCount = alarms.filter(alarm => alarm.isRead !== 'Y').length;
 
     const handleMenuToggle = (menuName: string) => {
-        setOpenMenu(openMenu === menuName ? null : menuName);
+        setOpenMenu(prevOpenMenu => (prevOpenMenu === menuName ? null : menuName));
     };
 
     const handleLogout = async () => {
@@ -71,69 +62,50 @@ const Header = () => {
 
     const handleAlarmClick = async (alarm: Alarm) => {
         setOpenMenu(null);
-        
-        setAlarms(prevAlarms =>
-            prevAlarms.map(a =>
-                a.alarmId === alarm.alarmId ? { ...a, isRead: 'Y' } : a
-            )
-        );
-
+        if (alarm.isRead !== 'Y') {
+            setAlarms(prevAlarms => prevAlarms.map(a => a.alarmId === alarm.alarmId ? { ...a, isRead: 'Y' } : a));
+            try {
+                await markAlarmAsRead(alarm.alarmId);
+            } catch (error) {
+                console.error("'읽음' 처리 중 에러 발생:", error);
+            }
+        }
         if (alarm.type === 'INQUIRY_ANSWER') {
             navigate(`/cs-history/${alarm.refId}`);
         }
-
-        try {
-            if (alarm.isRead !== 'Y') {
-                await markAlarmAsRead(alarm.alarmId);
-            }
-        } catch (error) {
-            console.error("'읽음' 처리 중 에러 발생:", error);
-        }
     };
 
-    const handleClearAllAlarms = async () => {
+    const handleDeleteAllAlarms = async () => {
         try {
             await deleteAllAlarms();
             setAlarms([]);
         } catch (error) {
-            console.error("'모두 읽음' 처리 중 에러 발생:", error);
+            console.error("'모두 삭제' 처리 중 에러 발생:", error);
             alert("알림을 삭제하는 중 오류가 발생했습니다.");
         }
     };
 
     return (
-        <header className="header-container">
+        <header className="header-container" ref={headerRef}>
             <div className="header-left">
                 <Link to="/" className="header-logo">MBTI-X</Link>
                 <nav className="header-nav">
-                    <div 
-                        className="nav-item"
-                        onMouseEnter={() => setOpenMenu('board')}
-                        onMouseLeave={() => setOpenMenu(null)}
-                    >
-                        <span className="nav-link-style">게시판</span>
-                        {openMenu === 'board' && (
-                            <div className="dropdown-menu">
-                                <Link to="/board/all" onClick={() => setOpenMenu(null)}>전체 게시판</Link>
-                                <Link to="/board/mbti" onClick={() => setOpenMenu(null)}>MBTI 게시판</Link>
-                                <Link to="/board/curious" onClick={() => setOpenMenu(null)}>궁금해 게시판</Link>
-                            </div>
-                        )}
+                    <div className="nav-item">
+                        <button className="nav-link-style" onClick={() => handleMenuToggle('board')}>게시판</button>
+                        <div className={`dropdown-menu ${openMenu === 'board' ? 'active' : ''}`}>
+                            <Link to="/board/all" onClick={() => setOpenMenu(null)}>전체 게시판</Link>
+                            <Link to="/board/mbti" onClick={() => setOpenMenu(null)}>MBTI 게시판</Link>
+                            <Link to="/board/curious" onClick={() => setOpenMenu(null)}>궁금해 게시판</Link>
+                        </div>
                     </div>
                     <Link to="/balance-game">밸런스 게임</Link>
-                    <div 
-                        className="nav-item"
-                        onMouseEnter={() => setOpenMenu('minigame')}
-                        onMouseLeave={() => setOpenMenu(null)}
-                    >
-                        <span className="nav-link-style">미니게임</span>
-                        {openMenu === 'minigame' && (
-                            <div className="dropdown-menu">
-                                <Link to="/game/a" onClick={() => setOpenMenu(null)}>미니게임A</Link>
-                                <Link to="/game/b" onClick={() => setOpenMenu(null)}>미니게임B</Link>
-                                <Link to="/game/c" onClick={() => setOpenMenu(null)}>미니게임C</Link>
-                            </div>
-                        )}
+                    <div className="nav-item">
+                        <button className="nav-link-style" onClick={() => handleMenuToggle('minigame')}>미니게임</button>
+                        <div className={`dropdown-menu ${openMenu === 'minigame' ? 'active' : ''}`}>
+                            <Link to="/game/a" onClick={() => setOpenMenu(null)}>미니게임A</Link>
+                            <Link to="/game/b" onClick={() => setOpenMenu(null)}>미니게임B</Link>
+                            <Link to="/game/c" onClick={() => setOpenMenu(null)}>미니게임C</Link>
+                        </div>
                     </div>
                     <Link to="/chatbot">MBTI 챗봇</Link>
                 </nav>
@@ -141,53 +113,41 @@ const Header = () => {
             <div className="header-right">
                 {isAuthenticated && user ? (
                     <>
-                        <div className="nav-item" ref={userMenuRef}>
-                             <button className="user-profile-button" onClick={() => handleMenuToggle('user')}>
+                        <div className="nav-item">
+                            <button className="user-profile-button" onClick={() => handleMenuToggle('user')}>
                                 <div className="user-icon"></div>
                                 <span>{user.nickname}</span>
                             </button>
-                            {openMenu === 'user' && (
-                                <div className="dropdown-menu user-menu">
-                                    <Link to="/mypage" onClick={() => setOpenMenu(null)}>마이페이지</Link>
-                                    {isAdmin ? (
-                                        <Link to="/admin" onClick={() => setOpenMenu(null)}>관리자페이지</Link>
-                                    ) : (
-                                        <Link to="/cs-center" onClick={() => setOpenMenu(null)}>고객센터</Link>
-                                    )}
-                                    <a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
-                                </div>
-                            )}
-                        </div>
-                        <div className="nav-item" ref={notificationMenuRef}>
-                             <button className="notification-button" onClick={() => handleMenuToggle('notification')}>
-                                <FaRegBell size={24} />
-                                {unreadCount > 0 && (
-                                    <span className="notification-dot">
-                                        {unreadCount > 9 ? '9+' : unreadCount}
-                                    </span>
+                            <div className={`dropdown-menu user-menu ${openMenu === 'user' ? 'active' : ''}`}>
+                                <Link to="/mypage" onClick={() => setOpenMenu(null)}>마이페이지</Link>
+                                {isAdmin ? (
+                                    <Link to="/admin" onClick={() => setOpenMenu(null)}>관리자페이지</Link>
+                                ) : (
+                                    <Link to="/cs-center" onClick={() => setOpenMenu(null)}>고객센터</Link>
                                 )}
+                                <a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
+                            </div>
+                        </div>
+                        <div className="nav-item">
+                            <button className="notification-button" onClick={() => handleMenuToggle('notification')}>
+                                <FaRegBell size={24} />
+                                {unreadCount > 0 && <span className="notification-dot">{unreadCount > 9 ? '9+' : unreadCount}</span>}
                             </button>
-                             {openMenu === 'notification' && (
-                                <div className="dropdown-menu notification-menu">
-                                   <div className="notification-header">
-                                       <span>알림</span>
-                                       <button onClick={handleClearAllAlarms}>모두 읽음</button> 
-                                   </div>
-                                   {alarms.length > 0 ? (
-                                       alarms.map(alarm => (
-                                           <div 
-                                               key={alarm.alarmId} 
-                                               className={`notification-item ${alarm.isRead !== 'Y' ? 'unread' : ''}`}
-                                               onClick={() => handleAlarmClick(alarm)}
-                                           >
-                                               {alarm.content}
-                                           </div>
-                                       ))
-                                   ) : (
-                                    <div className="notification-item">새로운 알림이 없습니다.</div>
-                                   )}
+                            <div className={`dropdown-menu notification-menu ${openMenu === 'notification' ? 'active' : ''}`}>
+                                <div className="notification-header">
+                                    <span>알림</span>
+                                    <button onClick={handleDeleteAllAlarms}>모두 읽음</button>
                                 </div>
-                            )}
+                                {alarms.length > 0 ? (
+                                    alarms.map(alarm => (
+                                        <div key={alarm.alarmId} className={`notification-item ${alarm.isRead !== 'Y' ? 'unread' : ''}`} onClick={() => handleAlarmClick(alarm)}>
+                                            {alarm.content}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="notification-item">새로운 알림이 없습니다.</div>
+                                )}
+                            </div>
                         </div>
                     </>
                 ) : (

@@ -14,6 +14,7 @@ export interface Inquiry {
     userLoginId: string;
     userNickname: string;
     fileName?: string;
+    deletedByUser?: 'Y' | 'N';
 }
 
 // 페이지네이션
@@ -40,4 +41,11 @@ export const fetchInquiryById = async (inquiryId: number): Promise<Inquiry> => {
 export const submitAnswer = async (inquiryId: number, answer: string): Promise<string> => {
     const response = await apiClient.post(`/admin/inquiries/${inquiryId}/answer`, { answer });
     return response.data;
+};
+
+// 문의를 ID로 받아 숨김 처리
+export const hideInquiries = async (inquiryIds: number[]): Promise<void> => {
+    await Promise.all(
+        inquiryIds.map(id => apiClient.delete(`/admin/inquiries/${id}`))
+    );
 };

@@ -81,6 +81,7 @@ const CsInquiryFormPage = () => {
                         onChange={handleChange}
                         placeholder="제목을 입력하세요"
                         required
+                        maxLength={33}
                     />
                 </div>
 

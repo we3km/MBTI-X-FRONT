@@ -19,7 +19,7 @@ export const markAlarmAsRead = async (alarmId: number): Promise<void> => {
     await apiClient.patch(`/alarms/${alarmId}/read`);
 };
 
-export const markAllAlarmsAsRead = async (): Promise<void> => {
+export const markAllAsRead = async (): Promise<void> => {
     await apiClient.patch('/alarms/read-all');
 };
 

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { store } from "../../store/store";
 import { chatbotApi } from "../../api/chatbot/catbotApi";
 import styles from "./createChat.module.css";
-import axios from 'axios';
+import axios from 'axios'; // axios 라이브러리 추가
 
 const mbtiList = [
   "ESTJ", "ESTP", "ESFJ", "ESFP",
@@ -22,7 +22,7 @@ interface createChat {
   talkStyle: string;
   age: number;
   features: string;
-  botProfileImageUrl?: string;
+  botProfileImageUrl?: string; // 👈 추가
 }
 
 interface CreateChatComponentProps {
@@ -51,27 +51,37 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
   const getUserId = () => store.getState().auth.user?.userId;
   const userId = getUserId();
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); // 👈 1단계, 2단계 구분용 상태 추가
   const [loading, setLoading] = useState(false);
-  const [botProfileImageUrl, setBotProfileImageUrl] = useState<string | null>(null);
+  const [botProfileImageUrl, setBotProfileImageUrl] = useState<string | null>(null); // 👈 이미지 URL 상태 추가
 
-  // 1단계: 프로필 이미지 생성 요청 (미리보기)
+  // 1단계: 챗봇 프로필 이미지 생성
   const handleGenerateImage = async () => {
     setLoading(true);
+    if (!selectedMBTI || !botName) {
+      alert("MBTI와 닉네임은 필수 항목입니다.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      // 백엔드의 이미지 생성 API 호출
-      const response = await axios.post("http://localhost:8085/api/chatbot/generate-image", {
+      // 백엔드의 새로운 엔드포인트로 이미지 생성 요청
+      const response = await chatbotApi.post("/generate-image", {
         botMbti: selectedMBTI,
         botName: botName,
         gender: gender,
         age: age,
         talkStyle: talkStyle,
         features: features
+      },
+      {
+          timeout: 60000, // 👈 타임아웃 시간을 1분(60000ms)으로 설정
       });
 
       const imageUrl = response.data.imageUrl;
+      console.log(imageUrl);
       setBotProfileImageUrl(imageUrl);
-      setStep(2); // 이미지가 생성되면 2단계로 이동
+      setStep(2); // 👈 이미지 생성이 완료되면 2단계로 이동
     } catch (error) {
       console.error("이미지 생성 실패:", error);
       alert("이미지 생성에 실패했습니다. 다시 시도해주세요.");
@@ -80,7 +90,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
     }
   };
 
-  // 2단계: 챗봇 최종 생성 요청 (이미지 URL 포함)
+  // 2단계: 챗봇 최종 생성 (이미지 URL을 함께 전달)
   const handleCreate = async () => {
     setLoading(true);
     if (!userId || !selectedMBTI || !botName || !botProfileImageUrl) {
@@ -98,15 +108,19 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
         talkStyle,
         age,
         features,
-        botProfileImageUrl,
+        botProfileImageUrl, // 👈 생성된 이미지 URL을 백엔드로 전달
       };
 
-      const res = await chatbotApi.post("/chatbot/room", chatData);
+      // 기존 챗봇 생성 엔드포인트 호출
+      const res = await chatbotApi.post("", chatData,
+      {
+          timeout: 60000, // 👈 타임아웃 시간을 1분(60000ms)으로 설정
+      });
       const newRoom = res.data;
       if (onChatCreated) {
         onChatCreated(newRoom);
       }
-      navigate(`/mbtiChat/${newRoom.roomId}`, { state: newRoom });
+      navigate(`/chat/${newRoom.roomId}`, { state: newRoom });
     } catch (error) {
       console.error("챗봇 생성 실패:", error);
       alert("챗봇 생성에 실패했습니다. 다시 시도해주세요.");
@@ -119,6 +133,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
     <div className={styles.container}>
       <h2 className={styles.heading}>나만의 챗봇 만들기</h2>
 
+      {/* 1단계: 정보 입력 */}
       {step === 1 && (
         <>
           <div className={styles.inputContainer}>
@@ -135,6 +150,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
               ))}
             </div>
           </div>
+
           <div className={styles.inputContainer}>
             <p>챗봇 닉네임을 입력해주세요:</p>
             <input
@@ -145,6 +161,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
               placeholder="챗봇 닉네임"
             />
           </div>
+
           <div className={styles.inputContainer}>
             <p>성별:</p>
             <label>
@@ -154,6 +171,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
               <input type="radio" name="gender" value="여자" checked={gender === "여자"} onChange={(e) => setGender(e.target.value)} /> 여자
             </label>
           </div>
+
           <div className={styles.inputContainer}>
             <p>나이:</p>
             <input
@@ -164,6 +182,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
               placeholder="나이"
             />
           </div>
+
           <div className={styles.inputContainer}>
             <p>주요 특징 (예: '게으름, 다정함'):</p>
             <input
@@ -174,6 +193,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
               placeholder="특징을 콤마(,)로 구분하여 입력"
             />
           </div>
+
           <div className={styles.inputContainer}>
             <p>말투:</p>
             <label>
@@ -197,6 +217,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
               반말
             </label>
           </div>
+
           <div style={{ marginTop: "20px" }}>
             <button
               onClick={handleGenerateImage}
@@ -216,6 +237,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
         </>
       )}
 
+      {/* 2단계: 이미지 확인 및 최종 생성 */}
       {step === 2 && botProfileImageUrl && (
         <>
           <h3 className={styles.heading}>생성된 프로필 이미지</h3>

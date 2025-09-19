@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { chatbotApi } from "../../api/chatbot/catbotApi";
 import styles from "./Chat.module.css";
 import { store } from "../../store/store";
-import axios from 'axios'; // axios 라이브러리 import
 
 interface ChatMessage {
   roomId: number;

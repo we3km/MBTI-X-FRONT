@@ -1,13 +1,82 @@
-import mini from "./main.module.css"
-import speedIcon from "../../assets/mini-game/main/Speed.png"
-import quizIcon from "../../assets/mini-game/main/Quiz.png"
-import picIcon from "../../assets/mini-game/main/Wrong.png"
-import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { Outlet } from 'react-router-dom';
+import mini from "./main.module.css";
+import speedIcon from "../../assets/mini-game/main/Speed.png";
+import quizIcon from "../../assets/mini-game/main/Quiz.png";
+import picIcon from "../../assets/mini-game/main/Wrong.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import api from "../../api/mainPageApi";
+import type { RootState } from "../../store/store";
+import { useSelector } from "react-redux";
+
+// 1. 게임 정보를 배열로 분리
+const gameList = [
+    {
+        title: "SPEED QUIZ",
+        icon: quizIcon,
+        link: "/miniGame/SpeedQuiz",
+        rankKey: 1, // ranks 객체에서 데이터를 찾기 위한 키
+    },
+    {
+        title: "REACTION",
+        icon: speedIcon,
+        link: "/miniGame/ReactionTest",
+        rankKey: 2,
+    },
+    {
+        title: "CATCH MIND",
+        icon: picIcon,
+        link: "/miniGame/OnlineGame",
+        rankKey: 3,
+    },
+];
+
+interface RankItem {
+    MBTI_NAME: string;
+    TOTAL_SCORE: number;
+}
+
+interface Game {
+    title: string;
+    icon: string;
+    link: string;
+    rankKey: number;
+}
+
+type RanksMap = {
+    [key: number]: RankItem[];
+}
+
+interface GameCardProps {
+    game: Game;
+    ranks: RanksMap;
+}
+
+const GameCard: React.FC<GameCardProps> = ({ game, ranks }) => {
+    const rankData = ranks[game.rankKey] || [];
+    const medals = ['🥇', '🥈', '🥉'];
+    return (
+        <div className={mini.card}>
+            <div className={mini.cardtitle}>{game.title}</div>
+            <img src={game.icon} alt={`${game.title} 아이콘`} className={mini.cardicon} />
+            <Link to={game.link}>
+                <button className={mini.startbutton}>START</button>
+            </Link>
+            <div className={mini.ranking}>
+                {rankData.slice(0, 3).map((rank, index) => (
+                    <div key={index}>
+                        {medals[index]} {rank.MBTI_NAME} &nbsp; {rank.TOTAL_SCORE} POINT
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
 
 export default function GameMenu() {
-
+    const user = useSelector((state: RootState) => state.auth.user);
+    const navigate = useNavigate();
+    console.log("로그인한 회원 권한 :", user?.roles);
+    
     interface RankItem {
         GAME_CODE: number;
         TOTAL_SCORE: number;
@@ -15,75 +84,42 @@ export default function GameMenu() {
     }
 
     type RankMap = {
-        [key: number]: RankItem[]; // key는 게임 코드
+        [key: number]: RankItem[];
     };
 
-    const [ranks, setRanks] = useState<RankMap>({});
+    const { data: ranks, isLoading, isError } = useQuery<RankMap>({
+        queryKey: ["ranks"],
+        queryFn: async () => {
+            const res = await api.get("/rank");
+            return res.data;
+        },
+        staleTime: 1000 * 60,
+        retry: 1,
+    });
 
-    // 화면 띄워질때 랭크 가져오자
-    useEffect(() => {
-        fetch("http://localhost:8085/api/rank", {
-        })
-            .then(res => res.json())
-            .then((data) => {
-                console.log("랭크 받아오는 데이터", data);
-                setRanks(data);
-            })
-            .catch(err => console.error(err));
-    }, []);
+    if (isLoading) return <div>로딩 중...</div>;
+    if (isError) return <div>데이터 로드 실패</div>;
 
     return (
-        <>
-            <div className={mini.container}>
-
-                <div className={mini.topbutton}>
-                    <Link to="/miniGame/GameRank">
-                        <button>게임 랭크 보기</button>
-                    </Link>
-                </div>
-
-                <div className={mini.cardcontainer}>
-                    <div className={mini.card}>
-                        <div className={mini.cardtitle}>스피드 퀴즈</div>
-                        <img src={quizIcon} alt="퀴즈 아이콘" className={mini.cardicon} />
-                        <Link to="/miniGame/SpeedQuiz">
-                            <button className={mini.startbutton}>게임 시작</button>
-                        </Link>
-                        <div className={mini.ranking}>
-                            <div>🥇 {ranks[1] && ranks[1][0]?.MBTI_NAME}  {ranks[1] && ranks[1][0]?.TOTAL_SCORE} POINT</div>
-                            <div>🥈 {ranks[1] && ranks[1][1]?.MBTI_NAME}  {ranks[1] && ranks[1][1]?.TOTAL_SCORE} POINT</div>
-                            <div>🥈 {ranks[1] && ranks[1][2]?.MBTI_NAME}  {ranks[1] && ranks[1][2]?.TOTAL_SCORE} POINT</div>
-                        </div>
-                    </div>
-
-                    <div className={mini.card}>
-                        <div className={mini.cardtitle}>순발력 게임</div>
-                        <img src={speedIcon} alt="순발력 아이콘" className={mini.cardicon} />
-                        <Link to="/miniGame/ReactionTest">
-                            <button className={mini.startbutton}>게임 시작</button>
-                        </Link >
-                        <div className={mini.ranking}>
-                            <div>🥇 {ranks[2] && ranks[2][0]?.MBTI_NAME} {ranks[2] && ranks[2][0]?.TOTAL_SCORE} POINT</div >
-                            <div>🥈 {ranks[2] && ranks[2][1]?.MBTI_NAME}  {ranks[2] && ranks[2][1]?.TOTAL_SCORE} POINT</div>
-                            <div>🥇 {ranks[2] && ranks[2][2]?.MBTI_NAME}  {ranks[2] && ranks[2][2]?.TOTAL_SCORE} POINT</div>
-                        </div >
-                    </div >
-
-                    <div className={mini.card}>
-                        < div className={mini.cardtitle}>캐치 마인드</div>
-                        <img src={picIcon} alt="틀린 그림 아이콘" className={mini.cardicon} />
-                        < Link to="/miniGame/OnlineGame" >
-                            < button className={mini.startbutton}>게임 시작</button>
-                        </Link >
-                        <div className={mini.ranking}>
-                            <div>🥇 {ranks[3] && ranks[3][0]?.MBTI_NAME} {ranks[3] && ranks[3][0]?.TOTAL_SCORE} POINT</div >
-                            <div>🥈 {ranks[3] && ranks[3][1]?.MBTI_NAME}  {ranks[3] && ranks[3][1]?.TOTAL_SCORE} POINT</div>
-                            <div>🥇 {ranks[3] && ranks[3][2]?.MBTI_NAME}  {ranks[3] && ranks[3][2]?.TOTAL_SCORE} POINT</div>
-                        </div >
-                    </div >
-                </div >
-                <Outlet />
-            </div >
-        </>
-    )
+        <div className={mini.container}>
+            <img src="/icons/exit.png" alt="나가기" className={mini.closeButon}
+                onClick={() => navigate("/")} />
+            <img src="/icons/mini-game.png" alt="미니게임" className={mini.title} />
+            <div className={mini.topbutton}>
+                <Link to="/miniGame/GameRank">
+                    <button>RANKING</button>
+                </Link>
+                {/* 관리자 권한으로 게임데이터 넣기 */}
+                {user?.roles?.includes("ROLE_ADMIN") &&
+                    <Link to="/miniGame/AdminQuizSubmit">
+                        <button>게임 데이터 넣기</button>
+                    </Link>}
+            </div>
+            <div className={mini.cardcontainer}>
+                {gameList.map((game) => (
+                    <GameCard key={game.rankKey} game={game} ranks={ranks || {}} />
+                ))}
+            </div>
+        </div>
+    );
 }

@@ -1,9 +1,8 @@
 import styles from './OnlineGame.module.css';
-import exit from "../../../assets/mini-game/reaction/퀴즈 나가기.png"
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { store } from '../../../store/store';
-import Modal from "../online-game/modal/CreateGameRoom";
+import Modal from "./modal/CreateGameRoom";
 import { useQuery } from '@tanstack/react-query';
 import api from '../../../api/mainPageApi';
 
@@ -12,8 +11,8 @@ type gameRoom = {
     roomId: number;
     roomName: string;
     creatorId: number;
-    status: string;
     playerCount: number;
+    status: string;
     nickname: string;
     mbtiName: string;
     profile: string;
@@ -25,72 +24,53 @@ export default function OnlineGame() {
     const userId = getUserId();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [gameRooms, setGameRooms] = useState<gameRoom[]>();
 
-    const handleCreateRoom = (title: string) => {
-        alert(`새로운 방이 생성되었습니다! 제목: ${title}, 생성자: ${userId}`);
-    };
-
-    const { data: gameRoomList, isLoading, isError } = useQuery<gameRoom[]>({
+    const { data: gameRooms, isLoading, isError } = useQuery<gameRoom[]>({
         queryKey: ["gamingRoomList"],
         queryFn: async () => {
             const res = await api.get("/selectGameRoomList");
-            console.log("각 대기방 속성 :", res.data);
             return res.data;
         },
+        refetchInterval: 2500, // 2초마다 최신화된 게임방 리스트 불러옴
         staleTime: 1000 * 60 * 5,
         retry: 1,
     });
 
-    useEffect(() => {
-        if (gameRoomList) {
-            console.log("서버에서 받아온 게임방 리스트:", gameRoomList);
-            setGameRooms(gameRoomList);
+    const enterGameRoom = async (roomId: number) => {
+        try {
+            const response = await api.post("/joinGameRoom", { roomId, userId });
+            if (response.data.status === 'success') {
+                navigate(`/miniGame/CatchMind/${roomId}`);
+            } else {
+                alert("이미 게임이 시작된 방입니다.");
+            }
+        } catch (err) {
+            alert("삭제된 게임방입니다.");
+            console.error("API 요청 실패:", err);
         }
-    }, [gameRoomList]);
+    };
 
     if (isLoading) return <div>로딩 중...</div>;
     if (isError) return <div>데이터 로드 실패</div>;
 
-    // 각 게임방 번호 받아와서 게임방 들어가기
-    const enterGameRoom = (roomId: number) => {
-        console.log("입장할 방 ID:", roomId);
-        // 게임방 입장 로직
-        (async () => {
-            try {
-                await api.post("/joinGameRoom", { roomId, userId }, {
-                    headers: { "Content-Type": "application/json" }
-                });
-                console.log({ userId }, { roomId }, "번호 입장");
-            } catch (err) {
-                console.error("방 입장 실패:", err);
-            }
-        })();
-        navigate(`/miniGame/CatchMind/${roomId}`);
-    };
-
     return (
         <div className={styles.lobbyContainer}>
+            <img src="/icons/exit.png" alt="게임 종료"
+                className={styles.closeButton}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    navigate("/miniGame"); // 메인 페이지 이동
+                }}
+            >
+            </img>
             <div className={styles.lobbyBox}>
                 <header className={styles.header}>
                     <h1 className={styles.title}>대기방 리스트</h1>
                     <button
-                        className={styles.closeButton}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            const confirmExit = window.confirm("게임을 종료하시겠습니까?\n게임 종료시, 메인화면으로 이동합니다.");
-                            if (confirmExit) {
-                                navigate("/miniGame"); // 메인 페이지 이동
-                            }
-                        }}
-                    >
-                        <img src={exit} alt="게임 종료" />
-                    </button>
-                    <button
                         className={styles.createRoom}
                         onClick={() => setIsModalOpen(true)} // 게임방 여는 모달
                     >
-                        게임방 생성
+                        방 만들기
                     </button>
                 </header>
 
@@ -98,9 +78,15 @@ export default function OnlineGame() {
                     {gameRooms != null && gameRooms.map((room) => {
                         const statusStyle = styles.playing;
                         return (
-                            <div key={room.roomId} className={styles.roomItemContainer} onClick={() => enterGameRoom(room.roomId)}>
+                            <div key={room.roomId} className={styles.roomItemContainer} onClick={() => {
+                                if (room.playerCount >= 5) {
+                                    alert("방이 꽉찼습니다!");
+                                    return;
+                                }
+                                enterGameRoom(room.roomId);
+                            }}>
                                 <div className={styles.userInfo}>
-                                    <img src={room.profile} alt={`${room.nickname} profile`} className={styles.profile} />
+                                    <img src={`/profile/default/${room.profile}`} alt={`${room.nickname} profile`} className={styles.profile} />
                                     <div className={styles.nameMbti}>
                                         <span className={styles.name}>{room.nickname}</span>
                                         <span className={styles.mbti}>{room.mbtiName}</span>
@@ -108,6 +94,9 @@ export default function OnlineGame() {
                                 </div>
                                 <div className={styles.roomTitle}>
                                     <span>{room.roomName}</span>
+                                </div>
+                                <div className={styles.roomStatus}>
+                                    {room.status?.trim().toUpperCase() === "Y" ? "게임중..." : "대기중..."}
                                 </div>
                                 <div className={styles.roomStatus}>
                                     <span className={statusStyle}>
@@ -124,7 +113,6 @@ export default function OnlineGame() {
             {isModalOpen && (
                 <Modal
                     onClose={() => setIsModalOpen(false)}
-                    onCreate={handleCreateRoom}
                 />
             )}
         </div>

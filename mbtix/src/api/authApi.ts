@@ -32,10 +32,10 @@ const noAuthUrls = [
 authApi.interceptors.request.use((config) => {
   const token = getAccessToken();
 
-  // permitAll 엔드포인트에는 토큰 안 붙임l
-  const isNoAuthUrl = noAuthUrls.some((url) =>
-    config.url?.startsWith(url)
-  );
+  // permitAll 엔드포인트 + /refresh 요청에는 토큰 안 붙임
+  const isNoAuthUrl =
+    (config.url && noAuthUrls.some((url) => config.url?.startsWith(url))) ||
+    config.url?.includes("/refresh");
 
   if (!isNoAuthUrl && token) {
     if (!config.headers) {
@@ -150,6 +150,16 @@ export const verifyEmail = async (email: string, code: string) => {
   return res.data;
 };
 
+export const nameMatch = async (name:string) => {
+  const res = await authApi.get<boolean>("/namematch", {params:{name}})
+  return res.data
+}
+
+export const idMatch = async (name:string ,loginId:string) =>{
+  const res = await authApi.get<boolean>("/idmatch", {params:{name,loginId}})
+  return res.data
+}
+
 
 
 export const login = async (
@@ -190,22 +200,3 @@ export const refreshToken = async () => {
   return res.data;
 };
 
-/** 앱 시작 시 한 번 호출해서 새로고침 로그인 유지 + user 복구 */
-export const bootstrapAuth = async () => {
-  try {
-    const { data } = await authApi.post<AuthResult>("/refresh");
-    const uid = data.user?.userId ?? getUserId() ?? 0;
-    const nextUser = data.user ?? getUser();
-
-    store.dispatch(
-      setAuth({
-        accessToken: data.accessToken,
-        userId: uid,
-        refreshToken: data.refreshToken ?? null,
-        user: nextUser ?? null,
-      })
-    );
-  } catch {
-    store.dispatch(logoutAction());
-  }
-};

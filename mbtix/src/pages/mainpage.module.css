@@ -78,7 +78,7 @@
     color: white;
     cursor: pointer;
     transition: transform 0.2s, height 0.2s;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .card:hover {
@@ -135,4 +135,17 @@
     font-size: 14px;
     font-weight: normal;
     margin-top: 5px;
+}
+
+.profileImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+.nickname {
+    font-size: 14px;
+    font-weight: 500;
+    color: hsl(0, 0%, 59%);
+    margin-top: 15px;
 }

@@ -1,54 +1,182 @@
+/* ✨ 1. 움직이는 배경을 위한 애니메이션 추가 */
 .rankContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* 페이지 큰 제목 */
-.rankTitle {
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: black;
-}
-
-.pageTitle {
-    font-size: 36px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: black;
-}
-
-/* 랭킹 카드 그리드 */
-.rankWrapper {
-    display: grid;
-    width: 1000px;
-    height: 600px;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    padding: 2rem;
-    background-color: #6a8cff;
-    border-radius: 1.5rem;
     position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    background-size: 400% 400%;
+    /* ✨ 애니메이션을 위해 배경 크기 확장 */
+    box-sizing: border-box;
+    animation: gradientAnimation 15s ease infinite;
+    /* ✨ 애니메이션 적용 */
 }
 
-/* 카드 */
+/* ✨ 2. 타이틀 호버 시 반짝이는 효과 추가 */
+.pageTitle img {
+    width: 500px;
+    transition: background-position 0.5s ease;
+    /* ✨ 부드러운 전환 */
+}
+
+.pageTitle:hover {
+    background-position: 100% 0;
+    /* ✨ 호버 시 배경 위치 이동 */
+}
+
+.rankWrapper {
+    position: relative;
+    /* ✅ 버튼이 이 박스 기준으로 absolute 배치 */
+    display: grid;
+    width: 100%;
+    max-width: 1400px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+    padding: 3rem;
+    background: linear-gradient(135deg, #8998e8, #6a8cff);
+    border-radius: 2rem;
+    box-shadow: 0 10px 40px rgba(106, 140, 255, 0.3);
+}
+
+/* ✨ 3. 카드가 순차적으로 나타나는 애니메이션 준비 */
 .rankCard {
-    background-color: #fff;
     border-radius: 1.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    /* ✨ 기본 상태를 투명하게 */
+    animation: cardFadeInUp 0.6s ease forwards;
+    /* ✨ 나타나는 애니메이션 적용 */
 }
 
-.rankExit {
-    position: absolute;
-    top: 2rem;
-    right: 5rem;
-    font-size: 18px;
+.rankCard:hover {
+    transform: translateY(-10px) scale(1.05);
+    /* 위로 10px 떠오르면서 5% 확대 */
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.15);
+    /* 그림자 진하게 */
+}
+
+.rankTitle {
+    font-size: 1.8rem;
     font-weight: bold;
-    color: black;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.closeButton {
+    position: absolute;
+    right: 20px;
+    margin-bottom: 20px;
     cursor: pointer;
-    transition: color 0.2s ease;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: transparent;
+    /* ✅ 배경 투명 */
+    box-shadow: none;
+    /* ✅ 그림자 제거 */
+}
+
+.closeButton:hover {
+    transform: scale(1.15);
+}
+
+.closeButton:hover img {
+    filter: brightness(0) invert(1);
+}
+
+.closeButton img {
+    width: 40px;
+    height: 40px;
+    transition: filter 0.2s ease;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    25% {
+        background-position: 50% 100%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    75% {
+        background-position: 50% 0%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ✅ 카드 페이드인 업 (스케일 효과 추가) */
+@keyframes cardFadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ✅ 카드 순차적 등장 */
+.rankCard:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.rankCard:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.rankCard:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.rankCard:nth-child(4) {
+    animation-delay: 0.8s;
+}
+
+/* ✅ 카드 호버 시 미세 흔들림 */
+@keyframes hoverWiggle {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-11px) rotate(-1deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+
+    75% {
+        transform: translateY(-9px) rotate(-1deg);
+    }
+
+    100% {
+        transform: translateY(-10px) rotate(0deg);
+    }
 }

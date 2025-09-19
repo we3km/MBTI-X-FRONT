@@ -4,8 +4,9 @@ import exit from "../../../assets/mini-game/reaction/퀴즈 나가기.png"
 import wrongPic from "../../../assets/mini-game/speed-quiz/퀴즈 오답.png"
 import rightPic from "../../../assets/mini-game/speed-quiz/퀴즈 정답.png"
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../store/store";
+import { store } from "../../../store/store";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "../../../api/mainPageApi";
 
 interface Quiz {
     question: string;
@@ -21,24 +22,20 @@ export default function SpeedQuiz() {
     const [userAnswer, setUserAnswer] = useState("");
     const userAnswerRef = useRef("");
 
-    // 퀴즈 문제 할당
-    const [quizData, setQuizData] = useState<Quiz[] | null>([]);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // 로그인 회원 번호
-    const userId = useSelector((state: RootState) => state.auth.userId);
+    const getUserId = () => store.getState().auth.user?.userId;
+    const userId = getUserId();
 
-    // 데베 끌어오는 거 일단 테스트    
-    useEffect(() => {
-        fetch("http://localhost:8085/api/speedquiz", {
-        })
-            .then(res => res.json())
-            .then((data: Quiz[]) => {
-                setQuizData(data);
-            })
-            .catch(err => console.error(err));
-        console.log("회원 번호 : ", userId);
-    }, []);
+    const { data: quizData, isLoading, isError } = useQuery<Quiz[]>({
+        queryKey: ["quiz"],
+        queryFn: async () => {
+            const res = await api.get("/speedquiz");
+            return res.data;
+        },
+        staleTime: 1000 * 60,
+        retry: 1,
+    });
 
     const handleStart = () => {
         if (round > 5) {
@@ -134,34 +131,29 @@ export default function SpeedQuiz() {
     }, [round]);
 
     // 마지막 포인트 넣기
-    const handleFinalClick = async () => {
-        try {
-            await insertPoint(correctCount * 10);
-            navigate("/miniGame");
-        } catch (error) {
-            alert("점수 저장에 실패했습니다.");
-        }
+    const handleFinalClick = () => {
+        const score = correctCount * 10;
+        insertPoint.mutate(score);
     };
 
-    const insertPoint = async (score: number) => {
-        try {
-            const response = await fetch("http://localhost:8085/api/point", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    GAME_CODE: 1,
-                    SCORE: score,
-                    USER_ID: userId
-                })
-            });
-            if (!response.ok) {
-                throw new Error("점수 전송 실패");
-            }
+    const insertPoint = useMutation({
+        mutationFn: (score: number) => api.post("/point", {
+            GAME_CODE: 1,
+            SCORE: score,
+            USER_ID: userId
+        }),
+        onSuccess: () => {
             console.log("점수 전송 완료");
-        } catch (err) {
-            console.error(err);
-        }
-    };
+            navigate("/miniGame");
+        },
+        onError: (error) => {
+            console.error("점수 전송 실패:", error);
+            navigate("/miniGame");
+        },
+    });
+
+    if (isLoading) return <div>로딩 중...</div>;
+    if (isError) return <div>데이터 로드 실패</div>;
 
     return (
         <div className={Quiz.quizGameWrapper} onClick={handleClickArea}>
@@ -186,7 +178,7 @@ export default function SpeedQuiz() {
             )}
 
             {status === "idle" && (
-                <div className={Quiz.quizGameScreen} style={{ cursor: "pointer" }}>
+                <div className={Quiz.quizGameScreen} style={{ cursor: "pointer"}}>
                     아무곳을 눌러서 시작
                     <div className={Quiz.quizFirst}>
                         <br />총 문제는 5문제이며, 각 문제당 제한시간은 5초 입니다.
@@ -197,9 +189,9 @@ export default function SpeedQuiz() {
             {/* 문제 제출 부분 */}
             {status === "waiting" && (
                 <div className={Quiz.quizGameScreen}>
-                    <h1 className="quizCount"><br />{count}</h1>
+                    <h1 className={Quiz.quizCount}><br />{count}</h1>
                     <div className="quizDescription">
-                        {quizData !== null && (quizData[round - 1].question)}
+                        {quizData !== undefined && (quizData[round - 1].question)}
                     </div>
                     <input
                         className={Quiz.quizAnswer}
@@ -230,7 +222,7 @@ export default function SpeedQuiz() {
                 <div className={Quiz.quizGameScreen} style={{ cursor: "pointer" }}>
                     <img src={wrongPic} />
                     <div>
-                        <br />정답 : {quizData !== null && (quizData[round - 1].answer)}</div>
+                        <br />정답 : {quizData !== undefined && (quizData[round - 1].answer)}</div>
                     {round === 5 ? (
                         <p>탭하여 테스트 결과를 확인하세요.</p>
                     ) : (

@@ -1,123 +1,211 @@
+/* 폰트 import (public/index.html에 이미 있다면 생략) */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+/* --- 전체 레이아웃 --- */
+body,
+html {
+    height: 100%;
+    margin: 0;
+}
+
 .lobbyContainer {
-    position: relative;
-    background: #6b8cff;
-    color: white;
-    width: 1500px;
-    height: 800px;
+    height: 90vh;
+    width: 90vw;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    align-items: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #6a8cff 100%);
     font-family: 'Pretendard', sans-serif;
-    /* 폰트는 시스템에 맞게 조정하세요 */
 }
 
 .lobbyBox {
     width: 100%;
-    max-width: 800px;
-    padding: 30px;
-}
-
-.header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    max-width: 1200px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 30px 40px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     position: relative;
-    margin-bottom: 25px;
+    padding: 20px;
 }
 
-.title {
-    color: black;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.closeButton {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    background: none;
-    border: none;
-    padding: 0;
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
-}
-
-.closeButton img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    color: black;
-}
-
-/* 방 목록 아이템 스타일 (여기에 통합됨) */
-.roomItemContainer {
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 16px 20px;
-    margin-bottom: 15px;
+/* --- 헤더 --- */
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* hover 효과 */
+.title {
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* --- 버튼 --- */
+.header button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.createRoom {
+    background-color: #ffffff;
+    color: #6a8cff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.createRoom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0ff;
+}
+
+.closeButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 85px;
+    height: 85px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 1000;
+}
+
+.closeButton:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.closeButton:active {
+    transform: scale(0.9);
+    opacity: 1;
+}
+
+
+.roomList {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.roomList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.roomList::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.roomList::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+}
+
+.roomList::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.roomItemContainer {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
 .roomItemContainer:hover {
     cursor: pointer;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    background-color: #f9f9ff;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: #6a8cff;
+}
+
+/* --- 방 목록 아이템 내부 --- */
+.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
 }
 
 .userInfo {
     display: flex;
     align-items: center;
     gap: 15px;
-    flex: 1.5;
-}
-
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
+    flex: 2;
+    /* 비율 조정 */
+    min-width: 200px;
 }
 
 .nameMbti {
     display: flex;
-    gap: 8px;
-    align-items: baseline;
+    flex-direction: column;
+    /* 세로 정렬 */
+    align-items: flex-start;
+    gap: 4px;
 }
 
 .name {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1.1rem;
-    color: black;
+    color: #333;
 }
 
 .mbti {
     font-size: 0.9rem;
-    color: #555;
+    color: #777;
+    background-color: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 8px;
 }
 
 .roomTitle {
-    flex: 2;
-    text-align: center;
+    flex: 3;
+    /* 비율 조정 */
+    text-align: left;
+    /* 왼쪽 정렬로 변경 */
+    padding-left: 20px;
     font-size: 1.1rem;
     font-weight: 500;
-    color: #333;
+    color: #444;
 }
 
 .roomStatus {
     flex: 1;
+    /* 비율 조정 */
     text-align: right;
+    font-size: 0.95rem;
     font-weight: 600;
+    color: #555;
+    min-width: 80px;
 }
 
-.playing {
-    color: #888;
+/* 상태별 텍스트 색상 */
+.statusWaiting {
+    color: #28a745;
+}
+
+.statusPlaying {
+    color: #dc3545;
 }

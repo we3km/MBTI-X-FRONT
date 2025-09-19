@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import styles from "./MBTIGraph.module.css"
 import { useNavigate } from "react-router-dom";
-import exitBtn from "../../assets/mini-game/main/나가기.png"
 
 interface MBTIData {
     type: string;
@@ -34,9 +33,9 @@ export default function MBTIGraph() {
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>사이트 회원의 MBTI 비율</h2>
+            <h2 className={styles.title}><img src="/icons/MBTIofUsers.png"/></h2>
             <button className={styles.exit} onClick={() => navigate(-1)}>
-                <img src={exitBtn} alt="뒤로가기" />
+                <img src="/icons/exit.png" alt="Close" />
             </button>
             <div className={styles.graphWrapper}>
                 <ResponsiveContainer width="100%" height="100%">

@@ -4,15 +4,15 @@ import exit from "../../../assets/mini-game/reaction/퀴즈 나가기.png"
 import warning from "../../../assets/mini-game/reaction/순발력게임_경고 사진.png"
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../store/store";
+import { store } from "../../../store/store";
+import api from "../../../api/mainPageApi";
+import { useMutation } from "@tanstack/react-query";
 
 export default function ReactionTest() {
     const [status, setStatus] = useState<"idle" | "waiting" | "ready" | "fail" | "result" | "final">("idle");
     const [round, setRound] = useState(1);
     const [time, setTime] = useState<number | null>(null);
 
-    // const [lastTime, setLastTime] = useState<number | null>(null);
     const [bestTime, setBestTime] = useState<number | null>(null);
     const [history, setHistory] = useState<number[]>([]);
 
@@ -21,20 +21,31 @@ export default function ReactionTest() {
 
     const navigate = useNavigate();
 
-    // 로그인 회원 번호
-    const userId = useSelector((state: RootState) => state.auth.userId);
+    const getUserId = () => store.getState().auth.user?.userId;
+    const userId = getUserId();
 
     const avgTime = history.length > 0
         ? history.reduce((a, b) => a + b, 0) / history.length
         : 0;
 
     let stars = 1;
-    if (avgTime < 210 && avgTime >= 180) stars = 5;
-    else if (avgTime < 240) stars = 4;
-    else if (avgTime < 270) stars = 3;
-    else if (avgTime < 300) stars = 2;
-    else stars = 1;
-
+    let you = "🐛";
+    if (avgTime < 210 && avgTime >= 180) {
+        stars = 5;
+        you = "🐆"
+    }
+    else if (avgTime < 240) {
+        stars = 4;
+        you = "🐱";
+    }
+    else if (avgTime < 270) {
+        stars = 3;
+        you = "🐦"
+    }
+    else if (avgTime < 300) {
+        stars = 2;
+        you = "🐍"
+    }
     // 각 라운드 별 기록 그래프
     interface RoundGraphProps {
         history: number[];
@@ -160,34 +171,26 @@ export default function ReactionTest() {
 
 
     // 마지막 포인트 넣기
-    const handleFinalClick = async () => {
-        try {
-            await insertPoint(stars * 10);
-            navigate("/miniGame");
-        } catch (error) {
-            alert("점수 저장에 실패했습니다.");
-        }
+    const handleFinalClick = () => {
+        const score = stars * 10;
+        insertPoint.mutate(score);
     };
 
-    const insertPoint = async (score: number) => {
-        try {
-            const response = await fetch("http://localhost:8085/api/point", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    GAME_CODE: 2,
-                    SCORE: score,
-                    USER_ID: userId
-                })
-            });
-            if (!response.ok) {
-                throw new Error("점수 전송 실패");
-            }
+    const insertPoint = useMutation({
+        mutationFn: (score: number) => api.post("/point", {
+            GAME_CODE: 2,
+            SCORE: score,
+            USER_ID: userId
+        }),
+        onSuccess: () => {
             console.log("점수 전송 완료");
-        } catch (err) {
-            console.error(err);
-        }
-    };
+            navigate("/miniGame");
+        },
+        onError: (error) => {
+            console.error("점수 전송 실패:", error);
+            navigate("/miniGame");
+        },
+    });
 
     return (
         <div className={Reaction.reactionGameWrapper} onClick={handleClickArea}>
@@ -255,7 +258,7 @@ export default function ReactionTest() {
                     <h5>나의 평균 반응 속도 테스트 결과는:</h5>
                     <p className={Reaction.reactionResultScore}>{avgTime.toFixed(2)}ms</p>
                     <p>최고 기록: {bestTime ?? "-"} ms</p>
-
+                    <p>당신은 {you} 입니다.</p>
                     <div className={Reaction.reactionStars}>
                         {Array.from({ length: 5 }, (_, i) => (
                             <span key={i} className={`${Reaction.reactionStar} ${i < stars ? Reaction.reactionFilled : Reaction.reactionEmpty}`}>

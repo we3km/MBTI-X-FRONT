@@ -6,34 +6,40 @@ import chatIcon from "../assets/main-page/챗봇.png"
 import mainIcon from "../assets/main-page/메인아이콘.png"
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { store } from "../store/store";
-import { useQuery } from "@tanstack/react-query";
-import api from "../api/mainPageApi";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import { clearAuth } from "../features/authSlice";
+import { authApi } from "../api/authApi";
+import { store } from "../store/store"
 
 export default function Home() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [balTitle, setBalTitle] = useState("");
+  const dispatch = useDispatch();
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  const getUserId = () => store.getState().auth.user?.userId;
-  const userId = getUserId();
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
+    // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
+    fetch("http://localhost:8085/api/getQuizTitle")
+      .then(res => res.text())
+      .then(data => setBalTitle(data)) // data는 String
+      .catch(err => console.error(err));
   }, [userId]);
 
-  // useQuery로 오늘의 밸런스 게임 제목 가져오기
-  const { data: balTitle, isLoading, isError } = useQuery<string>({
-    queryKey: ["balanceTitle"],
-    queryFn: async () => {
-      const res = await api.get("/getQuizTitle");
-      return res.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    retry: 1,
-  });
-
-  if (isLoading) return <div>로딩 중...</div>;
-  if (isError) return <div>데이터 로드 실패</div>;
+  const handleLogout = async () => {
+    const token = store.getState().auth.accessToken;
+    try {
+      await authApi.post("/logout", {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } finally {
+      dispatch(clearAuth());
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -43,18 +49,26 @@ export default function Home() {
         </Link>
         {!isLoggedIn && (
           <div className={styles.authButtons}>
-            <button className={styles.authButton}>로그인</button>
-            <button className={styles.authButton}>회원가입</button>
+            <Link to="/login">
+              <button className={styles.authButton}>로그인</button>
+            </Link>
+            <Link to="/signup">
+              <button className={styles.authButton}>회원가입</button>
+            </Link>
           </div>
         )}
-
         {isLoggedIn && (
           <div className={styles.authButtons}>
-            <button className={styles.authButton}>로그아웃</button>
+            <img
+              src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
+              alt="프로필"
+              className={styles.profileImage}
+            />
+            <div className={styles.nickname}>"{user?.nickname}"님 환영합니다.</div>
+            <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}
       </div>
-
       <h1 className={styles.logo}><img src={mainIcon} /></h1>
       <div className={styles.cardWrapper}>
         <div className={styles.card}>
@@ -62,7 +76,6 @@ export default function Home() {
           <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>
           <img src={chatIcon} alt="MBTI 챗봇" />
         </div>
-
         <div
           className={!isBoardOpen ? styles.card : styles.boardCard}
           onMouseEnter={() => setIsBoardOpen(true)}
@@ -88,7 +101,6 @@ export default function Home() {
             </div>
           )}
         </div>
-
         {isLoggedIn ? (
           <Link to="/miniGame">
             <div className={styles.card}>
@@ -107,7 +119,6 @@ export default function Home() {
             <img src={miniIcon} alt="미니게임" />
           </div>
         )}
-
         <div className={styles.card}>
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
           <div className={styles.cardDesc}>{balTitle}</div>

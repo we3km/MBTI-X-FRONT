@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import styles from "./CreateGameRoom.module.css";
 import { store } from "../../../../store/store";
 import api from "../../../../api/mainPageApi"
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
     onClose: () => void;
-    onCreate: (title: string) => void;
 }
 
 type CreateRoomInput = {
@@ -18,18 +17,19 @@ type CreateRoomInput = {
 const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
-    // const userId = useSelector((state: RootState) => state.auth.userId);
+
     const getUserId = () => store.getState().auth.user?.userId;
     const userId = getUserId();
-    console.log("현재 로그인한 회원 번호 : ", userId);
-    // 게임방 생성용 mutation
+    const queryClient = useQueryClient();
+
     const createRoomMutation = useMutation({
         mutationFn: (data: CreateRoomInput) =>
             api.post("/createGameRoom", data).then(res => res.data),
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             console.log("생성하는 게임방 번호 :", data);
             setTitle("");
             onClose();
+            await queryClient.invalidateQueries({ queryKey: ['gamingRoomList'] });
             navigate(`/miniGame/CatchMind/${data}`);
         },
         onError: (err: Error) => {
@@ -56,7 +56,6 @@ const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
                     X
                 </button>
                 <div className={styles.inputWrapper}>
-                    <label className={styles.label}>제목 :</label>
                     <input
                         type="text"
                         className={styles.input}
@@ -65,7 +64,8 @@ const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
                         onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
-                <button className={styles.createBtn} onClick={handleCreate}>
+                <button className={styles.createBtn} onClick={
+                    handleCreate}>
                     생성하기
                 </button>
             </div>

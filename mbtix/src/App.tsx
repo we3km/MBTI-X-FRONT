@@ -55,7 +55,7 @@ function App() {
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
 
           {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+          <Route path="/" element={<MainPage />} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
@@ -73,8 +73,6 @@ function App() {
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
           {/* --- 로그인 관련 경로 --- */}
-          <Route path="/" element={<Home />}
-          />
           <Route path="/login" element={<LoginPage />}/>
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />

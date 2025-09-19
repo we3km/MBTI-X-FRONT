@@ -1,0 +1,256 @@
+.admin-page-container {
+    padding: 50px 40px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 80px);
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #5D9CEC;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
+}
+
+.inquiry-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inquiry-filters .filter-group {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.inquiry-filters .filter-group button {
+    padding: 8px 20px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.inquiry-filters .filter-group button:hover {
+    border-color: #5D9CEC;
+    color: #5D9CEC;
+}
+
+.inquiry-filters .filter-group button.active {
+    background-color: #5D9CEC;
+    color: white;
+    border-color: #5D9CEC;
+}
+
+.inquiry-filters .delete-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fa5252;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: auto;
+}
+
+.inquiry-filters .delete-btn:hover {
+    background-color: #e03131;
+}
+
+.table-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 24px;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.admin-table th, .admin-table td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.admin-table th {
+    background-color: #f8f9fa;
+    color: #868e96;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.admin-table .clickable-row:hover {
+    background-color: #f8f9fa;
+}
+
+.admin-table .inquiry-title {
+    text-align: left;
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.status-badge.status-N {
+    background-color: #fab005;
+}
+
+.status-badge.status-Y {
+    background-color: #40c057;
+}
+
+.deleted-by-user-tag {
+    color: #adb5bd;
+    font-size: 13px;
+    margin-left: 8px;
+    font-style: italic;
+}
+
+.detail-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+    margin-bottom: 30px;
+}
+
+.card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.card-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #343a40;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.card-header .meta-info {
+    font-size: 14px;
+    color: #868e96;
+}
+
+.card-header .meta-info span {
+    margin-right: 20px;
+}
+
+.card-content {
+    padding: 24px;
+    line-height: 1.7;
+}
+
+.card-content p {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.card-content textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+.card-content textarea:disabled {
+    background-color: #f1f3f5;
+    color: #495057;
+}
+
+.action-box {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.action-box button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.action-box button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.action-box .submit-btn {
+    background-color: #339af0;
+}
+.action-box .submit-btn:hover {
+    background-color: #1c7ed6;
+}
+
+.action-box .cancel-btn {
+    background-color: #868e96;
+}
+.action-box .cancel-btn:hover {
+    background-color: #495057;
+}
+.attachment-box {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.attachment-box h4 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.attached-image {
+    max-width: 100%;
+    max-height: 500px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}

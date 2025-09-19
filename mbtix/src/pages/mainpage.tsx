@@ -11,6 +11,7 @@ import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
+import {  useNavigate } from "react-router-dom";
 
 export default function Home() {
 
@@ -18,8 +19,11 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
+
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
@@ -29,6 +33,7 @@ export default function Home() {
       .then(data => setBalTitle(data)) // data는 String
       .catch(err => console.error(err));
   }, [userId]);
+
   const handleLogout = async () => {
     const token = store.getState().auth.accessToken;
     try {
@@ -42,9 +47,14 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Link to="/MBTIGraph">
-          <div className={styles.userInfo}>회원 MBTI 비율</div>
-        </Link>
+        <div className={styles.headerLeft}>
+          <Link to="/MBTIGraph">
+            <div className={styles.userInfo}>회원 MBTI 비율</div>
+          </Link>
+          <Link to="/MbtiTest">
+            <div className={styles.mbtitest}>MBTI 검사</div>
+          </Link>
+        </div>
         {!isLoggedIn && (
           <div className={styles.authButtons}>
             <Link to="/login">
@@ -57,6 +67,7 @@ export default function Home() {
         )}
         {isLoggedIn && (
           <div className={styles.authButtons}>
+
             <Link to={`/mypage`}>
             <img
           src={
@@ -120,11 +131,13 @@ export default function Home() {
             <img src={miniIcon} alt="미니게임" />
           </div>
         )}
-        <div className={styles.card}>
+
+        <div className={styles.card} onClick={() => navigate("/BalanceList")}>  
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
           <div className={styles.cardDesc}>{balTitle}</div>
           <img src={balanceIcon} alt="밸런스 게임" />
         </div>
+
       </div>
     </div>
   );

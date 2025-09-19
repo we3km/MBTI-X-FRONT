@@ -1,6 +1,10 @@
+import './App.css'
+
+import { Navigate, Route, Routes } from 'react-router-dom'
+
 import React from 'react';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+
 import { useDispatch } from 'react-redux';
 import { authApi } from './api/authApi';
 import { setAuth } from './features/authSlice';
@@ -16,6 +20,13 @@ import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
 import MyPage from './pages/myPage/MyPage';
+
+import TodayGame from './pages/balGame/TodayGame';
+import BalanceList from './pages/balGame/BalanceList';
+import PastBalance from './pages/balGame/PastBalance';
+import BalanceCreate from './pages/balGame/CreateBalGame';
+import MbtiTest from './pages/mbtiTest/MbtiTest';
+import MbtiResult from './pages/mbtiTest/MbtiResult';
 
 // import GameMenu from './pages/mini-game/GameMenu';
 // import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
@@ -85,6 +96,26 @@ function App() {
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           <Route path='/mypage' element={<ProtectedRoute><MyPage/></ProtectedRoute>}/>
           </Route>
+         
+          
+          <Route path="/login" element={<LoginPage />}/>
+          <Route path="find-pw" element={<Findpw />} />
+          <Route path="/find-id" element={<Findid/>} />
+          <Route path="/signup" element={<SignupPage />} />
+          {/* <Route path="/miniGame" element={<GameMenu />} />
+          <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
+          <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
+          <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
+          <Route path="/MBTIGraph" element={<MBTIGraph />} />
+          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
+          <Route path='/social-signup' element={<SocialSignup/>}/>
+          <Route path="/signup-complete" element={<SignupComplete />} />
+           <Route path="/balance/today" element={<TodayGame />} />
+        <Route path="/balanceList" element={<BalanceList />} />
+        <Route path="/balance/:gameId" element={<PastBalance />} />
+        <Route path="/balance/new" element={<BalanceCreate />} />
+        <Route path="/MbtiTest" element={<MbtiTest />} />
+        <Route path="/MbtiResult" element={<MbtiResult />} />
         </Routes>
       </section>
     </AuthGate>

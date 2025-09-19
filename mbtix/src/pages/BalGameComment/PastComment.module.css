@@ -1,0 +1,103 @@
+.commentBox {
+  border-radius: 1rem;
+  background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 2rem;  
+  padding-bottom: 2rem;             /* ⬅️ 좌우 패딩 통일 */
+}
+
+.commentTitle {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+.commentForm {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 600px;             /* ⬅️ 리스트와 동일한 폭 */
+  margin: 0 auto 1.5rem;        /* ⬅️ 가운데 정렬 + 아래 간격 */
+}
+
+.commentForm input {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.commentForm button {
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #38bdf8, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.commentForm button:hover {
+  opacity: 0.9;
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  
+   margin-left: -60px;                 /* ⬅️ 가운데 정렬 */
+}
+
+.commentItem {
+  width: 100%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.commentUser {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.commentContent {
+  font-size: 1rem;
+  color: #334155;
+  text-align: left;
+}
+
+.deleteBtn {
+  align-self: flex-end;
+  margin-top: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  background: #f87171;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.deleteBtn:hover {
+  opacity: 0.85;
+}

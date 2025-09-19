@@ -1,0 +1,123 @@
+:root {
+  --brand: #0ea5e9;
+  --brand-dark: #0284c7;
+  --ink-1: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --bg-grad: linear-gradient(180deg, #bae6fd, #e0f2fe, #f0f9ff);
+  --shadow-1: 0 10px 30px rgba(2, 6, 23, 0.08);
+}
+
+.page {
+  min-height: 100vh;
+  background: var(--bg-grad);
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+
+  background: #fff;
+  border-radius: 1.75rem;
+  padding: 3rem 3rem 4rem;
+  box-shadow: var(--shadow-1);
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.title {
+  color: var(--brand-dark);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.type {
+  font-size: 4rem;
+  font-weight: 900;
+  margin: 1.2rem 0 0.25rem;
+  color: var(--brand);
+  letter-spacing: -0.02em;
+}
+
+.profileImg {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  
+  
+  margin: 1.5rem 0 1rem;
+  box-shadow: 0 8px 16px rgba(14, 165, 233, 0.15);
+}
+
+.name {
+  font-size: 1.35rem;
+  color: var(--ink-2);
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.description {
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* ✅ 강점/약점을 좌우 2컬럼 배치 */
+.strengthWeakness {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+.section {
+  background: #f8fafc;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.section h3 {
+  color: var(--brand-dark);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+
+
+.retryBtn {
+  margin-top: 1.75rem;
+  width: 100%;
+  padding: 1.1rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.retryBtn:hover {
+  background: var(--brand-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(2, 6, 23, 0.12);
+}
+
+/* 📱 반응형 */
+@media (max-width: 640px) {
+  .strengthWeakness {
+    grid-template-columns: 1fr;
+  }
+}

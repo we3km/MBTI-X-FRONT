@@ -19,6 +19,12 @@
     object-fit: contain;
     /* 이미지 비율 깨지지 않게 */
 }
+
+.headerLeft {
+  display: flex;
+  flex-direction: column; /* 세로 배치 */
+  gap: 10px;               /* 버튼 사이 간격 */
+}
 .userInfo {
     font-size: 14px;
     background: #fff;
@@ -29,11 +35,31 @@
     margin-left: 10px;
     cursor: pointer;
     transition: 0.2s;
+    
+}
+.mbtitest{
+    font-size: 14px;
+    background: #fff;
+    color: #6a8cff;
+    border: 2px solid #6a8cff;
+    border-radius: 20px;
+    padding: 5px 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    
+
 }
 .userInfo:hover {
     background: #6A8CFF;
     color: #fff;
 }
+
+.mbtitest:hover {
+    background: #6a8cff;
+    color: #fff;
+}
+
 .authButtons {
     display: flex;
     gap: 10px;

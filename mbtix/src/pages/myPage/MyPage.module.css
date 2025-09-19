@@ -5,7 +5,7 @@
   --text: #0F172A;              /* Slate 900 */
   --muted: #64748B;             /* Slate 500-600 */
   --line: #E6E9F2;              /* 연한 라인 */
-  --card: #FFFFFF;              /* 카드 배경 */
+  --Mypagecard: #FFFFFF;              /* 카드 배경 */
   --bg: #F7F9FC;                /* 페이지 배경 (살짝 톤) */
   --hover: #F3F6FF;             /* 행 호버 하이라이트 */
 }
@@ -73,7 +73,7 @@
 
 .mbtiCard{
   width:100%;
-  background:var(--card);
+  background:var(--Mypagecard);
   border:1px solid var(--line);
   border-radius:12px;
   padding:18px;
@@ -110,7 +110,7 @@
 
 .accountBox, .scoreBox{
   width:780px; max-width:100%;
-  background:var(--card);
+  background:var(--Mypagecard);
   border:1px solid var(--line);
   border-radius:12px;
   padding:18px 20px;

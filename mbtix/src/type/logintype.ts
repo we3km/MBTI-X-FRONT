@@ -1,4 +1,3 @@
-// === API payloads ===
 export interface SignupRequest {
   loginId: string;
   email: string;
@@ -25,6 +24,27 @@ export interface User {
   point : number;
   roles: string;
 }
+
+export interface UserEntity {
+    userId: number;
+    loginId: string;
+    nickname: string;
+    email: string;
+    createdAt: string;
+    statusName: string;
+    relesaeDate: string | null;
+}
+
+export interface PageInfo {
+    listCount: number;
+    currentPage: number;
+    pageLimit: number;
+    boardLimit: number;
+    maxPage: number;
+    startPage: number;
+    endPage: number;
+}
+
 
 // 백엔드 로그인/회원가입 응답 형식
 export interface AuthResult {
@@ -59,3 +79,5 @@ export type SetAuthPayload = {
   refreshToken?: string | null; // 없으면 기존 state 유지
   user?: User | null;
 };
+
+

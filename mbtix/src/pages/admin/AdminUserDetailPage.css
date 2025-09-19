@@ -1,0 +1,269 @@
+.admin-page-container {
+    padding: 50px 40px;
+    background-color: #f8f9fa;
+}
+
+.user-detail-header {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #5D9CEC, #339af0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.user-info-summary {
+    flex-grow: 1;
+}
+
+.user-nickname {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #343a40;
+}
+
+.user-meta {
+    display: flex;
+    gap: 20px;
+    color: #868e96;
+    font-size: 14px;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-활동중 { background: #e6fcf5; color: #087f5b; }
+.status-정지 { background: #fff5f5; color: #c92a2a; }
+.status-탈퇴 { background: #f1f3f5; color: #868e96; }
+
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.ban-button {
+    background: #ffe3e3;
+    color: #c92a2a;
+}
+.ban-button:hover {
+    background: #ffc9c9;
+}
+
+.role-button {
+    background: #e7f5ff;
+    color: #1c7ed6;
+}
+.role-button:hover {
+    background: #d0ebff;
+}
+
+.detail-tabs {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.tab-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.tab-header button {
+    padding: 15px 25px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: #868e96;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-header button.active {
+    color: #5D9CEC;
+    border-bottom-color: #5D9CEC;
+    background: white;
+}
+
+.tab-content {
+    padding: 25px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.info-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.info-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #343a40;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 15px;
+}
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-item .label {
+    color: #868e96;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.history-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+}
+.history-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.history-card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.history-card li {
+    padding: 10px 0;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
+    color: #495057;
+}
+.history-card li:last-child {
+    border-bottom: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.ban-modal {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    width: 400px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ban-modal h2 {
+    margin: 0;
+    text-align: center;
+}
+
+.ban-modal select, .ban-modal textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    font-size: 15px;
+}
+
+.ban-modal textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.modal-actions button:first-child {
+    background-color: #f1f3f5;
+    color: #495057;
+}
+.modal-actions button:last-child {
+    background-color: #fa5252;
+    color: white;
+}
+
+.unban-button {
+    background: #e6fcf5;
+    color: #087f5b;
+}
+.unban-button:hover {
+    background: #c3fae8;
+}

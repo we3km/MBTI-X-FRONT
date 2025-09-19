@@ -5,6 +5,7 @@ import { store } from "../store/store";
 import { setAuth, logout as logoutAction } from "../features/authSlice";
 
 const API_BASE = "http://localhost:8085/api/auth";
+
 const getAccessToken = () => store.getState().auth.accessToken;
 const getUserId = () => store.getState().auth.userId;
 const getUser = (): User | null => store.getState().auth.user;
@@ -28,6 +29,13 @@ const noAuthUrls = [
   "/checkemail",
 ];
 
+// ===== setupAuthApiInterceptors 함수 추가 =====
+export const setupAuthApiInterceptors = () => {
+  // 이미 인터셉터가 설정되어 있으므로 별도 작업 불필요
+  // 필요시 추가 설정을 여기에 작성
+  console.log('Auth API interceptors are already set up');
+};
+
 // ===== request interceptor: Bearer 토큰 붙이기 =====
 authApi.interceptors.request.use((config) => {
   const token = getAccessToken();
@@ -43,7 +51,7 @@ authApi.interceptors.request.use((config) => {
   }
   return config;
 });
- 
+
 // ===== response interceptor: 401 발생 시 refresh 시도 후 재요청 =====
 let isRefreshing = false;
 let waiters: Array<(token?: string) => void> = [];
@@ -100,7 +108,6 @@ authApi.interceptors.response.use(
 
         if (!original.headers) original.headers = new AxiosHeaders();
         (original.headers as AxiosHeaders).set("Authorization", `Bearer ${accessToken}`);
-
         return authApi(original);
       } catch (refreshErr) {
         waiters.forEach((cb) => cb(undefined));
@@ -115,7 +122,6 @@ authApi.interceptors.response.use(
     return Promise.reject(err);
   }
 );
-
 
 // =============== API functions ===============
 export const signup = async (data: SignupRequest): Promise<AuthResult> => {
@@ -133,8 +139,8 @@ export const checkNickname = async (nickname: string) => {
   return res.data;
 };
 
-export const checkEmail = async (email:string) => {
-  const res = await authApi.get<boolean>("/checkemail",{params:{ email }});
+export const checkEmail = async (email: string) => {
+  const res = await authApi.get<boolean>("/checkemail", { params: { email } });
   return res.data;
 }
 
@@ -148,31 +154,27 @@ export const verifyEmail = async (email: string, code: string) => {
   return res.data;
 };
 
-export const nameMatch = async (name:string) => {
-  const res = await authApi.get<boolean>("/namematch", {params:{name}})
+export const nameMatch = async (name: string) => {
+  const res = await authApi.get<boolean>("/namematch", { params: { name } })
   return res.data
 }
 
-export const idMatch = async (name:string ,loginId:string) =>{
-  const res = await authApi.get<boolean>("/idmatch", {params:{name,loginId}})
+export const idMatch = async (name: string, loginId: string) => {
+  const res = await authApi.get<boolean>("/idmatch", { params: { name, loginId } })
   return res.data
 }
-
-
 
 export const login = async (
   loginId: string,
   password: string,
-  rememberMe: boolean 
+  rememberMe: boolean
 ) => {
   const res = await authApi.post<AuthResult>("/login", {
     loginId,
     password,
-    rememberMe, 
+    rememberMe,
   });
-
   const { accessToken, refreshToken, user } = res.data;
-
   store.dispatch(
     setAuth({
       accessToken,
@@ -181,7 +183,6 @@ export const login = async (
       user,
     })
   );
-
   return res.data;
 };
 
@@ -197,4 +198,3 @@ export const refreshToken = async () => {
   const res = await authApi.post<AuthResult>("/refresh");
   return res.data;
 };
-

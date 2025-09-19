@@ -1,100 +1,184 @@
-/* src/pages/balance/PastStats.module.css */
+:root {
+  --brand: #4dabf7;
+  --brand-light: #74c0fc;
+  --ink-1: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --ring: #e2e8f0;
+  --shadow-1: 0 6px 20px rgba(15, 23, 42, 0.08);
+}
+
 .main {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 24px;
+  max-width: 960px;
+  margin: 60px auto;
+  padding: 0 20px 80px;
 }
 
 .head {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
-.back {
-  color: #2563eb;
-  text-decoration: none;
+.head h1 {
+  font-size: clamp(1.8rem, 1.2rem + 1.5vw, 2.3rem);
+  font-weight: 800;
+  color: var(--ink-1);
 }
 
 .panel {
-  color: #3b82f6;
-  background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
+  background: var(--brand);
   border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, .06);
+  padding: 40px 30px;
+  color: #fff;
+  box-shadow: var(--shadow-1);
+}
+
+.title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .subtitle {
-  color: #6b7280;
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 1rem;
+  color: #e0f2ff;
+}
+
+.optionGrid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.optionCard {
+  background: #fff;
+  border: 1px solid var(--ring);
+  border-radius: 16px;
+  width: 300px;
+  height: 400px;
+
+  /* ✅ flex로 내부 중앙 정렬 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* ← 수평 중앙 */
+  justify-content: space-between;
+
+  padding: 28px 20px;
+  text-align: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.optionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-1);
+}
+
+.optHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 16px;
 }
 
-.grid {
-  
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.card {
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 20px;
-  background-color: white;
-}
-
-.badge {
-  display: inline-block;
-  background: #e0f2fe;
-  color: #2563eb;
+.optBadge {
+  display: inline-grid;
+  place-content: center;
+  background: #e7f5ff;
+  color: #1c7ed6;
   font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 9999px;
-  margin-bottom: 10px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+}
+
+.optTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.chartTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 10px 0 6px;
+  color: var(--ink-2);
+}
+
+.legend {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .countLine {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.barWrap {
-  height: 10px;
-  background: #e5e7eb;
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.barFill {
-  height: 10px;
-  background: #3b82f6;
-  border-radius: 9999px;
-  transition: width .35s ease;
-  
-}
-
-.donuts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
-  gap: 24px;
-  margin-bottom: 24px;
-   
-}
-
-.donutBox {
   align-items: center;
-  gap: 16px;
-  
-}
-
-.legend {
-  font-size: 14px;
-  line-height: 1.6;
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--ink-2);
 }
 
 .commentSection {
-  margin-top: 3rem; /* ✅ 결과 위와 댓글 사이 간격 */
+  background: #f1f9ff;
+  margin-top: 36px;
+  border-radius: 16px;
+  padding: 28px;
+  color: var(--ink-2);
+  border: 1px solid var(--ring);
 }
+
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pagination button {
+  margin: 0 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.pagination button:hover {
+  background: var(--brand-light);
+}
+
+.pagination span {
+  margin: 0 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.topLeftFab {
+  font-size: 14px;
+  background: #fff;
+  color: var(--brand);
+  border: 2px solid var(--brand);
+  border-radius: 20px;
+  padding: 6px 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  position: fixed;
+  left: 50px;
+  top: 50px;
+}
+.topLeftFab:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
+

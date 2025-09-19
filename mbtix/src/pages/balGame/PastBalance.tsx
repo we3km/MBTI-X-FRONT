@@ -1,116 +1,109 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getStats, type StatsRes } from "../../api/BalGameApi";
+import { useEffect, useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import { getPast, getStats, type StatsRes } from "../../api/BalGameApi";
 import styles from "./css/PastBalance.module.css";
 import { Donut, MBTI_COLORS } from "../../components/balGame/Donut";
 import BalGameComment from "../BalGameComment/BalGameComment";
-import type { RootState } from "../../store/store";
 import { useSelector } from "react-redux";
-
-
+import type { RootState } from "../../store/store";
 
 export default function PastBalance() {
-  const { gameId } = useParams<{ gameId: string }>();
+  const [params] = useSearchParams();
+  const date = params.get("date")!;
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // ⬅️ 추가
+  const [game, setGame] = useState<any | null>(null);
   const [stats, setStats] = useState<StatsRes | null>(null);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const user = useSelector((s: RootState) => s.auth.user);
+
 
   useEffect(() => {
-    if (!gameId) return;
-    const id = Number(gameId);
-    if (Number.isNaN(id)) {
-      console.error("잘못된 gameId:", gameId);
-      return;
-    }
-    getStats(id).then(setStats).catch(console.error);
-  }, [gameId]);
+    getPast(date, page, 1)
+      .then(async (res) => {
+        const g = res.content?.[0];
+        setTotalPages(res.totalPages); // ⬅️ 추가
+        if (!g) return;
+        setGame(g);
+        const stat = await getStats(g.gameId);
+        setStats(stat);
+      })
+      .catch(console.error);
+  }, [date, page]);
 
-  const rows = useMemo(() => {
-    if (!stats) return [];
-    const keys = ["A", "B"];
-    return keys.map((k) => ({
-      label: k,
-      cnt: stats.options[k]?.cnt ?? 0,
-      ratio: Math.round(stats.options[k]?.ratio ?? 0),
-    }));
-  }, [stats]);
+  if (!game || !stats) return <div>불러오는 중...</div>;
 
-  // ✅ MBTI 도넛 데이터 가공
-  const pieA = useMemo(() => {
-    const m = stats?.mbti?.A || {};
-    return Object.entries(m).map(([code, v]) => ({ label: code, value: v.cnt }));
-  }, [stats]);
-
-  const pieB = useMemo(() => {
-    const m = stats?.mbti?.B || {};
-    return Object.entries(m).map(([code, v]) => ({ label: code, value: v.cnt }));
-  }, [stats]);
-
-  if (!stats) return <div>결과 불러오는 중...</div>;
+  const options = game.options as { label: string; textContent: string }[];
 
   return (
     <main className={styles.main}>
       <div className={styles.head}>
-        <h1>결과 보기</h1>
-        <Link to="/balanceList" className={styles.back}>
-          ← 목록으로
-        </Link>
+        <h1>{date}의 게임</h1>
+
       </div>
+
 
       <section className={styles.panel}>
+        <h2 className={styles.title}>{game.title}</h2>
         <p className={styles.subtitle}>총 {stats.totalVotes}명 참여</p>
 
-        {/* ✅ MBTI 도넛 */}
-        <div className={styles.donuts}>
-          <div className={styles.donutBox}>
-            <Donut data={pieA} />
-            <div className={styles.legend}>
-              {pieA.map((d) => {
-                const color = MBTI_COLORS[d.label] || "#ADB5BD";
-                return (
-                  <div key={d.label} style={{ color }}>
-                    ■ {d.label} {d.value}표
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        <div className={styles.optionGrid}>
+          {options.map((o) => {
+            const cnt = stats.options[o.label]?.cnt ?? 0;
+            const ratio = stats.options[o.label]?.ratio ?? 0;
+            const pie = Object.entries(stats.mbti?.[o.label] || {}).map(
+              ([code, v]: any) => ({ label: code, value: (v as any).cnt })
+            );
 
-          <div className={styles.donutBox}>
-            <Donut data={pieB} />
-            <div className={styles.legend}>
-              {pieB.map((d) => {
-                const color = MBTI_COLORS[d.label] || "#ADB5BD";
-                return (
-                  <div key={d.label} style={{ color }}>
-                    ■ {d.label} {d.value}표
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+            return (
+              <div key={o.label} className={styles.optionCard}>
+                <div className={styles.optHead}>
+                  <div className={styles.optBadge}>{o.label}</div>
+                  <h3 className={styles.optTitle}>{o.textContent}</h3>
+                </div>
 
-        {/* ✅ 기존 A/B 비율 막대 */}
-        <div className={styles.grid}>
-          {rows.map((r) => (
-            <article key={r.label} className={styles.card}>
-              <div className={styles.badge}>{r.label}</div>
+                <p className={styles.chartTitle}>MBTI 분포</p>
+                <Donut data={pie} size={100} stroke={20} />
+                <ul className={styles.legend}>
+                  {pie.map((p) => {
+                    const color = MBTI_COLORS[p.label] || "#999";
+                    return (
+                      <li key={p.label} style={{ color }}>
+                        ■ {p.label} {p.value}표
+                      </li>
+                    );
+                  })}
+                </ul>
 
-              <div className={styles.countLine}>
-                <strong>{r.ratio}%</strong>
-                <span>{r.cnt}표</span>
+                <div className={styles.countLine}>
+                  <strong>{Math.round(ratio)}%</strong>
+                  <span>{cnt}표</span>
+                </div>
               </div>
-              <div className={styles.barWrap}>
-                <div className={styles.barFill} style={{ width: `${r.ratio}%` }} />
-              </div>
-            </article>
-          ))}
+            );
+          })}
         </div>
       </section>
-      {/* ✅ 댓글 컴포넌트 추가 */}
+
       <div className={styles.commentSection}>
-      <BalGameComment balId={Number(gameId)} currentUserId={user?.userId ?? 0} variant="past" />
+        <BalGameComment balId={game.gameId} currentUserId={user?.userId ?? 0} variant="past" />
       </div>
+
+      <div className={styles.pagination}>
+        {page > 1 && (
+          <button onClick={() => setPage((p) => p - 1)}>이전</button>
+        )}
+
+        <span>{page} / {totalPages}</span>
+
+        {page < totalPages && (
+          <button onClick={() => setPage((p) => p + 1)}>다음</button>
+        )}
+      </div>
+      <Link to="/balanceList">
+        <button className={styles.topLeftFab}>목록으로</button>
+      </Link>
+
+
     </main>
   );
 }

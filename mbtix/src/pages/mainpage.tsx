@@ -11,12 +11,14 @@ import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
+import {  useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
@@ -154,13 +156,13 @@ export default function Home() {
             <img src={miniIcon} alt="미니게임" />
           </div>
         )}
-        <Link to="/balanceList" >
-          <div className={styles.card}>
-            <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
-            <div className={styles.cardDesc}>{balTitle}</div>
-            <img src={balanceIcon} alt="밸런스 게임" />
-          </div>
-        </Link>
+
+        <div className={styles.card} onClick={() => navigate("/BalanceList")}>  
+          <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
+          <div className={styles.cardDesc}>{balTitle}</div>
+          <img src={balanceIcon} alt="밸런스 게임" />
+        </div>
+
       </div>
     </div>
   );

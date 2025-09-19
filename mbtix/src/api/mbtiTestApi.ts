@@ -35,3 +35,10 @@ export async function submitMbtiAnswers(
   });
   return res.data; // MBTI 문자열 (예: "ENFP")
 }
+
+// ✅ 사용자 MBTI 비율 가져오기
+export async function getMbtiRatio(userId: number) {
+  const res = await http.get(`/mbti/ratio/${userId}`);
+  return res.data as { mbtiName: string; ratio: number };
+}
+

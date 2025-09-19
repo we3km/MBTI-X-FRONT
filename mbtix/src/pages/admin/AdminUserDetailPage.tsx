@@ -21,7 +21,7 @@ const AdminUserDetailPage = () => {
                 setUserDetail(data);
             } catch (error) {
                 console.error("회원 상세 정보를 불러오는 중 에러 발생:", error);
-                alert("정보를 불러오는데 실패했습니다.");
+                toast.error("정보를 불러오는데 실패했습니다.");
                 navigate('/admin/users');
             }
         }

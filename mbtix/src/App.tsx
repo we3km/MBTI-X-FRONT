@@ -1,6 +1,5 @@
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
-
 import MbtiChat from './pages/mbti-chat/mbtiChat'
 import CreateChat from './pages/mbti-chat/createChat'
 import SignupPage from './pages/login/SignupPage'
@@ -9,12 +8,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import AuthGate from './components/AuthGate';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
-import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
+import TodayGame from './pages/balGame/TodayGame';
+import BalanceList from './pages/balGame/BalanceList';
+import PastBalance from './pages/balGame/PastBalance';
+import BalanceCreate from './pages/balGame/CreateBalGame';
+import MbtiTest from './pages/mbtiTest/MbtiTest';
+import MbtiResult from './pages/mbtiTest/MbtiResult';
 
 // import GameMenu from './pages/mini-game/GameMenu';
 // import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
@@ -81,10 +85,16 @@ function App() {
           <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
           <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
           <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
-        <Route path="/MBTIGraph" element={<MBTIGraph />} />
-        <Route path='/oauth2/success' element={<OAuth2Success/>}/>
-        <Route path='/social-signup' element={<SocialSignup/>}/>
-        <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path="/MBTIGraph" element={<MBTIGraph />} />
+          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
+          <Route path='/social-signup' element={<SocialSignup/>}/>
+          <Route path="/signup-complete" element={<SignupComplete />} />
+           <Route path="/balance/today" element={<TodayGame />} />
+        <Route path="/balanceList" element={<BalanceList />} />
+        <Route path="/balance/:gameId" element={<PastBalance />} />
+        <Route path="/balance/new" element={<BalanceCreate />} />
+        <Route path="/MbtiTest" element={<MbtiTest />} />
+        <Route path="/MbtiResult" element={<MbtiResult />} />
 
         <Route path='/chatbot' element={
             <ProtectedRoute>
@@ -94,10 +104,9 @@ function App() {
 
         <Route path='/createChat' element={<CreateChat/>}/>
         <Route path="/chat/:roomId" element={<MbtiChat />} />
-
-      </Routes>
-    </section>
-  </AuthGate>
-);
+        </Routes>
+      </section>
+    </AuthGate>
+  );
 }
 export default App

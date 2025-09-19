@@ -115,7 +115,17 @@ const Header = () => {
                     <>
                         <div className="nav-item">
                             <button className="user-profile-button" onClick={() => handleMenuToggle('user')}>
-                                <div className="user-icon"></div>
+                                <div>
+                                      <img
+                                      src={
+                                        user?.profileType === "UPLOAD"
+                                          ? `http://localhost:8085/api/profile/images/${user?.profileFileName}`
+                                          : `/profile/default/${user?.profileFileName || "default.jpg"}`
+                                      }
+                                      alt="프로필"
+                                      className="profileImage"
+                                    />
+                                </div>
                                 <span>{user.nickname}</span>
                             </button>
                             <div className={`dropdown-menu user-menu ${openMenu === 'user' ? 'active' : ''}`}>

@@ -49,7 +49,6 @@ export interface PageInfo {
 // 백엔드 로그인/회원가입 응답 형식
 export interface AuthResult {
   accessToken: string;
-  // refreshToken은 쿠키만 쓰는 환경에선 안 내려올 수도 있으니 optional로 두는 게 안전
   refreshToken?: string;
   user: User;
 }

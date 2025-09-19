@@ -5,13 +5,11 @@ import { useDispatch } from 'react-redux';
 import { authApi } from './api/authApi';
 import { setAuth } from './features/authSlice';
 
-import Header from './components/Header';
 import AuthGate from './components/AuthGate';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/login/Login';
 import SignupPage from './pages/login/SignupPage';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
-import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
@@ -42,23 +40,31 @@ import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
 import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
+import LayoutWithHeader from './components/LayoutWithHeader';
 
 
 function App() {
   return (
     <AuthGate>
-      <Header />
       <section id="content">
-        <Routes>
-          {/* --- 공개 경로 --- */}
+        {/* 헤더없어요 */}
+        {/* --- 공개 경로 --- */}
+          <Routes>
+          <Route path="/" element={<MainPage />}/>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="find-pw" element={<Findpw />} />
+          <Route path="/find-id" element={<Findid/>} />
+          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
+          <Route path='/social-signup' element={<SocialSignup/>}/>
+          <Route path="/signup-complete" element={<SignupComplete />} />
           <Route path="/cs-center" element={<CustomerServicePage />} />
           <Route path="/faqs" element={<FaqListPage />} />
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
-
           {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+
+          {/* 헤더 있어요 */}
+          <Route element={<LayoutWithHeader />}>
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
@@ -76,21 +82,9 @@ function App() {
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
           {/* --- 로그인 관련 경로 --- */}
-          <Route path="/" element={<Home />}
-          />
-          <Route path="/login" element={<LoginPage />}/>
-          <Route path="find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid/>} />
-          <Route path="/signup" element={<SignupPage />} />
-          {/* <Route path="/miniGame" element={<GameMenu />} />
-          <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
-          <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
-          <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
-          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
-          <Route path='/social-signup' element={<SocialSignup/>}/>
-          <Route path="/signup-complete" element={<SignupComplete />} />
-          <Route path='/mypage' element={<MyPage/>}/>
+          <Route path='/mypage' element={<ProtectedRoute><MyPage/></ProtectedRoute>}/>
+          </Route>
         </Routes>
       </section>
     </AuthGate>

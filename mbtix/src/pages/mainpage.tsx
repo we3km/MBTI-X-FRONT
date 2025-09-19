@@ -5,7 +5,7 @@ import balanceIcon from "../assets/main-page/밸런스 게임 이미지.png"
 import chatIcon from "../assets/main-page/챗봇.png"
 import mainIcon from "../assets/main-page/메인아이콘.png"
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
@@ -20,7 +20,6 @@ export default function Home() {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
-  const navigate = useNavigate();
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);

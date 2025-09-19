@@ -61,7 +61,7 @@
   justify-content: center;
   margin-top: 18px;
   position: relative;
-  z-index: 2; /* 🔥 Cropper 위에 버튼 올라오도록 */
+  z-index: 2; 
 }
 
 /* 공통 버튼 스타일 */

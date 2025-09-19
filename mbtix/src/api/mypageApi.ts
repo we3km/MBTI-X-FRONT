@@ -63,5 +63,12 @@ export const getScores = async (userId: number) => {
 
 export const getBoard = async (userId: number) =>{
   const res = await mypageApi.get(`/myBoard/${userId}`);
-  return res.data
+  return res.data;
+}
+
+export const deductMbtiPoint = async (userId:number) => {
+  const res = await mypageApi.put("/deductMbtiPoint",null,{
+    params: {userId},
+  });
+  return res.data;
 }

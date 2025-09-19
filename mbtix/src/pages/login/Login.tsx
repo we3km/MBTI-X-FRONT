@@ -58,9 +58,6 @@ const LoginPage: React.FC = () => {
     location.href = "http://localhost:8085/api/oauth2/authorization/kakao";
   };
 
-  const handleNaverLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
 
   return (
     <div className={styles.loginContainer}>
@@ -120,12 +117,6 @@ const LoginPage: React.FC = () => {
             onClick={handleKakaoLogin}
           >
             카카오로 로그인
-          </button>
-          <button
-            className={`${styles.socialBtn} ${styles.naver}`}
-            onClick={handleNaverLogin}
-          >
-            네이버로 로그인
           </button>
         </div>
       </form>

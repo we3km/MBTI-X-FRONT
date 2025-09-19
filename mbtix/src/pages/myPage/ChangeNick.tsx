@@ -41,7 +41,13 @@ export default function ChangeNick() {
     if (!nickCheck) {
       setnickMessage("닉네임 중복 확인을 먼저 해주세요.");
       setnickMessageColor("red");
+          setnickMessageColor("red");
       return;
+    }
+    if ((user?.point ?? 0) < 500) {
+    setnickMessage("❌ 포인트가 부족합니다.");
+    setnickMessageColor("red");
+    return;
     }
 
     if (!user?.userId) {

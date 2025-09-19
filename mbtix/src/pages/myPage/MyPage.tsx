@@ -7,6 +7,7 @@ import ChangeNick from "./ChangeNick";
 import ChangePw from "./ChangePw";
 import ChangeProfileImg from "./ChangeImg";
 import { getBoard, getScores } from "../../api/mypageApi";
+import ChangeMbti from "./ChangeMbti";
 
 export default function MyPage() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -14,6 +15,7 @@ export default function MyPage() {
   const [shwoChangeNick , setShowChangeNick] = useState(false);
   const [shwoChangePw , setShowChangePW] = useState(false);
   const [showChangeImg, setSwowChangeImg] = useState(false);
+  const [showChangeMbti, setShowChangeMbti] = useState(false);
 
   const [boards, setBoards] = useState<{ boardId : number, boardTitle: string; nickName: string; createdAt: string; viewCount: number }[]>([]);
 
@@ -66,7 +68,7 @@ return (
       <div className={styles.mbtiCard}>
         <h3>나의 MBTI</h3>
         <p className={styles.mbtiValue}>{user?.mbtiName || "INTJ"}</p>
-        <button className={styles.smallBtn}>MBTI 재검사</button>
+        <button className={styles.smallBtn} onClick={()=> setShowChangeMbti(true)}>MBTI 재검사</button>
         <button className={styles.smallBtn}>밸런스 게임 의견</button>
       </div>
     </aside>
@@ -134,6 +136,11 @@ return (
     {showChangeImg && (
       <Modal onClose={() => setSwowChangeImg(false)}>
         <ChangeProfileImg />
+      </Modal>
+    )}
+    {showChangeMbti && (
+      <Modal onClose={()=> setShowChangeMbti(false)}>
+          <ChangeMbti onClose={() => setShowChangeMbti(false)}/>
       </Modal>
     )}
   </div>

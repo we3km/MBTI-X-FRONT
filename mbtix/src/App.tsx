@@ -1,6 +1,10 @@
+import './App.css'
+
+import { Navigate, Route, Routes } from 'react-router-dom'
+
 import React from 'react';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+
 import { useDispatch } from 'react-redux';
 import { authApi } from './api/authApi';
 import { setAuth } from './features/authSlice';
@@ -17,6 +21,12 @@ import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
+import TodayGame from './pages/balGame/TodayGame';
+import BalanceList from './pages/balGame/BalanceList';
+import PastBalance from './pages/balGame/PastBalance';
+import BalanceCreate from './pages/balGame/CreateBalGame';
+import MbtiTest from './pages/mbtiTest/MbtiTest';
+import MbtiResult from './pages/mbtiTest/MbtiResult';
 
 // import GameMenu from './pages/mini-game/GameMenu';
 // import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
@@ -57,7 +67,7 @@ function App() {
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
 
           {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+          <Route path="/" element={<MainPage />} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
@@ -75,8 +85,8 @@ function App() {
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
           {/* --- 로그인 관련 경로 --- */}
-          <Route path="/" element={<Home />}
-          />
+         
+          
           <Route path="/login" element={<LoginPage />}/>
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
@@ -89,6 +99,12 @@ function App() {
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
+           <Route path="/balance/today" element={<TodayGame />} />
+        <Route path="/balanceList" element={<BalanceList />} />
+        <Route path="/balance/:gameId" element={<PastBalance />} />
+        <Route path="/balance/new" element={<BalanceCreate />} />
+        <Route path="/MbtiTest" element={<MbtiTest />} />
+        <Route path="/MbtiResult" element={<MbtiResult />} />
         </Routes>
       </section>
     </AuthGate>

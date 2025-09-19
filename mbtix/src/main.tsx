@@ -15,7 +15,7 @@ import { setupAuthApiInterceptors } from './api/authApi.ts';
 const queryClient = new QueryClient();
 
 setupApiClientInterceptors(store);
-setupAuthApiInterceptors(store);
+
 
 createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

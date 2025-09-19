@@ -342,7 +342,7 @@ export default function CatchMind() {
                             <div className={styles.profileContainer}>
                                 {/* 방장 로직 할당 필요! */}
                                 <img src={`/profile/default/${gamer.profile}`} alt={gamer.nickname} className={styles.profile} />
-                                {gamer.userId === gameRoomInfo?.creatorId && <div className={styles.crownIcon}></div>}
+                                {gamer.userId === gameState.captain?.userId && <div className={styles.crownIcon}></div>}
                             </div>
                             <div className={styles.gamerInfo}>
                                 <span className={styles.nickname}>

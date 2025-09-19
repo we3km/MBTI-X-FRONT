@@ -1,8 +1,7 @@
 import axios, { AxiosHeaders } from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8085/api',
-    withCredentials: true
+    baseURL: 'http://localhost:8085/api'
 });
 
 export const setupInterceptors = (store: any) => {

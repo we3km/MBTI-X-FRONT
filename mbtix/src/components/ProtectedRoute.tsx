@@ -4,31 +4,36 @@ import type { RootState } from "../store/store";
 import { Navigate } from "react-router-dom";
 
 interface Props {
-    children : ReactNode; //자식 컴포넌트
+    children: ReactNode;
     requiredRoles?: string[];
-    redirectTo?:string;
+    redirectTo?: string;
 }
 
 export default function ProtectedRoute({
-    children,
-    requiredRoles=[],
-    redirectTo="/login"}:Props){
+  children,
+  requiredRoles = [],
+  redirectTo = "/login"
+}: Props) {
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
-        const {isAuthenticated,user} = useSelector( (state:RootState) => state.auth);
-        //로그인하지 않은 경우
-        if(!isAuthenticated){
-            alert("로그인 후 이용해주세요")
-            return <Navigate to={redirectTo} replace/>
-        }
-        //권한이 필요한 경우 권한 확인
-        if(requiredRoles.length > 0 && user){
-            const hasRequiredRole = requiredRoles.some( role => user.roles.includes(role));
+  // 로그인하지 않은 경우
+  if (!isAuthenticated) {
+    alert("로그인 후 이용해주세요.");
+    return <Navigate to={redirectTo} replace />;
+  }
 
-            if(!hasRequiredRole){
-                return <Navigate to="/unauthorized" replace />;
-            }
-        }
+  // roles 배열 안전하게 처리
+  const roles: string[] = Array.isArray(user?.roles)
+    ? user.roles
+    : user?.roles
+      ? [user.roles]   // 단일 string이면 배열로 감싸기
+      : [];            // undefined면 빈 배열
 
+  // 권한 검사
+  if (requiredRoles.length > 0 && !roles.some((role: string) => requiredRoles.includes(role))) {
+    alert("접근 권한이 없습니다.");
+    return <Navigate to="/" replace />;
+  }
 
-    return <>{children}</>
+  return <>{children}</>;
 }

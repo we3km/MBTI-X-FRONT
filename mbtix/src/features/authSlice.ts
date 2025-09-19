@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import {initialAuthState, type AuthState, type SetAuthPayload } from "../type/logintype";
+import { initialAuthState, type AuthState, type SetAuthPayload } from "../type/logintype";
 
 const authSlice = createSlice({
   name: "auth",
@@ -7,13 +7,17 @@ const authSlice = createSlice({
   reducers: {
     /** 로그인 / 토큰 갱신 시 */
     setAuth(state: AuthState, action: PayloadAction<SetAuthPayload>) {
-      const { accessToken, userId, refreshToken } = action.payload;
+      const { accessToken, userId, refreshToken, user, retestAllowed } = action.payload; // ✅ retestAllowed도 구조 분해
+
       state.accessToken = accessToken ?? state.accessToken ?? null;
       state.userId = userId;
-      // refreshToken이 오면 교체, 없으면 기존값 유지
       state.refreshToken = refreshToken ?? state.refreshToken ?? null;
-      state.user = action.payload.user ?? state.user
+      state.user = user ?? state.user;
       state.isAuthenticated = !!accessToken;
+
+      if (retestAllowed !== undefined) {
+        state.retestAllowed = retestAllowed; // ✅ 정상 반영
+      }
     },
 
     /** 로그아웃 */
@@ -21,7 +25,9 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.userId = null;
+      state.user = null;
       state.isAuthenticated = false;
+      state.retestAllowed = false; // ✅ 초기화
     },
 
     /** 전부 초기화 */
@@ -29,7 +35,9 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.userId = null;
+      state.user = null;
       state.isAuthenticated = false;
+      state.retestAllowed = false; // ✅ 초기화
     },
   },
 });

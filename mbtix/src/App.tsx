@@ -2,12 +2,7 @@ import './App.css'
 
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import React from 'react';
 import './App.css';
-
-import { useDispatch } from 'react-redux';
-import { authApi } from './api/authApi';
-import { setAuth } from './features/authSlice';
 
 import AuthGate from './components/AuthGate';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -52,6 +47,8 @@ import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
 import LayoutWithHeader from './components/LayoutWithHeader';
+import { useSelector } from 'react-redux';
+import type { RootState } from './store/store';
 
 
 function App() {
@@ -95,27 +92,13 @@ function App() {
           {/* --- 로그인 관련 경로 --- */}
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           <Route path='/mypage' element={<ProtectedRoute><MyPage/></ProtectedRoute>}/>
-          </Route>
-         
-          
-          <Route path="/login" element={<LoginPage />}/>
-          <Route path="find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid/>} />
-          <Route path="/signup" element={<SignupPage />} />
-          {/* <Route path="/miniGame" element={<GameMenu />} />
-          <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
-          <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
-          <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
-          <Route path="/MBTIGraph" element={<MBTIGraph />} />
-          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
-          <Route path='/social-signup' element={<SocialSignup/>}/>
-          <Route path="/signup-complete" element={<SignupComplete />} />
-           <Route path="/balance/today" element={<TodayGame />} />
-        <Route path="/balanceList" element={<BalanceList />} />
-        <Route path="/balance/:gameId" element={<PastBalance />} />
-        <Route path="/balance/new" element={<BalanceCreate />} />
-        <Route path="/MbtiTest" element={<MbtiTest />} />
-        <Route path="/MbtiResult" element={<MbtiResult />} />
+          <Route path="/balance/today" element={<TodayGame />} />
+          <Route path="/balanceList" element={<BalanceList />} />
+          <Route path="/balance/:gameId" element={<PastBalance />} />
+          <Route path="/balance/new" element={<BalanceCreate />} />
+          <Route path="/MbtiTest" element={useSelector((state: RootState) => state.auth.retestAllowed)? <MbtiTest />: <Navigate to="/" replace />}/>
+          <Route path="/MbtiResult" element={<MbtiResult />} />
+          </Route>         
         </Routes>
       </section>
     </AuthGate>

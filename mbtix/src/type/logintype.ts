@@ -61,6 +61,7 @@ export interface AuthState {
   userId: number | null;
   isAuthenticated: boolean;
   user: User | null;
+  retestAllowed: boolean
 }
 
 export const initialAuthState: AuthState = {
@@ -69,6 +70,7 @@ export const initialAuthState: AuthState = {
   userId: null,
   isAuthenticated: false,
   user: null,
+  retestAllowed: false
 };
 
 // setAuth 액션 payload 타입
@@ -77,6 +79,7 @@ export type SetAuthPayload = {
   userId: number;
   refreshToken?: string | null; // 없으면 기존 state 유지
   user?: User | null;
+  retestAllowed?: boolean;
 };
 
 

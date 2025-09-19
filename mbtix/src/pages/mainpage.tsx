@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Link} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import { clearAuth } from "../features/authSlice";
+import { clearAuth, setAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
 import {  useNavigate } from "react-router-dom";
@@ -24,15 +24,28 @@ export default function Home() {
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
 
+    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const refreshToken = useSelector((state: RootState) => state.auth.refreshToken);
+
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
+
+  dispatch(
+    setAuth({
+      accessToken,   // 기존 토큰 유지
+      refreshToken,  // 기존 refreshToken 유지
+      userId: userId!,
+      user: user ?? null,
+      retestAllowed: false,  // ⭐️ 검사 권한 해제
+    })
+  );
     // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
     fetch("http://localhost:8085/api/getQuizTitle")
       .then(res => res.text())
       .then(data => setBalTitle(data)) // data는 String
       .catch(err => console.error(err));
-  }, [userId]);
+  }, [userId,dispatch]);
 
   const handleLogout = async () => {
     const token = store.getState().auth.accessToken;
@@ -50,9 +63,6 @@ export default function Home() {
         <div className={styles.headerLeft}>
           <Link to="/MBTIGraph">
             <div className={styles.userInfo}>회원 MBTI 비율</div>
-          </Link>
-          <Link to="/MbtiTest">
-            <div className={styles.mbtitest}>MBTI 검사</div>
           </Link>
         </div>
         {!isLoggedIn && (

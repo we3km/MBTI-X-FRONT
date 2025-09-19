@@ -42,10 +42,11 @@ export default function ChangeMbti({ onClose }: ChangeMbtiProps) {
       user: {
         ...user,
         point: res.point,
-      }
+      },
+      retestAllowed: true
         })
       )
-      navigate("/"); // 수정해야함
+      navigate("/MbtiTest");
     } catch (err: any) {
       console.error(err);
       if (err.response?.status === 400) {

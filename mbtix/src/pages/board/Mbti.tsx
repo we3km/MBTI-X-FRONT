@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { api } from "../../api/boardApi";
 import styles from "./Board.module.css";
-import { Link } from "react-router-dom";
-import type { Board } from "../../type/board";
+import { Link, useParams } from "react-router-dom";
+import { mbtiTypes, type Board } from "../../type/board";
+import BoardHeader from "./BoardHeader";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 
 export default function List() {
-  const [nickname, setNickname] = useState("닉네임");
   const [boardData, setBoardData] = useState<Board[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState<"latest" | "views">("latest");
@@ -13,16 +15,15 @@ export default function List() {
   // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
+  const {id} = useParams();
 
-  // 닉네임 로컬스토리지에서 불러오기
-  useEffect(() => {
-    const savedNickname = localStorage.getItem("nickname") || "닉네임";
-    setNickname(savedNickname);
-  }, []);
+  const user = useSelector((state:RootState) => state.auth.user);    
+  const mbtiId = user?.mbtiId || 0 ;
+  const userMbti = mbtiTypes.find( mbti => mbtiId === mbtiId)?.mbtiName || '';
 
   // 게시글 불러오기
   useEffect(() => {
-    api.get("/board", { params: { mbtiName: "ISTP" } }) // MBTI가 ISTP라고 가정.
+    api.get("/board", { params: { mbtiId : id, categoryId : 3 } }) // MBTI가 ISTP라고 가정.
       .then((res) => setBoardData(res.data))
       .catch((err) => {
         console.error(err);
@@ -64,29 +65,12 @@ export default function List() {
   return (
     <div className={styles.wrapper}>
       {/* 헤더 */}
-      <div className={styles.header}>
-        <div className={styles["header-left"]}>MBTI-X</div>
-        <div className={styles["header-center"]}>
-          <div className={styles.dropdown}>
-            <a href="/board">게시판 ▼</a>
-            <div className={styles["dropdown-content"]}>
-              <a href="/board">통합 게시판</a>
-              <a href="/Mbti">전용 게시판</a>
-            </div>
-          </div>
-          <a href="/question">궁금해 게시판</a>
-          <a href="#">미니게임</a>
-          <a href="#">MBTI 챗봇</a>
-        </div>
-        <div className={styles["header-right"]}>
-          <span className={styles.nickname}>{nickname}</span>
-        </div>
-      </div>
+      <BoardHeader/>
 
       {/* 메인 컨테이너 */}
       <div className={styles.container}>
         <main className={styles.content}>
-          <h1>전용 게시판</h1>
+          <h1>{userMbti} 전용 게시판</h1>
 
           {/* 검색창 + 버튼 그룹 */}
           <div className={styles["search-write-container"]}>
@@ -108,7 +92,7 @@ export default function List() {
                 </div>
               </div>
 
-              <Link to={"/board/new"}>
+              <Link to={"/board/new?categoryId=3"}>
                 <button className={styles["write-btn"]}>글쓰기</button>
               </Link>
             </div>

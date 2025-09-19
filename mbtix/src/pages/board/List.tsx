@@ -3,15 +3,13 @@ import { api } from "../../api/boardApi";
 import styles from "./Board.module.css";
 import { Link } from "react-router-dom";
 import type { Board } from "../../type/board";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store/store";
+import BoardHeader from "./BoardHeader";
 
 export default function List() {
   const [boardData, setBoardData] = useState<Board[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState<"latest" | "views">("latest");
-  const nickname = useSelector((state: RootState) => state.auth.user?.nickname);
-
+  
   // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
@@ -22,12 +20,16 @@ export default function List() {
 
   // 게시글 불러오기
   useEffect(() => {
-    api.get("/board")
+    api.get("/board", {params:{
+      categoryId : 2
+    }})
       .then(res => setBoardData(res.data))
       .catch((err) => {
         console.error(err);
         alert("게시글을 불러오는 중 오류가 발생했습니다.");
       });
+
+      
   }, []);
 
   // 검색 필터 적용
@@ -64,24 +66,7 @@ export default function List() {
   return (
     <div className={styles.wrapper}>
       {/* 헤더 */}
-      <div className={styles.header}>
-        <div className={styles["header-left"]}>MBTI-X</div>
-        <div className={styles["header-center"]}>
-          <div className={styles.dropdown}>
-            <a href="/board">게시판 ▼</a>
-            <div className={styles["dropdown-content"]}>
-              <a href="/board">통합 게시판</a>
-              <a href="Mbti">전용 게시판</a>
-            </div>
-          </div>
-          <a href="/question">궁금해 게시판</a>
-          <a href="#">미니게임</a>
-          <a href="#">MBTI 챗봇</a>
-        </div>
-        <div className={styles["header-right"]}>
-          <span className={styles.nickname}>{nickname}</span>
-        </div>
-      </div>
+      <BoardHeader/>
 
       {/* 메인 컨테이너 */}
       <div className={styles.container}>
@@ -108,7 +93,7 @@ export default function List() {
                 </div>
               </div>
 
-              <Link to={"/board/new"}>
+              <Link to={"/board/new?categoryId=2"}>
                 <button className={styles["write-btn"]}>글쓰기</button>
               </Link>
             </div>

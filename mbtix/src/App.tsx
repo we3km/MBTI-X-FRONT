@@ -52,16 +52,33 @@ return (
         <Route path='/oauth2/success' element={<OAuth2Success/>}/>
         <Route path='/social-signup' element={<SocialSignup/>}/>
         <Route path="/signup-complete" element={<SignupComplete />} />
+
         <Route path='/board'  >
-          <Route path='' element={<List/>}/>
-          <Route path='new' element={<Insert/>} />
-          <Route path=':id' element={<Detail/>}/>
+          <Route path='' element={
+            <ProtectedRoute>
+                <List/>
+            </ProtectedRoute>}/>
+          <Route path='new' element={
+            <ProtectedRoute>
+              <Insert/>
+            </ProtectedRoute>
+            } />
+          <Route path=':id' element={
+            <ProtectedRoute>
+              <Detail/>
+            </ProtectedRoute>}/>
         </Route>
         <Route path="/question">
-          <Route path='' element={<Question/>}/>
+          <Route path='' element={
+            <ProtectedRoute>        
+              <Question/>
+            </ProtectedRoute>}/>
         </Route>
-        <Route path="/Mbti">
-          <Route path='' element={<Mbti/>}/>
+        <Route path="/mbti">
+          <Route path=':id' element={
+            <ProtectedRoute>  
+              <Mbti/>
+            </ProtectedRoute>}/>
         </Route>
 
       </Routes>

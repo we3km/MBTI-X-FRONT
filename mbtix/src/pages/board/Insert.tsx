@@ -1,27 +1,26 @@
 import { useState, useEffect } from "react";
 import styles from "./Board.module.css";
 import { api } from "../../api/boardApi";
+import BoardHeader from "./BoardHeader";
+import { categorys, mbtiTypes } from "../../type/board";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
 export default function Insert() {
-  const [nickname, setNickname] = useState("익명");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("1");
+  const [selectedCategory, setSelectedCategory] = useState("ISTJ");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const categorys = [
-    { categoryId: "1", categoryName: "통합게시판" },
-    { categoryId: "2", categoryName: "궁금해" },
-    { categoryId: "3", categoryName: "MBTI게시판" },
-  ];
+  // 'id' 파라미터의 값 가져오기
+  const categoryId = searchParams.get('categoryId'); 
 
-  const userMbti = "ISTP";
-
-  useEffect(() => {
-    const savedNickname = localStorage.getItem("nickname") || "익명";
-    setNickname(savedNickname);
-  }, []);
+  const user = useSelector((state:RootState) => state.auth.user);    
+  const mbtiId = user?.mbtiId || 0 ;
+  const userMbti = mbtiTypes.find( mbti => mbtiId === mbtiId)?.mbtiName || '';
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -45,8 +44,14 @@ export default function Insert() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    formData.append("categoryId", selectedCategory);
+    formData.append("categoryId", categoryId!!);
     formData.append("mbtiName", userMbti);
+
+    if(categoryId == '1'){
+      // 궁금해 게시판인 경우, 선택한 대상 MBIT가 서버로 전송될 수 있도록 수정
+      formData.append("boardMbti",selectedCategory);
+    }
+
 
     imageFiles.forEach((file) => {
       formData.append("images", file);
@@ -57,7 +62,7 @@ export default function Insert() {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then(() => {
-        window.location.href = "/board";
+        window.location.href = `/board?boardMbti=${selectedCategory}`;
       })
       .catch((err) => {
         console.error(err);
@@ -68,24 +73,7 @@ export default function Insert() {
   return (
     <div className={styles.wrapper}>
       {/* 헤더 */}
-      <div className={styles.header}>
-        <div className={styles["header-left"]}>MBTI-X</div>
-        <div className={styles["header-center"]}>
-          <div className={styles.dropdown}>
-            <a href="/board">게시판 ▼</a>
-            <div className={styles["dropdown-content"]}>
-              <a href="/board">통합 게시판</a>
-              <a href="/mbti">전용 게시판</a>
-            </div>
-          </div>
-          <a href="/question">궁금해 게시판</a>
-          <a href="#">미니게임</a>
-          <a href="#">MBTI 챗봇</a>
-        </div>
-        <div className={styles["header-right"]}>
-          <span className={styles.nickname}>{nickname}</span>
-        </div>
-      </div>
+      <BoardHeader/>
 
       <div className={styles.container}>
         <main className={styles.content}>
@@ -97,18 +85,22 @@ export default function Insert() {
           />
 
           <div className={styles.flexRow}>
+          {
+            categoryId === '1' && 
             <div className={styles.leftDropdown}>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 {categorys.map((cat) => (
-                  <option key={cat.categoryId} value={cat.categoryId}>
+                  <option key={cat.categoryId} value={cat.categoryName}>
                     #{cat.categoryName}
                   </option>
                 ))}
               </select>
             </div>
+          }
+         
 
             {/* 이미지 첨부 */}
             <div className={styles.imageUpload}>

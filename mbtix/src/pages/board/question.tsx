@@ -3,10 +3,21 @@ import { api } from "../../api/boardApi";
 import styles from "./Board.module.css";
 import { Link } from "react-router-dom";
 import type { Board } from "../../type/board";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
+import BoardHeader from "./BoardHeader";
+
+type MBTIGroup<T extends string> = {
+  label: string;
+  options: T[];
+  state: T | null;
+  setState: React.Dispatch<React.SetStateAction<T | null>>;
+};
 
 export default function Question() {
   // ------------------ 상태 ------------------
-  const [nickname, setNickname] = useState("닉네임");
+  const nickname = useSelector((state: RootState) => state.auth.user?.nickname) || "익명";
+
   const [boardData, setBoardData] = useState<Board[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState<"latest" | "views">("latest");
@@ -16,53 +27,33 @@ export default function Question() {
   const postsPerPage = 10;
 
   // ------------------ MBTI 선택 상태 ------------------
-  type MBTIGroup<T extends string> = {
-    label: string;
-    options: T[];
-    state: T | null;
-    setState: React.Dispatch<React.SetStateAction<T | null>>;
-  };
-
   const [selectedEI, setSelectedEI] = useState<"E" | "I" | null>(null);
   const [selectedNS, setSelectedNS] = useState<"N" | "S" | null>(null);
   const [selectedFT, setSelectedFT] = useState<"F" | "T" | null>(null);
   const [selectedPJ, setSelectedPJ] = useState<"P" | "J" | null>(null);
 
-  const mbtiGroups: MBTIGroup<"E" | "I">[] = [
+  const allMBTIGroups: MBTIGroup<any>[] = [
     { label: "E/I", options: ["E", "I"], state: selectedEI, setState: setSelectedEI },
-  ];
-  const mbtiGroupsNS: MBTIGroup<"N" | "S">[] = [
     { label: "N/S", options: ["N", "S"], state: selectedNS, setState: setSelectedNS },
-  ];
-  const mbtiGroupsFT: MBTIGroup<"F" | "T">[] = [
     { label: "F/T", options: ["F", "T"], state: selectedFT, setState: setSelectedFT },
-  ];
-  const mbtiGroupsPJ: MBTIGroup<"P" | "J">[] = [
     { label: "P/J", options: ["P", "J"], state: selectedPJ, setState: setSelectedPJ },
-  ];
-
-  const allMBTIGroups = [
-    ...mbtiGroups,
-    ...mbtiGroupsNS,
-    ...mbtiGroupsFT,
-    ...mbtiGroupsPJ,
   ];
 
   // ------------------ useEffect ------------------
   useEffect(() => {
-    const savedNickname = localStorage.getItem("nickname") || "닉네임";
-    setNickname(savedNickname);
-  }, []);
-
-  useEffect(() => {
     api
-      .get("/board")
+      .get("/board", {
+        params: {
+          categoryId: 1,
+          mbtiName: allMBTIGroups.map((mbti) => mbti.state ?? "_").join(""),
+        },
+      })
       .then((res) => setBoardData(res.data))
       .catch((err) => {
         console.error(err);
         alert("게시글을 불러오는 중 오류가 발생했습니다.");
       });
-  }, []);
+  }, [selectedEI, selectedNS, selectedFT, selectedPJ]);
 
   // ------------------ 필터 & 정렬 ------------------
   const filteredPosts = boardData.filter(
@@ -72,7 +63,8 @@ export default function Question() {
   );
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
-    if (sortOption === "latest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    if (sortOption === "latest")
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     if (sortOption === "views") return b.view - a.view;
     return 0;
   });
@@ -91,34 +83,14 @@ export default function Question() {
   // ------------------ 렌더링 ------------------
   return (
     <div className={styles.wrapper}>
-      {/* 헤더 */}
-      <div className={styles.header}>
-        <div className={styles["header-left"]}>MBTI-X</div>
-        <div className={styles["header-center"]}>
-          <div className={styles.dropdown}>
-            <a href="/board">게시판 ▼</a>
-            <div className={styles["dropdown-content"]}>
-              <a href="/board">통합 게시판</a>
-              <a href="/Mbti">전용 게시판</a>
-            </div>
-          </div>
-          <a href="/question">궁금해 게시판</a>
-          <a href="#">미니게임</a>
-          <a href="#">MBTI 챗봇</a>
-        </div>
-        <div className={styles["header-right"]}>
-          <span className={styles.nickname}>{nickname}</span>
-        </div>
-      </div>
+      <BoardHeader />
 
-      {/* 메인 컨테이너 */}
       <div className={styles.container}>
         <main className={styles.content}>
           <h1>궁금해 게시판</h1>
 
           {/* 검색창 + 버튼 그룹 */}
           <div className={styles["search-write-container"]}>
-            {/* 왼쪽: 검색창 */}
             <input
               type="text"
               placeholder="🔍제목 또는 작성자 검색"
@@ -126,7 +98,6 @@ export default function Question() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
 
-            {/* 오른쪽 버튼 그룹 */}
             <div className={styles["button-group"]}>
               <div className={styles.dropdown}>
                 <button className={styles["write-btn"]}>정렬 ▼</button>
@@ -136,7 +107,7 @@ export default function Question() {
                 </div>
               </div>
 
-              <Link to={"/board/new"}>
+              <Link to={"/board/new?categoryId=1"}>
                 <button className={styles["write-btn"]}>글쓰기</button>
               </Link>
             </div>
@@ -161,7 +132,9 @@ export default function Question() {
                 currentPosts.map((post) => (
                   <tr key={post.boardId}>
                     <td>
-                      <Link to={"/board/" + post.boardId}>{post.title}</Link>
+                      <Link to={"/board/" + post.boardId}>
+                        [{post.mbtiName ?? "-"}] {post.title}
+                      </Link>
                     </td>
                     <td>{post.nickname}</td>
                     <td>{new Date(post.createdAt).toLocaleString()}</td>
@@ -197,7 +170,7 @@ export default function Question() {
             </button>
           </div>
 
-          {/* ---------- MBTI 선택 ---------- */}
+          {/* MBTI 선택 */}
           <h3 style={{ marginTop: "40px" }}>MBTI 선택</h3>
           <div style={{ margin: "20px 0", textAlign: "center" }}>
             {allMBTIGroups.map((group) => (
@@ -224,7 +197,7 @@ export default function Question() {
           </div>
 
           <p>
-            선택한 성향:{" "}
+            선택한 MBTI:{" "}
             <strong>
               {selectedEI ?? "-"}
               {selectedNS ?? "-"}

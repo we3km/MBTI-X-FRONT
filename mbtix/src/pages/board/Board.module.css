@@ -3,24 +3,6 @@
   width: 1280px;
 }
 
-/* ---------------- 기존 헤더 ---------------- */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #2699E6;
-  color: white;
-  padding: 10px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-.header a { color: white; text-decoration: none; margin: 0 10px; }
-.header-left { font-weight: bold; }
-.header-center { display: flex; align-items: center; }
-.header-right { display: flex; align-items: center; }
-.nickname { font-weight: bold; }
-
 /* ---------------- 드롭다운 ---------------- */
 .dropdown { position: relative; display: inline-block; }
 .dropdown-content {
@@ -224,6 +206,40 @@
   font-size: 12px;
   color: gray;
   margin-top: 2px;
+}
+
+.commentMain {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.commentActions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.replyItem {
+  margin-left: 20px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+
+.replyMain {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.replyContent {
+  flex: none; 
+}
+.replyActions {
+  flex: none;
 }
 
 .commentSection button:hover { background-color: #1a6fb3; }

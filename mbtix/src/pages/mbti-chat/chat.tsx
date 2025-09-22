@@ -17,15 +17,7 @@ interface SaveChatMessage {
 
 interface ChatProps {
   roomId: string;
-  state: {
-    mbti: string;
-    botName: string;
-    gender: string;
-    talkStyle: string;
-    age: number;
-    features: string;
-    botProfileImageUrl?: string; // 👈 이미지 URL 속성 추가
-  };
+  state: any;
 }
 
 export default function Chat({ roomId, state }: ChatProps) {
@@ -89,7 +81,8 @@ export default function Chat({ roomId, state }: ChatProps) {
           gender: state.gender,
           talkStyle: state.talkStyle,
           age: state.age,
-          features: state.features,
+          personality: state.personality, // personality로 변경
+          appearance: state.appearance, // appearance 추가
         }),
       });
       const reader = response.body?.getReader();
@@ -109,7 +102,7 @@ export default function Chat({ roomId, state }: ChatProps) {
         // 6. 봇 메시지 실시간 업데이트
         setMessages((prevMessages) => {
           const lastMessage = prevMessages[prevMessages.length - 1];
-          if (lastMessage.sender === "bot") {
+          if (lastMessage?.sender === "bot") {
             // 마지막 메시지가 봇 메시지면 내용 업데이트
             const newMessages = [...prevMessages];
             newMessages[newMessages.length - 1] = {
@@ -156,7 +149,9 @@ export default function Chat({ roomId, state }: ChatProps) {
             {m.sender === "bot" && (
               <div className={styles.botHeader}>
                 {state.botProfileImageUrl && (
-                  <img src={`http://localhost:8085/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> // 👈 포트 번호 8085로 수정
+                  // 수정: /api 대신 /uploads 경로 사용
+                  <img src={`http://localhost:8085/api${state.botProfileImageUrl}`}
+                   alt="Profile" className={styles.profileImage}/> 
                 )}
                 <div className={styles.botName}>{state.botName}</div>
               </div>
@@ -176,7 +171,8 @@ export default function Chat({ roomId, state }: ChatProps) {
           <div className={styles.botWrapper}>
             <div className={styles.botHeader}>
               {state.botProfileImageUrl && (
-                <img src={`http://localhost:8085/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> // 👈 포트 번호 8085로 수정
+                // 수정: /api 대신 /uploads 경로 사용
+                <img src={`http://localhost:8085/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> 
               )}
               <div className={styles.botName}>{state.botName}</div>
             </div>

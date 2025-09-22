@@ -95,10 +95,12 @@
   gap: 8px;
 }
 .textArea {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  resize: none;
+  resize: vertical;
   font-size: 14px;
+  min-height: 80px;
+  box-sizing: border-box;
 }

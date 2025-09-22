@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { store } from "../../store/store";
 import { chatbotApi } from "../../api/chatbot/catbotApi";
 import styles from "./createChat.module.css";
-import axios from 'axios'; // axios 라이브러리 추가
 
 const mbtiList = [
   "ESTJ", "ESTP", "ESFJ", "ESFP",
@@ -13,17 +12,6 @@ const mbtiList = [
   "ISTJ", "ISTP", "ISFJ", "ISFP",
   "INTJ", "INTP", "INFJ", "INFP"
 ];
-
-interface createChat {
-  userId: number;
-  botMbti: string;
-  botName: string;
-  gender: string;
-  talkStyle: string;
-  age: number;
-  features: string;
-  botProfileImageUrl?: string; // 👈 추가
-}
 
 interface CreateChatComponentProps {
   onChatCreated?: (newRoom: {
@@ -35,53 +23,53 @@ interface CreateChatComponentProps {
     gender: string;
     talkStyle: string;
     age: number;
-    features: string;
+    personality: string; // 'features' 대신 'personality'
+    appearance: string;  // 'appearance' 추가
     botProfileImageUrl: string;
   }) => void;
 }
 
 export default function CreateChat({ onChatCreated }: CreateChatComponentProps) {
+  const navigate = useNavigate();
+  
+  // State for Step 1
   const [selectedMBTI, setSelectedMBTI] = useState<string | null>(null);
   const [botName, setBotName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState<number | null>(null);
-  const [features, setFeatures] = useState("");
   const [talkStyle, setTalkStyle] = useState("존대말");
-  const navigate = useNavigate();
+
+  // State for Step 2
+  const [personality, setPersonality] = useState("");
+  const [appearance, setAppearance] = useState("");
+  
+  // General State
   const getUserId = () => store.getState().auth.user?.userId;
   const userId = getUserId();
-
-  const [step, setStep] = useState(1); // 👈 1단계, 2단계 구분용 상태 추가
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [botProfileImageUrl, setBotProfileImageUrl] = useState<string | null>(null); // 👈 이미지 URL 상태 추가
+  const [botProfileImageUrl, setBotProfileImageUrl] = useState<string | null>(null);
 
-  // 1단계: 챗봇 프로필 이미지 생성
+  // 이미지 생성 (2단계 -> 3단계)
   const handleGenerateImage = async () => {
     setLoading(true);
-    if (!selectedMBTI || !botName) {
-      alert("MBTI와 닉네임은 필수 항목입니다.");
-      setLoading(false);
-      return;
-    }
-
     try {
-      // 백엔드의 새로운 엔드포인트로 이미지 생성 요청
       const response = await chatbotApi.post("/generate-image", {
+        // 1, 2단계 모든 정보 전달
         botMbti: selectedMBTI,
-        botName: botName,
-        gender: gender,
-        age: age,
-        talkStyle: talkStyle,
-        features: features
-      },
-      {
-          timeout: 60000, // 👈 타임아웃 시간을 1분(60000ms)으로 설정
+        botName,
+        gender,
+        age,
+        talkStyle,
+        personality,
+        appearance
+      }, {
+          timeout: 180000, 
       });
 
       const imageUrl = response.data.imageUrl;
-      console.log(imageUrl);
       setBotProfileImageUrl(imageUrl);
-      setStep(2); // 👈 이미지 생성이 완료되면 2단계로 이동
+      setStep(3); // 이미지 확인 및 최종 생성 단계로 이동
     } catch (error) {
       console.error("이미지 생성 실패:", error);
       alert("이미지 생성에 실패했습니다. 다시 시도해주세요.");
@@ -90,7 +78,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
     }
   };
 
-  // 2단계: 챗봇 최종 생성 (이미지 URL을 함께 전달)
+  // 챗봇 최종 생성 (3단계)
   const handleCreate = async () => {
     setLoading(true);
     if (!userId || !selectedMBTI || !botName || !botProfileImageUrl) {
@@ -107,20 +95,28 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
         gender,
         talkStyle,
         age,
-        features,
-        botProfileImageUrl, // 👈 생성된 이미지 URL을 백엔드로 전달
+        personality, // 'features' 대신 'personality'
+        appearance,  // 'appearance' 추가
+        botProfileImageUrl,
       };
 
-      // 기존 챗봇 생성 엔드포인트 호출
-      const res = await chatbotApi.post("", chatData,
-      {
-          timeout: 60000, // 👈 타임아웃 시간을 1분(60000ms)으로 설정
+      const res = await chatbotApi.post("", chatData, {
+          timeout: 180000,
       });
       const newRoom = res.data;
       if (onChatCreated) {
         onChatCreated(newRoom);
       }
-      navigate(`/chat/${newRoom.roomId}`, { state: newRoom });
+      navigate(`/chat/${newRoom.roomId}`, { state: {
+        mbti: newRoom.botMbti,
+        botName: newRoom.botName,
+        gender: newRoom.gender,
+        talkStyle: newRoom.talkStyle,
+        age: newRoom.age,
+        personality: newRoom.personality,
+        appearance: newRoom.appearance,
+        botProfileImageUrl: newRoom.botProfileImageUrl
+      }});
     } catch (error) {
       console.error("챗봇 생성 실패:", error);
       alert("챗봇 생성에 실패했습니다. 다시 시도해주세요.");
@@ -128,12 +124,20 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
       setLoading(false);
     }
   };
+  
+  const nextStep = () => {
+    if (!selectedMBTI || !botName) {
+      alert("MBTI와 닉네임은 필수 항목입니다.");
+      return;
+    }
+    setStep(2);
+  }
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>나만의 챗봇 만들기</h2>
+      <h2 className={styles.heading}>나만의 챗봇 만들기 ( {step} / 3 )</h2>
 
-      {/* 1단계: 정보 입력 */}
+      {/* 1단계: 기본 정보 입력 */}
       {step === 1 && (
         <>
           <div className={styles.inputContainer}>
@@ -184,46 +188,53 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
           </div>
 
           <div className={styles.inputContainer}>
-            <p>주요 특징 (예: '게으름, 다정함'):</p>
-            <input
-              type="text"
-              value={features}
-              onChange={(e) => setFeatures(e.target.value)}
-              className={styles.inputField}
-              placeholder="특징을 콤마(,)로 구분하여 입력"
-            />
-          </div>
-
-          <div className={styles.inputContainer}>
             <p>말투:</p>
             <label>
-              <input
-                type="radio"
-                name="talkStyle"
-                value="존대말"
-                checked={talkStyle === "존대말"}
-                onChange={(e) => setTalkStyle(e.target.value)}
-              />
-              존대말
+              <input type="radio" name="talkStyle" value="존대말" checked={talkStyle === "존대말"} onChange={(e) => setTalkStyle(e.target.value)} /> 존대말
             </label>
             <label style={{ marginLeft: "12px" }}>
-              <input
-                type="radio"
-                name="talkStyle"
-                value="반말"
-                checked={talkStyle === "반말"}
-                onChange={(e) => setTalkStyle(e.target.value)}
-              />
-              반말
+              <input type="radio" name="talkStyle" value="반말" checked={talkStyle === "반말"} onChange={(e) => setTalkStyle(e.target.value)} /> 반말
             </label>
           </div>
 
           <div style={{ marginTop: "20px" }}>
-            <button
-              onClick={handleGenerateImage}
-              className={styles.createButton}
-              disabled={loading || !selectedMBTI || !botName}
-            >
+            <button onClick={nextStep} className={styles.createButton}>
+              다음 단계로 ➡️
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* 2단계: 상세 정보 입력 */}
+      {step === 2 && (
+        <>
+          <div className={styles.inputContainer}>
+            <p>성격:</p>
+            <textarea
+              value={personality}
+              onChange={(e) => setPersonality(e.target.value)}
+              className={styles.textArea}
+              rows={4}
+              placeholder="예: 성격, 성향, 사용자와의 관계 등. 문장을 나눠서 입력하면 더 잘 적용됩니다."
+            />
+          </div>
+
+          <div className={styles.inputContainer}>
+            <p>외모:</p>
+            <textarea
+              value={appearance}
+              onChange={(e) => setAppearance(e.target.value)}
+              className={styles.textArea}
+              rows={4}
+              placeholder="예: 머리색, 복장 등. 특징을 콤마(,)로 구분하여 입력해 주세요."
+            />
+          </div>
+          
+          <div style={{ marginTop: "20px" }}>
+            <button onClick={() => setStep(1)} className={styles.createButton} style={{ backgroundColor: "#6c757d", marginRight: "10px" }}>
+              ⬅️ 이전 단계로
+            </button>
+            <button onClick={handleGenerateImage} className={styles.createButton} disabled={loading}>
               {loading ? (
                 <>
                   <span className={styles.spinner}></span>
@@ -237,8 +248,8 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
         </>
       )}
 
-      {/* 2단계: 이미지 확인 및 최종 생성 */}
-      {step === 2 && botProfileImageUrl && (
+      {/* 3단계: 이미지 확인 및 최종 생성 */}
+      {step === 3 && botProfileImageUrl && (
         <>
           <h3 className={styles.heading}>생성된 프로필 이미지</h3>
           <img
@@ -248,18 +259,10 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
           />
           <p style={{ marginTop: "10px" }}>이미지가 마음에 드시면 챗봇을 생성하세요.</p>
           <div style={{ marginTop: "20px" }}>
-            <button
-              onClick={() => setStep(1)}
-              className={styles.createButton}
-              style={{ backgroundColor: "#6c757d", marginRight: "10px" }}
-            >
+            <button onClick={() => setStep(2)} className={styles.createButton} style={{ backgroundColor: "#6c757d", marginRight: "10px" }}>
               ⬅️ 다시 만들기
             </button>
-            <button
-              onClick={handleCreate}
-              className={styles.createButton}
-              disabled={loading}
-            >
+            <button onClick={handleCreate} className={styles.createButton} disabled={loading}>
               {loading ? (
                 <>
                   <span className={styles.spinner}></span>

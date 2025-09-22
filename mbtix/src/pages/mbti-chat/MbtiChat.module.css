@@ -1,16 +1,14 @@
 /* 뷰포트 기준 80% 폭 + 가운데 정렬 + 확장 방지 */
 .container {
-  width: 80vw;                /* 윈도우(뷰포트) 폭의 80% */
-  max-width: 1400px;          /* 선택: 너무 넓어지는 것 방지 */
-  min-width: 900px;           /* 선택: 너무 좁아지는 것 방지 */
+  width: 80vw;
+  max-width: 1400px;
+  min-width: 900px;
   height: 90vh;
-  margin: 5vh auto 0;         /* 수평 가운데 + 위에 약간 여백 */
+  margin: 5vh auto 0;
   box-sizing: border-box;
 
-  /* 부모가 flex여도 강제 확장되지 않도록 */
   flex: 0 0 auto;
 
-  /* 레이아웃: 좌측 사이드바 / 우측 메인 */
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 0;
@@ -31,9 +29,9 @@
   flex-direction: column;
   border-right: 1px solid rgba(255,255,255,0.08);
 
-  height: 100%;          /* 🔥 컨테이너 높이 채우기 */
+  height: 100%;
   box-sizing: border-box;
-  overflow: hidden;      /* 🔥 sidebar 자체가 넘치지 않도록 */
+  overflow: hidden;
 }
 
 .createBtn {
@@ -52,6 +50,56 @@
 .createBtn:hover {
   background: #2980b9;
   transform: translateY(-1px);
+}
+
+/* 챗봇 상세정보 */
+.currentBotInfo {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.currentBotDetail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.currentBotImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #3498db;
+    cursor: pointer;
+}
+
+.currentBotName {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.currentBotMbti {
+    font-size: 14px;
+    opacity: .8;
+}
+
+.detailBtn {
+    width: 100%;
+    padding: 8px 0;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ecf0f1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .15s ease;
+}
+
+.detailBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .roomList {
@@ -78,7 +126,6 @@
 .roomLink:hover { background: rgba(255,255,255,0.08); }
 .mbti { font-size: 12px; opacity: .8; }
 
-/* 👈 추가된 스타일 */
 .roomLinkContent {
   display: flex;
   align-items: center;
@@ -99,9 +146,9 @@
   display: flex;
   justify-content: center;
   align-items: center;  
-  height: 100%;           /* 부모(container)의 높이를 꽉 채움 */
-  overflow: hidden;       /* 자식이 넘쳐도 스크롤 안 뜨게 */
-  padding: 0;             /* 패딩은 안쪽 요소에서 조정 */
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
 }
 .placeholder {
   margin: auto;
@@ -115,7 +162,7 @@
 .roomList::-webkit-scrollbar { width: 8px; }
 .roomList::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 8px; }
 
-/* ChatRoom.module.css */
+/* Modal */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -150,4 +197,101 @@
   font-size: 24px;
   cursor: pointer;
   color: #666;
+}
+
+/* 상세정보 모달 */
+.detailModalContent {
+  background: #fff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+}
+
+.detailBotInfo h3 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.detailBotInfo p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.detailBotInfo p:last-child {
+  border-bottom: none;
+}
+
+.detailBotInfo strong {
+  color: #2c3e50;
+  font-weight: 700;
+  display: inline-block;
+  min-width: 60px;
+  margin-right: 10px;
+}
+
+.detailCloseBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* 이미지 확대 모달 */
+.fullImageModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.fullImageContent {
+    position: relative;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.fullImageContent img {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 8px;
+}
+
+.downloadBtn {
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.downloadBtn:hover {
+    background: #2980b9;
 }

@@ -1,21 +1,11 @@
 import './App.css'
-
-import { Navigate, Route, Routes } from 'react-router-dom'
-
-import React from 'react';
-import './App.css';
-
-import { useDispatch } from 'react-redux';
-import { authApi } from './api/authApi';
-import { setAuth } from './features/authSlice';
-
+import { Route, Routes } from 'react-router-dom'
+import SignupPage from './pages/login/SignupPage'
+import LoginPage from './pages/login/Login'
+import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import AuthGate from './components/AuthGate';
-import ProtectedRoute from './components/ProtectedRoute';
-import LoginPage from './pages/login/Login';
-import SignupPage from './pages/login/SignupPage';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
-import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
@@ -27,13 +17,10 @@ import PastBalance from './pages/balGame/PastBalance';
 import BalanceCreate from './pages/balGame/CreateBalGame';
 import MbtiTest from './pages/mbtiTest/MbtiTest';
 import MbtiResult from './pages/mbtiTest/MbtiResult';
-
 // import GameMenu from './pages/mini-game/GameMenu';
 // import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
 // import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
 // import GameRank from './pages/mini-game/Ranking';
-
-
 // 모든 페이지 컴포넌트 import
 import CustomerServicePage from './pages/faq/CustomerServicePage';
 import FaqListPage from './pages/faq/FaqListPage';
@@ -51,8 +38,11 @@ import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
 import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
-
-
+import List from './pages/board/List'
+import Insert from './pages/board/Insert'
+import Detail from './pages/board/Detail'
+import Question from './pages/board/question'
+import Mbti from './pages/board/Mbti'
 function App() {
   return (
     <AuthGate>
@@ -65,13 +55,11 @@ function App() {
           <Route path="/cs-center" element={<CustomerServicePage />} />
           <Route path="/faqs" element={<FaqListPage />} />
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
-
           {/* --- 로그인 필수 경로 --- */}
           <Route path="/" element={<MainPage />} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
-
           {/* --- 관리자 전용 경로 --- */}
           <Route path="/admin" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><UserManagementPage /></ProtectedRoute>} />
@@ -83,10 +71,7 @@ function App() {
           <Route path="/admin/faqs/edit/:faqId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminFaqFormPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryListPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
-
           {/* --- 로그인 관련 경로 --- */}
-         
-          
           <Route path="/login" element={<LoginPage />}/>
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
@@ -100,11 +85,21 @@ function App() {
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
            <Route path="/balance/today" element={<TodayGame />} />
-        <Route path="/balanceList" element={<BalanceList />} />
-        <Route path="/balance/:gameId" element={<PastBalance />} />
-        <Route path="/balance/new" element={<BalanceCreate />} />
-        <Route path="/MbtiTest" element={<MbtiTest />} />
-        <Route path="/MbtiResult" element={<MbtiResult />} />
+          <Route path="/balanceList" element={<BalanceList />} />
+          <Route path="/balance/:gameId" element={<PastBalance />} />
+          <Route path="/balance/new" element={<BalanceCreate />} />
+          <Route path="/MbtiTest" element={<MbtiTest />} />
+          <Route path="/MbtiResult" element={<MbtiResult />} />
+        
+          {/* 게시판 관련 경로 */}
+          <Route path="/board">
+            <Route path="" element={<ProtectedRoute><List /></ProtectedRoute>} />
+            <Route path="all" element={<ProtectedRoute><List /></ProtectedRoute>} />
+            <Route path="new" element={<ProtectedRoute><Insert /></ProtectedRoute>} />
+            <Route path="curious" element={<ProtectedRoute><Question /></ProtectedRoute>} />
+            <Route path="mbti" element={<ProtectedRoute><Mbti /></ProtectedRoute>} />
+            <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} /> 
+          </Route>
         </Routes>
       </section>
     </AuthGate>

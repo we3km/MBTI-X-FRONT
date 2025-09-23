@@ -67,6 +67,7 @@ function App() {
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
           
+
           {/* --- 로그인 필수 경로 --- */}
           {/* 헤더 있어요 */}
           <Route element={<LayoutWithHeader />}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getMbtiQuestions, submitMbtiAnswers } from "../../api/mbtiTestApi";
 import type { RootState } from "../../store/store";
@@ -75,12 +75,14 @@ export default function MbtiTest() {
   }
 
   try {
-    const result = await submitMbtiAnswers(user.userId, answers);
-    navigate("/MbtiResult", { state: { mbti: result } });
-  } catch (err) {
-    console.error("결과 전송 실패:", err);
-    alert("결과를 전송하는 중 오류가 발생했습니다.");
-  }
+  const result = await submitMbtiAnswers(user.userId, answers);
+
+  // 결과 페이지로 이동 먼저
+  navigate("/MbtiResult", { state: { mbti: result } });
+} catch (err) {
+  console.error("결과 전송 실패:", err);
+  alert("결과를 전송하는 중 오류가 발생했습니다.");
+}
 };
 
 

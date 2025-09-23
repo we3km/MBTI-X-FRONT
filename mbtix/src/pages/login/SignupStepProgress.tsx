@@ -12,8 +12,8 @@ export default function SignupStepProgress({ step }: Props) {
       {steps.map((label, idx) => (
         <React.Fragment key={idx}>
           <div
-            className={`${styles.step} ${step >= idx ? styles.completed : ""}`}
-          >
+          className={`${styles.step} ${
+          step > idx ? styles.completed : step === idx ? styles.current : ""}`}>
             <div className={styles.circle} />
             <span>{label}</span>
           </div>

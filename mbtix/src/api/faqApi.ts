@@ -14,7 +14,7 @@ export interface FaqPageResponse {
     list: Faq[];
 }
 
-// FAQ 목록 조회 (사용자, 관리자)
+// 1. FAQ 목록 조회 (사용자, 관리자)
 export const fetchAllFaqs = async (page: number): Promise<FaqPageResponse> => {
     const response = await apiClient.get('/faqs', {
         params: { cpage: page }
@@ -22,13 +22,13 @@ export const fetchAllFaqs = async (page: number): Promise<FaqPageResponse> => {
     return response.data;
 };
 
-// FAQ 상세 조회 (사용자, 관리자)
+// 2. FAQ 상세 조회 (사용자, 관리자)
 export const fetchFaqDetail = async (faqId: number): Promise<Faq> => {
     const response = await apiClient.get(`/faqs/${faqId}`);
     return response.data;
 };
 
-// 생성
+// 3. FAQ 생성
 type CreateFaqData = Omit<Faq, 'faqId' | 'createdAt'>;
 
 export const createFaq = async (faqData: CreateFaqData): Promise<Faq> => {
@@ -36,13 +36,13 @@ export const createFaq = async (faqData: CreateFaqData): Promise<Faq> => {
     return response.data;
 };
 
-// 수정
+// 4. FAQ 수정
 export const updateFaq = async (faqId: number, faqData: CreateFaqData): Promise<Faq> => {
     const response = await apiClient.put(`/faqs/${faqId}`, faqData);
     return response.data;
 };
 
-// 삭제
+// 5. FAQ 삭제
 export const deleteFaq = async (faqId: number): Promise<void> => {
-    await apiClient.delete(`/admin/faqs/${faqId}`);
+    await apiClient.delete(`/faqs/${faqId}`);
 };

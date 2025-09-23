@@ -3,33 +3,24 @@ import { api } from "../../api/boardApi";
 import styles from "./Board.module.css";
 import { Link } from "react-router-dom";
 import type { Board } from "../../type/board";
-import BoardHeader from "./BoardHeader";
 
 export default function List() {
   const [boardData, setBoardData] = useState<Board[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState<"latest" | "views">("latest");
-  
+
   // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
 
-  // 닉네임 로컬스토리지에서 불러오기
-  useEffect(() => {
-  }, []);
-
   // 게시글 불러오기
   useEffect(() => {
-    api.get("/board", {params:{
-      categoryId : 2
-    }})
-      .then(res => setBoardData(res.data))
+    api.get("/board", { params: { categoryId: 2 } })
+      .then((res) => setBoardData(res.data))
       .catch((err) => {
         console.error(err);
         alert("게시글을 불러오는 중 오류가 발생했습니다.");
       });
-
-      
   }, []);
 
   // 검색 필터 적용
@@ -59,15 +50,11 @@ export default function List() {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
-
   const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className={styles.wrapper}>
-      {/* 헤더 */}
-      <BoardHeader/>
-
       {/* 메인 컨테이너 */}
       <div className={styles.container}>
         <main className={styles.content}>
@@ -75,7 +62,6 @@ export default function List() {
 
           {/* 검색창 + 버튼 그룹 */}
           <div className={styles["search-write-container"]}>
-            {/* 왼쪽: 검색창 */}
             <input
               type="text"
               placeholder="🔍제목 또는 작성자 검색"
@@ -83,7 +69,6 @@ export default function List() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
 
-            {/* 오른쪽 버튼 그룹 */}
             <div className={styles["button-group"]}>
               <div className={styles.dropdown}>
                 <button className={styles["write-btn"]}>정렬 ▼</button>

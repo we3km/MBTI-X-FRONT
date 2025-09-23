@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./Board.module.css";
 import { api } from "../../api/boardApi";
-import BoardHeader from "./BoardHeader";
 import { categorys, mbtiTypes } from "../../type/board";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function Insert() {
   const [title, setTitle] = useState("");
@@ -13,14 +12,14 @@ export default function Insert() {
   const [selectedCategory, setSelectedCategory] = useState("ISTJ");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // 'id' 파라미터의 값 가져오기
   const categoryId = searchParams.get('categoryId'); 
 
   const user = useSelector((state:RootState) => state.auth.user);    
   const mbtiId = user?.mbtiId || 0 ;
-  const userMbti = mbtiTypes.find( mbti => mbtiId === mbtiId)?.mbtiName || '';
+  const userMbti = mbtiTypes.find( mbti => mbti.mbtiId == mbtiId)?.mbtiName || '';
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -72,9 +71,6 @@ export default function Insert() {
 
   return (
     <div className={styles.wrapper}>
-      {/* 헤더 */}
-      <BoardHeader/>
-
       <div className={styles.container}>
         <main className={styles.content}>
           <input

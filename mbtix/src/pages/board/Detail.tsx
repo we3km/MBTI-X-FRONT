@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import styles from "./Board.module.css";
 import { api } from "../../api/boardApi";
 import { initBoard, type Board } from "../../type/board";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-import BoardHeader from "./BoardHeader";
 
 // 댓글 타입
 type Comment = {
@@ -35,11 +34,14 @@ export default function Detail() {
   // 대댓글 보기 토글 상태
   const [openReplies, setOpenReplies] = useState<{ [key: number]: boolean }>({});
 
-  const nickname =
-    useSelector((state: RootState) => state.auth.user?.nickname) || "익명";
-  const loginUserId = useSelector(
-    (state: RootState) => state.auth.user?.userId
-  );
+  const nickname = useSelector((state: RootState) => state.auth.user?.nickname) || "익명";
+  const loginUserId = useSelector((state: RootState) => state.auth.user?.userId);
+  const userMbti = useSelector((state:RootState) => state.auth.user?.mbtiId);
+
+  const [searchParams] = useSearchParams();
+
+  // 'id' 파라미터의 값 가져오기
+  const categoryId = searchParams.get('categoryId'); 
 
   const param = useParams();
   const navigate = useNavigate();
@@ -49,18 +51,7 @@ export default function Detail() {
     getBoard();
 
     // 댓글 불러오기
-    api
-      .get("/board/" + param.id + "/comments")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          setComments(res.data);
-        } else if (res.data.comments) {
-          setComments(res.data.comments);
-        } else {
-          setComments([]);
-        }
-      })
-      .catch((err) => console.log(err));
+    getComments();    
   }, [param.id]);
   
   const getBoard = () => {
@@ -68,6 +59,22 @@ export default function Detail() {
       .get("/board/" + param.id)
       .then((res) => {
         setBoard(res.data)
+      })
+      .catch((err) => console.log(err));
+  }
+
+  const getComments = () => {
+    api
+      .get("/board/" + param.id + "/comments")
+      .then((res) => {
+        console.log(res.data)
+        if (Array.isArray(res.data)) {
+          setComments(res.data);
+        } else if (res.data.comments) {
+          setComments(res.data.comments);
+        } else {
+          setComments([]);
+        }
       })
       .catch((err) => console.log(err));
   }
@@ -90,7 +97,8 @@ export default function Detail() {
     if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
     try {
       await api.delete(`/board/comments/${commentId}`);
-      setComments(comments.filter((c) => c.commentId !== commentId));
+      getComments();
+      //setComments(comments.filter((c) => c.commentId !== commentId));
     } catch (err) {
       console.error(err);
       alert("댓글 삭제 실패");
@@ -103,6 +111,15 @@ export default function Detail() {
       alert("댓글 내용을 입력해주세요.");
       return;
     }
+
+    // 궁급해 게시판의 경우
+    // 게시글의 mbtiname과 질문자의 mbtiname이 일치하는 경우만 댓글작성가능
+
+    if(categoryId == '1' && userMbti != board.mbtiId ){
+        alert(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
+        return;
+    }
+
     try {
       const newComment: Omit<Comment, "userId"> = {
         content: commentInput,
@@ -126,6 +143,12 @@ export default function Detail() {
       alert("대댓글 내용을 입력해주세요.");
       return;
     }
+
+    if(categoryId == '1' && userMbti != board.mbtiId ){
+        alert(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
+        return;
+    }
+    
     try {
       const newReply: Omit<Comment, "userId"> = {
         content: replyInput,
@@ -184,9 +207,6 @@ export default function Detail() {
 
   return (
     <div className={styles.wrapper}>
-      {/* 헤더 */}
-      <BoardHeader />
-
       <main className={styles.content}>
         {/* 제목 + 메타정보 */}
         <div className={styles.postHeader}>
@@ -265,11 +285,17 @@ export default function Detail() {
           {comments.length === 0 && <p>댓글이 없습니다.</p>}
           {comments
             .filter((c) => !c.parentId)
-            .map((cmt, idx) => (
+            .map((cmt, idx) => {
+              const replyCount = comments.filter((r) => r.parentId === cmt.commentId).length;
+              return (
               <div key={idx} className={styles.commentItem}>
                 <div className={styles.commentMain}>
                   <div>
                     <strong>{cmt.nickname}</strong>: {cmt.content}
+                    {/* 대댓글 개수 표시 */}
+                    {replyCount > 0 && (
+                      <span className={styles.replyCount}> ({replyCount}개의 대댓글)</span>
+                    )}
                   </div>
                   <div className={styles.commentActions}>
                     <button
@@ -371,7 +397,7 @@ export default function Detail() {
                   </div>
                 )}
               </div>
-            ))}
+            )})}
         </div>
       </main>
 

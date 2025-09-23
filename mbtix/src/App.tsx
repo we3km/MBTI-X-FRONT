@@ -20,17 +20,10 @@ import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
 
-// import GameMenu from './pages/mini-game/GameMenu';
-// import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
-// import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
-// import GameRank from './pages/mini-game/Ranking';
-
-
-// 모든 페이지 컴포넌트 import
+// FAQ, CS, Admin Pages
 import CustomerServicePage from './pages/faq/CustomerServicePage';
 import FaqListPage from './pages/faq/FaqListPage';
 import FaqDetailPage from './pages/faq/FaqDetailPage';
-import MainPage from './pages/mainpage';
 import CsInquiryFormPage from './pages/cs/CsInquiryFormPage';
 import CsInquiryHistoryPage from './pages/cs/CsInquiryHistoryPage';
 import CsInquiryDetailPage from './pages/cs/CsInquiryDetailPage';
@@ -44,34 +37,26 @@ import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
 
-
 function App() {
-
-    /* 
-    5173/board => 게시글 목록
-    5173/board/new => 게시글 등록
-    5173/board/1 => 1번게시글 상세보기
-    5173/board/2 => 2번게시글 상세보기
-  */
   return (
     <AuthGate>
       <Header />
       <section id="content">
         <Routes>
-          {/* --- 공개 경로 --- */}
+          {/* 공개 경로 */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/cs-center" element={<CustomerServicePage />} />
           <Route path="/faqs" element={<FaqListPage />} />
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
 
-          {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+          {/* 로그인 필수 경로 */}
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
 
-          {/* --- 관리자 전용 경로 --- */}
+          {/* 관리자 전용 경로 */}
           <Route path="/admin" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><UserManagementPage /></ProtectedRoute>} />
           <Route path="/admin/users/:userId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminUserDetailPage /></ProtectedRoute>} />
@@ -83,53 +68,28 @@ function App() {
           <Route path="/admin/inquiries" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryListPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
-          {/* --- 로그인 관련 경로 --- */}
-          <Route path="/" element={<Home />}
-          />
-          <Route path="/login" element={<LoginPage />}/>
+          {/* 로그인 관련 경로 */}
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
-          <Route path="/signup" element={<SignupPage />} />
-          {/* <Route path="/miniGame" element={<GameMenu />} />
-          <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
-          <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
-          <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
 
-          <Route path='/board'  >
-            <Route path='' element={
-              <ProtectedRoute>
-                  <List/>
-              </ProtectedRoute>}/>
-            <Route path='new' element={
-              <ProtectedRoute>
-                <Insert/>
-              </ProtectedRoute>
-              } />
-            <Route path=':id' element={
-              <ProtectedRoute>
-                <Detail/>
-              </ProtectedRoute>}/>
+          {/* 게시판 관련 경로 */}
+          <Route path="/board">
+            <Route path="" element={<ProtectedRoute><List /></ProtectedRoute>} />
+            <Route path="all" element={<ProtectedRoute><List /></ProtectedRoute>} />
+            <Route path="new" element={<ProtectedRoute><Insert /></ProtectedRoute>} />
+            <Route path="curious" element={<ProtectedRoute><Question /></ProtectedRoute>} />
+            <Route path="mbti" element={<ProtectedRoute><Mbti /></ProtectedRoute>} />
+            <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} /> 
           </Route>
-          <Route path="/question">
-            <Route path='' element={
-              <ProtectedRoute>        
-                <Question/>
-              </ProtectedRoute>}/>
-          </Route>
-          <Route path="/mbti">
-            <Route path=':id' element={
-              <ProtectedRoute>  
-                <Mbti/>
-              </ProtectedRoute>}/>
-          </Route>  
 
         </Routes>
       </section>
     </AuthGate>
   );
 }
-export default App
+
+export default App;

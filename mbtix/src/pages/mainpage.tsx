@@ -99,10 +99,10 @@ const handleLogout = async () => {
               <button className={styles.boardBtn} onClick={() => navigate("/board")}>
                 전체 <span>자유로운 주제로 이야기 하세요!</span>
               </button>
-              <button className={styles.boardBtn}  onClick={() => navigate("/question")}>
+              <button className={styles.boardBtn}  onClick={() => navigate("/board/curious")}>
                 궁금해! <span>다른 MBTI는 어떨까??</span>
               </button>
-              <button className={styles.boardBtn}  onClick={() => navigate(`/mbti/${user?.mbtiId}`)}>
+              <button className={styles.boardBtn}  onClick={() => navigate(`/board/mbti`)}>
                 MBTI <span>같은 MBTI들과 이야기 해봐요!</span>
               </button>
             </div>

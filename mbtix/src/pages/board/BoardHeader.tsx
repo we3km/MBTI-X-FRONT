@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+/*import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import styles from './BoardHeader.module.css'
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,3 +33,4 @@ export default function BoardHeader(){
 
     )
 }
+*/

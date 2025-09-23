@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { api } from "../../api/boardApi";
 import styles from "./Board.module.css";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { mbtiTypes, type Board } from "../../type/board";
-import BoardHeader from "./BoardHeader";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
 
@@ -15,21 +14,24 @@ export default function List() {
   // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
-  const {id} = useParams();
 
-  const user = useSelector((state:RootState) => state.auth.user);    
-  const mbtiId = user?.mbtiId || 0 ;
-  const userMbti = mbtiTypes.find( mbti => mbtiId === mbtiId)?.mbtiName || '';
+  // 로그인 유저 정보
+  const user = useSelector((state: RootState) => state.auth.user);
+  const mbtiId = user?.mbtiId || 0;
+  const userMbti =
+    mbtiTypes.find((mbti) => mbti.mbtiId === mbtiId)?.mbtiName || "";
 
-  // 게시글 불러오기
+  // 게시글 불러오기 (로그인한 유저 MBTI 기준)
   useEffect(() => {
-    api.get("/board", { params: { mbtiId : id, categoryId : 3 } }) // MBTI가 ISTP라고 가정.
+    if (!mbtiId) return; // 로그인 안 된 경우
+    api
+      .get("/board", { params: { mbtiId: mbtiId, categoryId: 3 } })
       .then((res) => setBoardData(res.data))
       .catch((err) => {
         console.error(err);
         alert("게시글을 불러오는 중 오류가 발생했습니다.");
       });
-  }, []);
+  }, [mbtiId]);
 
   // 검색 필터 적용
   const filteredPosts = boardData.filter(
@@ -41,7 +43,9 @@ export default function List() {
   // 정렬 적용
   const sortedPosts = [...filteredPosts].sort((a, b) => {
     if (sortOption === "latest") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return (
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     }
     if (sortOption === "views") {
       return b.view - a.view;
@@ -58,15 +62,11 @@ export default function List() {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
-
   const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className={styles.wrapper}>
-      {/* 헤더 */}
-      <BoardHeader/>
-
       {/* 메인 컨테이너 */}
       <div className={styles.container}>
         <main className={styles.content}>
@@ -74,7 +74,6 @@ export default function List() {
 
           {/* 검색창 + 버튼 그룹 */}
           <div className={styles["search-write-container"]}>
-            {/* 왼쪽: 검색창 */}
             <input
               type="text"
               placeholder="🔍제목 또는 작성자 검색"
@@ -82,13 +81,16 @@ export default function List() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
 
-            {/* 오른쪽 버튼 그룹 */}
             <div className={styles["button-group"]}>
               <div className={styles.dropdown}>
                 <button className={styles["write-btn"]}>정렬 ▼</button>
                 <div className={styles["dropdown-content"]}>
-                  <button onClick={() => handleSortChange("latest")}>최신순</button>
-                  <button onClick={() => handleSortChange("views")}>조회수 높은 순</button>
+                  <button onClick={() => handleSortChange("latest")}>
+                    최신순
+                  </button>
+                  <button onClick={() => handleSortChange("views")}>
+                    조회수 높은 순
+                  </button>
                 </div>
               </div>
 

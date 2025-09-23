@@ -1,11 +1,11 @@
 import './App.css'
-import { Route, Routes } from 'react-router-dom'
+
+import { Navigate, Route, Routes } from 'react-router-dom'
 import MbtiChat from './pages/mbti-chat/mbtiChat'
 import CreateChat from './pages/mbti-chat/createChat'
 import SignupPage from './pages/login/SignupPage'
 import LoginPage from './pages/login/Login'
 import ProtectedRoute from './components/ProtectedRoute';
-import Header from './components/Header';
 import AuthGate from './components/AuthGate';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
 import OAuth2Success from './pages/login/OAuth2Success';
@@ -13,6 +13,8 @@ import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
+import MyPage from './pages/myPage/MyPage';
+
 import TodayGame from './pages/balGame/TodayGame';
 import BalanceList from './pages/balGame/BalanceList';
 import PastBalance from './pages/balGame/PastBalance';
@@ -40,6 +42,12 @@ import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
 import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
+
+import LayoutWithHeader from './components/LayoutWithHeader';
+import { useSelector } from 'react-redux';
+import type { RootState } from './store/store';
+import UserPage from './pages/myPage/Userpage';
+
 import List from './pages/board/List'
 import Insert from './pages/board/Insert'
 import Detail from './pages/board/Detail'
@@ -48,20 +56,30 @@ import Mbti from './pages/board/Mbti'
 function App() {
   return (
     <AuthGate>
-      <Header />
       <section id="content">
-        <Routes>
-          {/* --- 공개 경로 --- */}
+        {/* 헤더없어요 */}
+        {/* --- 공개 경로 --- */}
+          <Routes>
+          <Route path="/" element={<MainPage />}/>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/cs-center" element={<CustomerServicePage />} />
-          <Route path="/faqs" element={<FaqListPage />} />
-          <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
+          <Route path="find-pw" element={<Findpw />} />
+          <Route path="/find-id" element={<Findid/>} />
+          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
+          <Route path='/social-signup' element={<SocialSignup/>}/>
+          <Route path="/signup-complete" element={<SignupComplete />} />
+          
+
           {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<MainPage />} />
+          {/* 헤더 있어요 */}
+          <Route element={<LayoutWithHeader />}>
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
+          <Route path="/cs-center" element={<CustomerServicePage />} />
+          <Route path="/faqs" element={<FaqListPage />} />
+          <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
+          
           {/* --- 관리자 전용 경로 --- */}
           <Route path="/admin" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><UserManagementPage /></ProtectedRoute>} />
@@ -73,8 +91,8 @@ function App() {
           <Route path="/admin/faqs/edit/:faqId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminFaqFormPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryListPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
-          {/* --- 로그인 관련 경로 --- */}
 
+          {/* --- 로그인 관련 경로 --- */}
           <Route path="/login" element={<LoginPage />}/>
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
@@ -96,13 +114,14 @@ function App() {
           <Route path='/createChat' element={<CreateChat/>}/>
           <Route path="/chat/:roomId" element={<MbtiChat />} />
 
+          <Route path='/mypage' element={<ProtectedRoute requiredRoles={['ROLE_USER']}><MyPage/></ProtectedRoute>}/>
+          <Route path="/user/:userId" element={<UserPage />} />
+
           <Route path="/balanceList" element={<BalanceList />} />
           <Route path="/balance/:gameId" element={<PastBalance />} />
           <Route path="/balance/new" element={<BalanceCreate />} />
-          <Route path="/MbtiTest" element={<MbtiTest />} />
+          <Route path="/MbtiTest" element={useSelector((state: RootState) => state.auth.retestAllowed)? <MbtiTest />: <Navigate to="/" replace />}/>
           <Route path="/MbtiResult" element={<MbtiResult />} />
-        
-          {/* 게시판 관련 경로 */}
           <Route path="/board">
             <Route path="" element={<ProtectedRoute><List /></ProtectedRoute>} />
             <Route path="all" element={<ProtectedRoute><List /></ProtectedRoute>} />
@@ -111,6 +130,7 @@ function App() {
             <Route path="mbti" element={<ProtectedRoute><Mbti /></ProtectedRoute>} />
             <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} /> 
           </Route>
+          </Route>        
         </Routes>
       </section>
     </AuthGate>

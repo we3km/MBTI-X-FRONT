@@ -1,0 +1,180 @@
+:root{
+  /* 모던 팔레트 */
+  --primary: #5B7CFF;           /* 포인트 블루 */
+  --primary-700: #3E61FF;       /* 호버용 진한 블루 */
+  --text: #0F172A;              /* Slate 900 */
+  --muted: #64748B;             /* Slate 500-600 */
+  --line: #E6E9F2;              /* 연한 라인 */
+  --Mypagecard: #FFFFFF;              /* 카드 배경 */
+  --bg: #F7F9FC;                /* 페이지 배경 (살짝 톤) */
+  --hover: #F3F6FF;             /* 행 호버 하이라이트 */
+}
+
+/* 2열/2행: 윗줄(aside|main), 아랫줄(posts|posts) */
+.container{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  grid-template-rows:auto auto;
+  grid-template-areas:
+    "aside main"
+    "posts posts";
+  column-gap:32px;
+  row-gap:20px;
+  padding:24px;
+  max-width:1160px;
+  margin:0 auto;
+  background:var(--bg);
+  color:var(--text);
+  box-sizing:border-box;
+}
+
+/* ── 좌측 사이드 ── */
+.sidebar{
+  grid-area:aside;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+
+.profileWrapper{
+  position:relative;
+  width:160px; height:160px;
+  border-radius:50%;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:0 1px 3px rgba(16,24,40,.06);
+}
+.profileImg{ width:100%; height:100%; object-fit:cover; }
+.profileOverlay{
+  position:absolute; left:0; right:0; bottom:0;
+  padding:8px 0; text-align:center;
+  background:linear-gradient(0deg, rgba(0,0,0,.55), rgba(0,0,0,.0));
+  color:#fff; font-size:13px; cursor:pointer;
+}
+
+.editBtnGroup{ width:100%; display:flex; flex-direction:column; gap:8px; }
+.editBtn{
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#FFF;
+  color:#1F2937;
+  font-size:14px;
+  cursor:pointer;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.editBtn:hover{
+  background:#FAFBFE;
+  border-color:#D9E0FF;
+  box-shadow:0 1px 4px rgba(59, 76, 255, .1);
+}
+
+.mbtiCard{
+  width:100%;
+  background:var(--Mypagecard);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 1px 3px rgba(16,24,40,.06);
+}
+.mbtiCard h3{ margin:0 0 6px; font-size:16px; color:#111827; }
+.mbtiValue{
+  color:var(--primary);
+  font-weight:700;
+  font-size:18px;
+  margin:4px 0 12px;
+}
+.smallBtn{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#FAFAFE;
+  color:#334155;
+  font-size:13px;
+  cursor:pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.smallBtn + .smallBtn{ margin-top:8px; }
+.smallBtn:hover{ background:#F3F6FF; border-color:#D9E0FF; }
+
+/* ── 우측 메인(세로열 중앙정렬) ── */
+.main{
+  grid-area:main;
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+  margin-top:80px; /* 너가 지정한 값 유지 */
+}
+
+.accountBox, .scoreBox{
+  width:780px; max-width:100%;
+  background:var(--Mypagecard);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px 20px;
+  box-shadow:0 1px 3px rgba(16,24,40,.06);
+}
+
+.accountBox p{ margin:6px 0; font-size:15px; color:#111827; }
+.accountBox strong{ margin-right:6px; font-weight:700; color:#0B1220; }
+
+.gameTitle{
+  text-align:center; font-weight:700; font-size:16px; margin:2px 0 14px;
+  color:#111827;
+}
+.gameScores{ display:flex; justify-content:center; gap:24px; }
+.gameCircle{
+  width:96px; height:96px; border-radius:50%;
+  background:linear-gradient(135deg, var(--primary), #8AA3FF);
+  color:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+  box-shadow:0 6px 18px rgba(91,124,255,.25);
+}
+.gameCircle span{ font-size:12px; opacity:.96; }
+.gameCircle strong{ font-size:20px; margin-top:6px; }
+
+/* ── 게시글: 라인 리스트(전체폭) ── */
+.postsSection{
+  grid-area:posts;
+  background:#FFF;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:0;
+  margin-right:20px;
+  box-shadow:0 1px 3px rgba(16,24,40,.06);
+}
+.postsSection > h3{
+  margin:0;
+  padding:14px 18px;
+  font-size:16px; font-weight:700; color:#0B1220;
+  border-bottom:1px solid #EEF1F6;
+}
+
+/* 한 줄씩 구분되는 심플 리스트 */
+.postItem{
+  display:grid; grid-template-columns:1fr auto; align-items:center;
+  padding:13px 18px;
+  background:transparent;
+  color:inherit;
+  border-bottom:1px solid #F2F4F9;
+  margin:0; box-shadow:none; border-radius:0;
+  transition: background .12s ease;
+}
+.postItem:last-child{ border-bottom:0; }
+.postItem:hover{ background:var(--hover); }
+
+.postTitle{
+  font-weight:600; font-size:15px; color:#111827; text-align:left;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.postMeta{
+  font-size:13px; color:var(--muted); margin-left:16px; white-space:nowrap;
+}
+
+/* 포커스 접근성(선택) */
+.editBtn:focus-visible, .smallBtn:focus-visible {
+  outline:3px solid #C9D4FF; outline-offset:2px;
+}

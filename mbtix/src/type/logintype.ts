@@ -17,7 +17,11 @@ export interface User {
   name: string;
   nickname: string;
   mbtiId: number;
+  mbtiName : string;
   profileFileName : string;
+  profileType : string;
+  provider : string;
+  point : number;
   roles: string;
 }
 
@@ -45,7 +49,6 @@ export interface PageInfo {
 // 백엔드 로그인/회원가입 응답 형식
 export interface AuthResult {
   accessToken: string;
-  // refreshToken은 쿠키만 쓰는 환경에선 안 내려올 수도 있으니 optional로 두는 게 안전
   refreshToken?: string;
   user: User;
 }
@@ -58,6 +61,7 @@ export interface AuthState {
   userId: number | null;
   isAuthenticated: boolean;
   user: User | null;
+  retestAllowed: boolean
 }
 
 export const initialAuthState: AuthState = {
@@ -66,14 +70,16 @@ export const initialAuthState: AuthState = {
   userId: null,
   isAuthenticated: false,
   user: null,
+  retestAllowed: false
 };
 
 // setAuth 액션 payload 타입
 export type SetAuthPayload = {
-  accessToken: string;
+  accessToken?: string | null;
   userId: number;
   refreshToken?: string | null; // 없으면 기존 state 유지
   user?: User | null;
+  retestAllowed?: boolean;
 };
 
 

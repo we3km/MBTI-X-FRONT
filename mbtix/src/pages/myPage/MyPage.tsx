@@ -8,9 +8,12 @@ import ChangePw from "./ChangePw";
 import ChangeProfileImg from "./ChangeImg";
 import { getBoard, getScores } from "../../api/mypageApi";
 import ChangeMbti from "./ChangeMbti";
+import { useNavigate } from "react-router-dom";
 
 export default function MyPage() {
   const user = useSelector((state: RootState) => state.auth.user);
+
+  const navigate = useNavigate();
 
   const [shwoChangeNick , setShowChangeNick] = useState(false);
   const [shwoChangePw , setShowChangePW] = useState(false);
@@ -36,7 +39,7 @@ return (
         <img
           src={
             user?.profileType === "UPLOAD"
-              ? `http://localhost:8085/api/profile/images/${user?.profileFileName}`
+              ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
               : `/profile/default/${user?.profileFileName || "default.jpg"}`
           }
           alt="프로필"
@@ -69,7 +72,7 @@ return (
         <h3>나의 MBTI</h3>
         <p className={styles.mbtiValue}>{user?.mbtiName || "INTJ"}</p>
         <button className={styles.smallBtn} onClick={()=> setShowChangeMbti(true)}>MBTI 재검사</button>
-        <button className={styles.smallBtn}>밸런스 게임 의견</button>
+        <button className={styles.smallBtn} onClick={()=> navigate("/balance/today")}>밸런스 게임 의견</button>
       </div>
     </aside>
 

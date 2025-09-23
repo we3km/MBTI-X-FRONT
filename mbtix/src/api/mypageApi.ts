@@ -1,7 +1,7 @@
 import axios, { AxiosHeaders } from "axios";
 import { store } from "../store/store";
 
-const API_BASE = "http://localhost:8085/api/";
+const API_BASE = "http://localhost:8085/api/mypage/";
 const getAccessToken = () => store.getState().auth.accessToken;
 
 export const mypageApi = axios.create({
@@ -72,3 +72,24 @@ export const deductMbtiPoint = async (userId:number) => {
   });
   return res.data;
 }
+
+export const getUserProfile = async (userId:number) =>{
+  const res = await mypageApi.get("/otherUserProfile",{
+    params : {userId},
+  });
+  return res.data;
+};
+
+export const getUserScores = async (userId: number) => {
+  const res = await mypageApi.get("/otherUserScores", {
+    params: { userId },
+  });
+  return res.data;
+};
+
+export const getUserBoards = async (userId: number) => {
+  const res = await mypageApi.get("/otherUserBoards", {
+    params: { userId },
+  });
+  return res.data;
+};

@@ -33,11 +33,11 @@ export default function Home() {
 
   dispatch(
     setAuth({
-      accessToken,   // 기존 토큰 유지
-      refreshToken,  // 기존 refreshToken 유지
+      accessToken,
+      refreshToken,  
       userId: userId!,
       user: user ?? null,
-      retestAllowed: false,  // ⭐️ 검사 권한 해제
+      retestAllowed: false,  
     })
   );
     // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
@@ -82,7 +82,7 @@ export default function Home() {
             <img
           src={
             user?.profileType === "UPLOAD"
-              ? `http://localhost:8085/api/profile/images/${user?.profileFileName}`
+              ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
               : `/profile/default/${user?.profileFileName || "default.jpg"}`
           }
           alt="프로필"

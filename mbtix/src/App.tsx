@@ -49,6 +49,7 @@ import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
 import LayoutWithHeader from './components/LayoutWithHeader';
 import { useSelector } from 'react-redux';
 import type { RootState } from './store/store';
+import UserPage from './pages/myPage/Userpage';
 
 
 function App() {
@@ -66,9 +67,7 @@ function App() {
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
-          <Route path="/cs-center" element={<CustomerServicePage />} />
-          <Route path="/faqs" element={<FaqListPage />} />
-          <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
+        
           {/* --- 로그인 필수 경로 --- */}
 
           {/* 헤더 있어요 */}
@@ -76,6 +75,9 @@ function App() {
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
+          <Route path="/cs-center" element={<CustomerServicePage />} />
+          <Route path="/faqs" element={<FaqListPage />} />
+          <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
 
           {/* --- 관리자 전용 경로 --- */}
           <Route path="/admin" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
@@ -89,9 +91,10 @@ function App() {
           <Route path="/admin/inquiries" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryListPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
-          {/* --- 로그인 관련 경로 --- */}
+          
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
-          <Route path='/mypage' element={<ProtectedRoute><MyPage/></ProtectedRoute>}/>
+          <Route path='/mypage' element={<ProtectedRoute requiredRoles={['ROLE_USER']}><MyPage/></ProtectedRoute>}/>
+          <Route path="/user/:userId" element={<UserPage />} />
           <Route path="/balance/today" element={<TodayGame />} />
           <Route path="/balanceList" element={<BalanceList />} />
           <Route path="/balance/:gameId" element={<PastBalance />} />

@@ -1,9 +1,13 @@
 .commentBox {
+              /* 화면 중앙 */
+  
   border-radius: 1rem;
-  background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
+ background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  padding: 2rem;  
-  padding-bottom: 2rem;             /* ⬅️ 좌우 패딩 통일 */
+padding-bottom: 2rem;
+padding-left: 30px;
+
+  
 }
 
 .commentTitle {
@@ -11,15 +15,17 @@
   font-size: 1.2rem;
   font-weight: 600;
   color: #334155;
-  margin-bottom: 1rem;
+  padding-right: 25px;
 }
 
 .commentForm {
   display: flex;
   gap: 0.5rem;
-  width: 100%;
-  max-width: 600px;             /* ⬅️ 리스트와 동일한 폭 */
-  margin: 0 auto 1.5rem;        /* ⬅️ 가운데 정렬 + 아래 간격 */
+
+  width: 100%;                    /* ✅ 박스 안에서 가득 */
+  max-width: 636px;     
+  padding-left: 5px;
+  
 }
 
 .commentForm input {
@@ -41,7 +47,6 @@
   cursor: pointer;
   transition: 0.2s;
 }
-
 .commentForm button:hover {
   opacity: 0.9;
 }
@@ -51,9 +56,11 @@
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 600px;   
+  padding-left: 5px;
   
-   margin-left: -60px;                 /* ⬅️ 가운데 정렬 */
+     
+            
 }
 
 .commentItem {
@@ -62,6 +69,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
   padding: 1rem 1.2rem;
+
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -97,7 +105,6 @@
   cursor: pointer;
   font-size: 0.75rem;
 }
-
 .deleteBtn:hover {
   opacity: 0.85;
 }

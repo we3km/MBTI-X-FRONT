@@ -76,7 +76,7 @@ export default function MbtiTest() {
 
   try {
     const result = await submitMbtiAnswers(user.userId, answers);
-    navigate("/MbtiResult", { state: { mbti: result } });
+    navigate("/MbtiResult", { state: { mbti: result, answers } });
   } catch (err) {
     console.error("결과 전송 실패:", err);
     alert("결과를 전송하는 중 오류가 발생했습니다.");

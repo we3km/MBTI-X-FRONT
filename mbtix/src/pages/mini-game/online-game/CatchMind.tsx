@@ -407,7 +407,9 @@ export default function CatchMind() {
                     {status === "drawing" && amIDrawer && <span>"{answer}"을(를) 묘사해주세요.</span>}
                     {status === "drawing" && !amIDrawer && <span>{answerLength ? "_ ".repeat(answerLength) : ""} ({answerLength}글자)</span>}
                 </div>
-                <div className={styles.timer}>
+                <div
+                    className={`${styles.timer} ${timeLeft <= 10 ? styles.bounce : ''}`}
+                >
                     {(status === "drawing" || status === "waiting") &&
                         `⏰ ${timeLeft}s Round ${round} of ${maxRounds}`}
                 </div>

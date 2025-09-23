@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 /* --- 기본 & 폰트 설정 --- */
 .container {
@@ -307,11 +308,18 @@
     opacity: 0.8;
 }
 
+.bounce {
+    display: inline-block;
+    animation: bounceText 0.5s ease-in-out infinite;
+}
+
 .roomTitle {
     font-family: 'Nanum Gothic', sans-serif;
     font-size: 40px;
-    font-weight: 900; /* 더 두껍게 */
+    font-weight: 900;
     color: #667eea;
+    display: inline-block;
+    animation: bounceText 1s ease-in-out infinite;
 }
 
 .clickableTitle {
@@ -326,7 +334,6 @@
 .clickableTitle:hover:not(:disabled) {
     transform: scale(1.1);
     opacity: 0.8;
-    /* 손 올렸을 때 살짝 투명 효과 */
 }
 
 .clickableTitle:disabled {
@@ -444,9 +451,20 @@
     font-size: 18px;
     border-radius: 20px;
     padding: 5px 10px;
-    /* 왼쪽, 오른쪽 여백 10px */
     margin-top: 10px;
     text-align: left;
-    /* 왼쪽 정렬 */
     margin-left: 10px;
+}
+
+@keyframes bounceText {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+        /* 위로 15px 튀기기 */
+    }
 }

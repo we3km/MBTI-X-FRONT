@@ -10,12 +10,11 @@ import { Toaster } from 'react-hot-toast';
 
 
 import { setupInterceptors as setupApiClientInterceptors } from './api/apiClient.ts';
-import { setupAuthApiInterceptors } from './api/authApi.ts';
+//import { setupAuthApiInterceptors } from './api/authApi.ts';
 
 const queryClient = new QueryClient();
 
 setupApiClientInterceptors(store);
-
 
 createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

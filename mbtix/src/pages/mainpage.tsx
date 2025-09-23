@@ -5,13 +5,12 @@ import balanceIcon from "../assets/main-page/밸런스 게임 이미지.png"
 import chatIcon from "../assets/main-page/챗봇.png"
 import mainIcon from "../assets/main-page/메인아이콘.png"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
-import {  useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
@@ -125,13 +124,13 @@ export default function Home() {
             </>
           ) : (
             <div className={styles.boardMenu}>
-              <button className={styles.boardBtn}>
+              <button className={styles.boardBtn} onClick={() => navigate("/board")}>
                 전체 <span>자유로운 주제로 이야기 하세요!</span>
               </button>
-              <button className={styles.boardBtn}>
+              <button className={styles.boardBtn}  onClick={() => navigate("/board/curious")}>
                 궁금해! <span>다른 MBTI는 어떨까??</span>
               </button>
-              <button className={styles.boardBtn}>
+              <button className={styles.boardBtn}  onClick={() => navigate(`/board/mbti`)}>
                 MBTI <span>같은 MBTI들과 이야기 해봐요!</span>
               </button>
             </div>

@@ -66,8 +66,8 @@ function App() {
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
           <Route path="/signup-complete" element={<SignupComplete />} />
+          
           {/* --- 로그인 필수 경로 --- */}
-
           {/* 헤더 있어요 */}
           <Route element={<LayoutWithHeader />}>
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { store } from "../../../store/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "../../../api/mainPageApi";
+import toast from 'react-hot-toast';
 
 interface Quiz {
     question: string;
@@ -152,6 +153,34 @@ export default function SpeedQuiz() {
         },
     });
 
+    const handleExit = () => {
+        toast((t) => (
+            <div>
+                <p>게임을 종료하시겠습니까?<br />종료 시 메인 화면으로 이동합니다.</p>
+                <div style={{ marginTop: '8px', display: 'flex', gap: '8px', width: '100%' }}>
+                    <button
+                        onClick={() => {
+                            handleReset();
+                            navigate("/miniGame");
+                            toast.dismiss(t.id); // 토스트 닫기
+                        }}
+                        style={{ backgroundColor: 'red', color: 'white', padding: '4px 8px', borderRadius: '12px', flex: 1 }}
+                    >
+                        종료
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)} // 취소
+                        style={{ backgroundColor: 'gray', color: 'white', padding: '4px 8px', borderRadius: '12px', flex: 1 }}
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity, // 사용자가 선택할 때까지 유지
+        });
+    };
+
     if (isLoading) return <div>로딩 중...</div>;
     if (isError) return <div>데이터 로드 실패</div>;
 
@@ -164,13 +193,7 @@ export default function SpeedQuiz() {
                     onClick={(e) => {
                         e.stopPropagation();
                         handleReset();
-                        const confirmExit = window.confirm(
-                            "게임을 종료하시겠습니까?\n게임 종료시, 메인화면으로 이동합니다."
-                        );
-                        if (confirmExit) {
-                            handleReset(); // 게임 상태 초기화
-                            navigate("/miniGame"); // 메인 페이지 이동
-                        }
+                        handleExit();
                     }}
                 >
                     <img src={exit} alt="게임 종료 메인페이지로 돌아가자" />
@@ -178,7 +201,10 @@ export default function SpeedQuiz() {
             )}
 
             {status === "idle" && (
-                <div className={Quiz.quizGameScreen} style={{ cursor: "pointer"}}>
+                <div
+                    className={`${Quiz.quizGameScreen} ${Quiz.floatText}`}
+                    style={{ cursor: "pointer" }}
+                >
                     아무곳을 눌러서 시작
                     <div className={Quiz.quizFirst}>
                         <br />총 문제는 5문제이며, 각 문제당 제한시간은 5초 입니다.
@@ -233,7 +259,7 @@ export default function SpeedQuiz() {
 
             {status === "final" && (
                 <div
-                    className={Quiz.quizGameScreen}
+                    className={`${Quiz.quizGameScreen} ${Quiz.floatText}`}
                     style={{ cursor: "pointer" }}
                     onClick={handleFinalClick}
                 >

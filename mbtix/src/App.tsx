@@ -1,18 +1,17 @@
-
 import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
 import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
 import GameRank from './pages/mini-game/Ranking';
 import OnlineGame from './pages/mini-game/online-game/OnlineGame';
 import CatchMind from './pages/mini-game/online-game/CatchMind';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation, matchPath } from 'react-router-dom';
+
 import Header from './components/Header';
 import AuthGate from './components/AuthGate';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/login/Login';
 import SignupPage from './pages/login/SignupPage';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
-import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
@@ -20,6 +19,12 @@ import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
 import GameMenu from './pages/mini-game/GameMenu';
 import AdminQuizSubmit from './pages/mini-game/admin-game/AdminQuizSubmit';
+import TodayGame from './pages/balGame/TodayGame';
+import BalanceList from './pages/balGame/BalanceList';
+import PastBalance from './pages/balGame/PastBalance';
+import BalanceCreate from './pages/balGame/CreateBalGame';
+import MbtiTest from './pages/mbtiTest/MbtiTest';
+import MbtiResult from './pages/mbtiTest/MbtiResult';
 
 // 모든 페이지 컴포넌트 import
 import CustomerServicePage from './pages/faq/CustomerServicePage';
@@ -38,10 +43,17 @@ import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
 import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
+
 function App() {
+  const location = useLocation();
+  const hideHeaderPaths = ['/', '/login', '/MBTIGraph', '/miniGame/GameRank', '/miniGame/CatchMind/:roomId', "/miniGame/SpeedQuiz", "/miniGame/ReactionTest", "/miniGame/OnlineGame"];
+  const shouldHideHeader = hideHeaderPaths.some(path =>
+    matchPath({ path, end: true }, location.pathname)
+  );
+
   return (
     <AuthGate>
-      <Header />
+      {!shouldHideHeader && <Header />}
       <section id="content">
         <Routes>
           {/* --- 공개 경로 --- */}
@@ -52,7 +64,7 @@ function App() {
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
 
           {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<ProtectedRoute><MainPage /></ProtectedRoute>} />
+          <Route path="/" element={<MainPage />} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
@@ -70,8 +82,6 @@ function App() {
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
           {/* --- 로그인 관련 경로 --- */}
-          <Route path="/" element={<Home />}
-          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid />} />
@@ -91,6 +101,12 @@ function App() {
           <Route path='/oauth2/success' element={<OAuth2Success />} />
           <Route path='/social-signup' element={<SocialSignup />} />
           <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path="/balance/today" element={<TodayGame />} />
+          <Route path="/balanceList" element={<BalanceList />} />
+          <Route path="/balance/:gameId" element={<PastBalance />} />
+          <Route path="/balance/new" element={<BalanceCreate />} />
+          <Route path="/MbtiTest" element={<MbtiTest />} />
+          <Route path="/MbtiResult" element={<MbtiResult />} />
         </Routes>
       </section>
     </AuthGate>

@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap');
+
 /* --- 기본 & 폰트 설정 --- */
 .container {
     height: 90vh;
-    width: 90vw;
+    width: 1200px;
     display: flex;
     flex-direction: column;
     font-family: 'Galmuri11', sans-serif;
@@ -88,6 +90,13 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #ddd;
+    transition: transform 0.2s ease;
+}
+
+.profile:hover {
+    transform: scale(1.2);
+    border-color: #6a8cff;
+    cursor: pointer;
 }
 
 .crownIcon {
@@ -299,8 +308,9 @@
 }
 
 .roomTitle {
+    font-family: 'Nanum Gothic', sans-serif;
     font-size: 40px;
-    font-weight: bold;
+    font-weight: 900; /* 더 두껍게 */
     color: #667eea;
 }
 
@@ -321,4 +331,122 @@
 
 .clickableTitle:disabled {
     color: #667eea;
+}
+
+.gamerPopup {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.popupProfile {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    position: relative;
+    background: #667eea;
+    padding: 20px 30px;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 1001;
+    color: white;
+
+    animation: fadeIn 0.5s ease forwards;
+}
+
+
+/* 닫기 버튼 */
+.modal .closeBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modalClosing {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+.createBtn {
+    margin-top: 25px;
+    height: 40px;
+    padding: 0 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50px;
+    border: none;
+    background-color: #4f76f2;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.createBtn:hover {
+    background-color: #3a5edb;
+}
+
+/* 나타날 때 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 사라질 때 */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 18px;
+    border-radius: 20px;
+    padding: 5px 10px;
+    /* 왼쪽, 오른쪽 여백 10px */
+    margin-top: 10px;
+    text-align: left;
+    /* 왼쪽 정렬 */
+    margin-left: 10px;
 }

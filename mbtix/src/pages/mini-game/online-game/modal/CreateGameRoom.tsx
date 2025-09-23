@@ -12,11 +12,13 @@ interface ModalProps {
 type CreateRoomInput = {
     title: string;
     userId: number;
+    maxPlayers: number;
 };
 
 const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
+    const [maxPlayers, setMaxPlayers] = useState(5); // 기본 5명
 
     const getUserId = () => store.getState().auth.user?.userId;
     const userId = getUserId();
@@ -46,7 +48,7 @@ const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
             return;
         }
         if (userId !== null || typeof (userId) !== undefined)
-            createRoomMutation.mutate({ title, userId });
+            createRoomMutation.mutate({ title, userId, maxPlayers });
     };
 
     return (
@@ -63,6 +65,18 @@ const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
                         placeholder="게임방 제목 입력"
                         onChange={(e) => setTitle(e.target.value)}
                     />
+                </div>
+                {/* 인원수 제한 입력 */}
+                <div className={styles.inputWrapper}>
+                    <input
+                        type="number"
+                        className={styles.input}
+                        value={maxPlayers}
+                        min={2}
+                        max={5}
+                        onChange={(e) => setMaxPlayers(Number(e.target.value))}
+                    />
+                    <span className={styles.label}>최대 인원수</span>
                 </div>
                 <button className={styles.createBtn} onClick={
                     handleCreate}>

@@ -11,14 +11,34 @@ import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
+  const mbtiMap: Record<number, string> = {
+    1: "istj",
+    2: "isfj",
+    3: "infj",
+    4: "intj",
+    5: "istp",
+    6: "isfp",
+    7: "infp",
+    8: "intp",
+    9: "estp",
+    10: "esfp",
+    11: "enfp",
+    12: "entp",
+    13: "estj",
+    14: "esfj",
+    15: "enfj",
+    16: "entj",
+  };
 
   useEffect(() => {
     setIsLoggedIn(!!userId);
@@ -44,9 +64,14 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Link to="/MBTIGraph">
-          <div className={styles.userInfo}>회원 MBTI 비율</div>
-        </Link>
+        <div className={styles.headerLeft}>
+          <Link to="/MBTIGraph">
+            <div className={styles.userInfo}>회원 MBTI 비율</div>
+          </Link>
+          <Link to="/MbtiTest">
+            <div className={styles.mbtitest}>MBTI 검사</div>
+          </Link>
+        </div>
         {!isLoggedIn && (
           <div className={styles.authButtons}>
             <Link to="/login">
@@ -64,7 +89,16 @@ export default function Home() {
               alt="프로필"
               className={styles.profileImage}
             />
-            <div className={styles.nickname}>"{user?.nickname}"님 환영합니다.</div>
+            {/* <div className={styles.nickname}>"{user?.nickname}"님 환영합니다.</div>
+            src={`/profile/default/${mbtiMap[user?.mbtiId || 0] || "default"}.jpg`}
+            alt="프로필"
+            className={styles.profileImage}
+            /> */}
+            {/* <img
+              src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
+              alt="프로필"
+              className={styles.profileImage}
+            /> */}
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}
@@ -119,12 +153,14 @@ export default function Home() {
             <img src={miniIcon} alt="미니게임" />
           </div>
         )}
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
-          <div className={styles.cardDesc}>{balTitle}</div>
-          <img src={balanceIcon} alt="밸런스 게임" />
-        </div>
-      </div>
+
+        <div className={styles.card} onClick={() => navigate("/BalanceList")}>
+      <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
+      <div className={styles.cardDesc}>{balTitle}</div>
+      <img src={balanceIcon} alt="밸런스 게임" />
     </div>
+
+  </div>
+    </div >
   );
 };

@@ -11,12 +11,14 @@
 }
 
 .modal {
-  background-color: #7495f5;
+  background: linear-gradient(135deg, #7495f5, #7495f5); /* 은은한 그라데이션 */
   padding: 40px;
-  border-radius: 12px;
+  border-radius: 20px;
   position: relative;
   width: 600px;
   text-align: center;
+  animation: modalFadeIn 0.7s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .closeBtn {
@@ -62,4 +64,19 @@
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* 모달 등장 애니메이션 */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    /* 작게 시작 */
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    /* 원래 크기 */
+  }
 }

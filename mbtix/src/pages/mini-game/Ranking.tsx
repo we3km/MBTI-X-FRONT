@@ -55,8 +55,6 @@ export default function GameRank() {
                     }))
                     .sort((a, b) => b.score - a.score),
             }));
-
-            // 👇 이 부분이 빠져서 발생한 오류입니다!
             return gameRanks;
         },
         staleTime: 1000 * 60,

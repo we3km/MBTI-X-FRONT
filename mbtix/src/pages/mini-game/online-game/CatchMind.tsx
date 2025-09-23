@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./CatchMind.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { store } from "../../../store/store";
@@ -13,6 +13,7 @@ import { Tldraw, Editor, getSnapshot, loadSnapshot } from '@tldraw/tldraw'
 import '@tldraw/tldraw/tldraw.css'
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { debounce } from 'lodash';
+import toast from 'react-hot-toast';
 
 // --- 백엔드의 Gamer DTO와 일치하는 타입 정의 ---
 type Gamer = {
@@ -33,7 +34,7 @@ type GameStateMessage = {
     answerLength?: number;
     gamers?: Gamer[];
     captain?: Gamer;
-    words?: string[]; // 출제자에게만 보이는 단어 목록
+    words?: string[];
 };
 
 type GameRoomInfo = {
@@ -41,6 +42,7 @@ type GameRoomInfo = {
     creatorId: number;
     roomName: string;
     playerCount: number;
+    maxCount: number;
 };
 
 export default function CatchMind() {
@@ -65,6 +67,8 @@ export default function CatchMind() {
     const amIDrawer = drawer?.userId === userId;
     const maxRounds = gamers ? gamers.length * 2 : 0;
 
+    const [isRoomModalOpen, setIsRoomModalOpen] = useState(false);
+
     const amIDrawerRef = useRef(amIDrawer);
     useEffect(() => { amIDrawerRef.current = amIDrawer; }, [amIDrawer]);
 
@@ -72,6 +76,11 @@ export default function CatchMind() {
 
     const editorRef = useRef(editor);
     useEffect(() => { editorRef.current = editor; }, [editor]);
+
+    const [hoveredGamer, setHoveredGamer] = useState<null | Gamer>(null);
+    const [popupPos, setPopupPos] = useState({ x: 0, y: 0 });
+
+    const [isClosing, setIsClosing] = useState(false);
 
     // 최신 상태를 저장할 ref 생성
     const stateRef = useRef({ amIDrawer, editor });
@@ -97,23 +106,31 @@ export default function CatchMind() {
             console.log("플레이어들 :", res.data);
             return res.data;
         },
-        staleTime: 1000 * 60 * 5,
         retry: 1,
         enabled: !!roomId,
     });
 
     // 현재 방 정보 불러오기
     const { data: gameRoomInfo } = useQuery<GameRoomInfo>({
-        queryKey: ["gameRoomInfo", roomId],
+        queryKey: ["gameRoomInfo", roomId, gameState.gamers],
         queryFn: async () => {
             const res = await api.get("/selectGameRoomInfo", { params: { roomId } });
             console.log("방 정보 :", res.data);
             return res.data;
         },
-        staleTime: 1000 * 60 * 5,
         retry: 1,
         enabled: !!roomId,
     });
+
+    const [newRoomName, setNewRoomName] = useState(gameRoomInfo?.roomName || "");
+    const [newMaxCount, setNewMaxCount] = useState(gameRoomInfo?.maxCount || 5);
+
+    // 사용자 강퇴시키기
+    const kickOut = (userId: number) => {
+        api.post("/leaveRoom", { roomId, userId })
+            .then(() => toast.success("강퇴 완료"))
+            .catch(() => toast.error("강퇴 실패"));
+    };
 
     useEffect(() => {
         if (gamersList && gameRoomInfo && !gameState.gamers) {
@@ -132,7 +149,8 @@ export default function CatchMind() {
             console.log("Client is already active.");
             return;
         }
-        const socket = new SockJS("http://localhost:8085/api/ws", null, {
+        // const socket = new SockJS("http://localhost:8085/api/ws", null, {
+        const socket = new SockJS("http://192.168.10.230:8085/api/ws", null, {
             transports: ["websocket", "xhr-streaming", "xhr-polling"]
         });
         const client = new Client({
@@ -149,6 +167,7 @@ export default function CatchMind() {
 
                 // 게임 상태용 구독
                 client.subscribe(`/sub/game/${roomId}/state`, (message: IMessage) => {
+                    console.log(message)
                     const receivedState: GameStateMessage = JSON.parse(message.body);
                     setGameState(prevState => ({
                         ...prevState,
@@ -295,15 +314,73 @@ export default function CatchMind() {
         });
     };
 
-    // 방 나가기
-    const handleExitRoom = async () => {
-        const confirmExit = window.confirm("게임을 종료하시겠습니까?\n게임 종료시, 대기방 목록으로 이동합니다.");
-        if (confirmExit) {
-            await api.post("/leaveRoom", { roomId, userId });
-            queryClient.invalidateQueries({ queryKey: ['gamersList'] });
-            queryClient.invalidateQueries({ queryKey: ['gamingRoomList'] });
-            navigate("/miniGame/OnlineGame");
+    // 플레이어 목록을 상태에 따라 정렬하기 위해 useMemo 사용
+    const sortedGamers = useMemo(() => {
+        if (!gameState.gamers) return [];
+        if (gameState.status === "start") {
+            return gameState.gamers;
         }
+        return [...gameState.gamers].sort((a, b) => b.points - a.points);
+    }, [gameState.gamers, gameState.status]);
+
+    // 방 나가기
+    const handleExitRoom = () => {
+        toast.custom((t) => (
+            <div
+                style={{
+                    padding: '16px',
+                    backgroundColor: 'white',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '12px',
+                    minWidth: '300px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}
+            >
+                <div style={{ fontWeight: 'bold', marginBottom: '8px', textAlign: 'center' }}>
+                    게임을 종료하시겠습니까?
+                </div>
+                <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                    <button
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'red',
+                            color: 'white',
+                            padding: '8px 0',
+                            borderRadius: '4px',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            await api.post("/leaveRoom", { roomId, userId });
+                            queryClient.invalidateQueries({ queryKey: ['gamersList'] });
+                            queryClient.invalidateQueries({ queryKey: ['gamingRoomList'] });
+                            toast.dismiss(t.id);
+                            navigate("/miniGame/OnlineGame");
+                        }}
+                    >
+                        종료
+                    </button>
+                    <button
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'gray',
+                            color: 'white',
+                            padding: '8px 0',
+                            borderRadius: '4px',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        ));
     };
 
     return (
@@ -314,7 +391,13 @@ export default function CatchMind() {
                         className={styles.clickableTitle}
                         disabled={gameRoomInfo?.creatorId !== userId} // 방장이 아니면 비활성화
                         onClick={() => {
-                            // 방 속성 바꿀 수 있도록
+                            if (status !== "start") {
+                                toast.error("게임 시작 후에는 방 설정을 변경할 수 없습니다!", {
+                                    duration: 3000,
+                                });
+                                return;
+                            }
+                            setIsRoomModalOpen(true);
                         }}
                     >
                         {gameRoomInfo?.roomName}
@@ -325,7 +408,7 @@ export default function CatchMind() {
                     {status === "drawing" && !amIDrawer && <span>{answerLength ? "_ ".repeat(answerLength) : ""} ({answerLength}글자)</span>}
                 </div>
                 <div className={styles.timer}>
-                    {(status === "drawing" || status === "waiting" || status === "result") &&
+                    {(status === "drawing" || status === "waiting") &&
                         `⏰ ${timeLeft}s Round ${round} of ${maxRounds}`}
                 </div>
                 <button className={styles.closeBtn} onClick={handleExitRoom}>
@@ -333,16 +416,26 @@ export default function CatchMind() {
                 </button>
             </div>
 
+            {/* 플레이어 리스트 */}
             <div className={styles.main}>
-                {/* 좌측 영역 (플레이어 목록) */}
                 <div className={styles.leftPanel}>
-                    {gamers?.map((gamer, index) => (
+                    {sortedGamers.map((gamer, index) => (
                         <div key={gamer.userId} className={styles.rankItem}>
                             {status !== "start" && (<div>#{index + 1}</div>)}
                             <div className={styles.profileContainer}>
-                                {/* 방장 로직 할당 필요! */}
-                                <img src={`/profile/default/${gamer.profile}`} alt={gamer.nickname} className={styles.profile} />
-                                {gamer.userId === gameState.captain?.userId && <div className={styles.crownIcon}></div>}
+                                {/* <img src={`/profile/default/${gamer.profile}`} alt={gamer.nickname} className={styles.profile} />
+                                 */}
+                                <img
+                                    src={`/profile/default/${gamer.profile}`}
+                                    alt={gamer.nickname}
+                                    className={styles.profile}
+                                    onClick={(e) => {
+                                        setHoveredGamer(gamer);
+                                        const rect = e.currentTarget.getBoundingClientRect();
+                                        setPopupPos({ x: rect.right + 10, y: rect.top }); // 오른쪽으로 살짝 띄우기
+                                    }}
+                                />
+                                {gamer.userId === gameRoomInfo?.creatorId && <div className={styles.crownIcon}></div>}
                             </div>
                             <div className={styles.gamerInfo}>
                                 <span className={styles.nickname}>
@@ -358,6 +451,62 @@ export default function CatchMind() {
                             </div>
                         </div>
                     ))}
+
+                    {hoveredGamer && (
+                        <div
+                            className={styles.gamerPopup}
+                            style={{
+                                position: "absolute",
+                                top: popupPos.y,
+                                left: popupPos.x,
+                                zIndex: 999,
+                            }}
+                        >
+                            <img
+                                src={`/profile/default/${hoveredGamer.profile}`}
+                                alt={hoveredGamer.nickname}
+                                className={styles.popupProfile}
+                            />
+                            {/* 방장만 강퇴시킬 수 있음 */}
+                            {hoveredGamer.userId === gameRoomInfo?.creatorId && <div style={{ color: "red" }}>방장<br /></div>}
+                            <div><b>{hoveredGamer.nickname}</b></div>
+                            <div>MBTI: {hoveredGamer.mbtiName}</div>
+                            <div>Points: {hoveredGamer.points}</div>
+                            {(userId === gameRoomInfo?.creatorId && hoveredGamer.userId !== userId) && (
+                                <button
+                                    onClick={() => {
+                                        toast(
+                                            t => (
+                                                <div>
+                                                    <p>{hoveredGamer.nickname}님을 정말 강퇴하시겠습니까?</p>
+                                                    <div style={{ marginTop: "5px" }}>
+                                                        <button
+                                                            onClick={() => {
+                                                                kickOut(hoveredGamer.userId);
+                                                                setHoveredGamer(null);
+                                                                toast.dismiss(t.id); // toast 닫기
+                                                            }}
+                                                        >
+                                                            확인
+                                                        </button>
+                                                        <button
+                                                            onClick={() => toast.dismiss(t.id)}
+                                                            style={{ marginLeft: "5px" }}
+                                                        >
+                                                            취소
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ),
+                                            { duration: Infinity } // 유저가 버튼 누를 때까지 유지
+                                        );
+                                    }}
+                                >
+                                    강퇴
+                                </button>)}
+                            <button onClick={() => setHoveredGamer(null)}>닫기</button>
+                        </div>
+                    )}
                 </div>
 
                 {/* 중앙 그림 영역 */}
@@ -433,7 +582,76 @@ export default function CatchMind() {
                     />
                 </div>
             </div>
-        </div>
-    );
+            {/* 방속성 변경 */}
+            {isRoomModalOpen && (
+                <div className={styles.overlay}>
+                    <div className={`${styles.modal} ${isClosing ? styles.modalClosing : ""}`}>
+                        <button
+                            className={styles.closeBtn}
+                            onClick={() => {
+                                setIsClosing(true);
+                                setTimeout(() => {
+                                    setIsClosing(false);
+                                    setIsRoomModalOpen(false);
+                                }, 500);
+                            }}
+                        >
+                            ✖
+                        </button>
 
+                        <h2>방 속성 변경</h2>
+
+                        {/* 방 이름 변경 */}
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.label}>방 제목</label>
+                            <input
+                                type="text"
+                                className={styles.input}
+                                value={newRoomName}
+                                onChange={(e) => setNewRoomName(e.target.value)}
+                            />
+                        </div>
+
+                        {/* 인원 제한 */}
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.label}>최대 인원</label>
+                            <input
+                                type="number"
+                                className={styles.input}
+                                min={2}
+                                max={5}
+                                value={newMaxCount}
+                                onChange={(e) => setNewMaxCount(Number(e.target.value))}
+                            />
+                        </div>
+
+                        <button
+                            className={styles.createBtn}
+                            onClick={() => {
+                                if (newMaxCount > gameRoomInfo!.playerCount) {
+                                    toast.error("최대인원 수는 접속중인 플레이어의 수보다 높게 설정해야합니다!");
+                                    return;
+                                }
+                                else {
+                                    api.post("/changeRoomInfo", {
+                                        roomId: gameRoomInfo?.roomId,
+                                        roomName: newRoomName,
+                                        maxCount: newMaxCount
+                                    }).then(() => {
+                                        queryClient.invalidateQueries({ queryKey: ["gameRoomInfo", roomId] });
+                                        setIsRoomModalOpen(false);
+                                        toast.success("방 속성 변경 완료!", { duration: 3000 });
+                                    }).catch((err) => {
+                                        toast.error("변경 실패: " + err.message, { duration: 3000 });
+                                    });
+                                }
+                            }}
+                        >
+                            저장하기
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div >
+    );
 }

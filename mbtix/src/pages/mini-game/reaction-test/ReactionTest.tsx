@@ -7,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContai
 import { store } from "../../../store/store";
 import api from "../../../api/mainPageApi";
 import { useMutation } from "@tanstack/react-query";
+import toast from 'react-hot-toast';
 
 export default function ReactionTest() {
     const [status, setStatus] = useState<"idle" | "waiting" | "ready" | "fail" | "result" | "final">("idle");
@@ -192,6 +193,34 @@ export default function ReactionTest() {
         },
     });
 
+    const handleExit = () => {
+        toast((t) => (
+            <div>
+                <p>게임을 종료하시겠습니까?<br />종료 시 메인 화면으로 이동합니다.</p>
+                <div style={{ marginTop: '8px', display: 'flex', gap: '8px', width: '100%' }}>
+                    <button
+                        onClick={() => {
+                            handleReset();
+                            navigate("/miniGame");
+                            toast.dismiss(t.id); // 토스트 닫기
+                        }}
+                        style={{ backgroundColor: 'red', color: 'white', padding: '4px 8px', borderRadius: '12px', flex: 1 }}
+                    >
+                        종료
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)} // 취소
+                        style={{ backgroundColor: 'gray', color: 'white', padding: '4px 8px', borderRadius: '12px', flex: 1 }}
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity, // 사용자가 선택할 때까지 유지
+        });
+    };
+
     return (
         <div className={Reaction.reactionGameWrapper} onClick={handleClickArea}>
             {status !== "final" && (
@@ -199,18 +228,15 @@ export default function ReactionTest() {
                     onClick={(e) => {
                         e.stopPropagation();
                         handleReset();
-                        const confirmExit = window.confirm("게임을 종료하시겠습니까?\n게임 종료시, 메인화면으로 이동합니다.");
-                        if (confirmExit) {
-                            handleReset();       // 게임 상태 초기화
-                            navigate("/miniGame");       // 메인 페이지 이동
-                        }
+                        handleExit();
                     }}>
                     <img src={exit} alt="게임 종료" />
                 </button>
             )}
 
             {status === "idle" && (
-                <div className={Reaction.reactionGameScreen} style={{ cursor: "pointer" }}>
+                <div className={`${Reaction.reactionGameScreen} ${Reaction.floatUpDown}`}
+                    style={{ cursor: "pointer" }}>
                     아무 곳을 눌러서 시작
                     <div className={Reaction.reactionDescription}>
                         준비가 되면 초록색으로 변하고 누르면 반응 시간이 측정됩니다.
@@ -254,20 +280,31 @@ export default function ReactionTest() {
             )}
 
             {status === "final" && (
-                <div className={Reaction.reactionGameScreen} style={{ cursor: "pointer" }} onClick={handleFinalClick}>
+                <div className={Reaction.reactionGameScreen}
+                    style={{ cursor: "pointer" }} onClick={handleFinalClick}>
                     <h5>나의 평균 반응 속도 테스트 결과는:</h5>
-                    <p className={Reaction.reactionResultScore}>{avgTime.toFixed(2)}ms</p>
+                    <p className={`${Reaction.reactionResultScore} ${Reaction.scoreGlow} ${Reaction.scorePop}`}>
+                        {avgTime.toFixed(2)}ms
+                    </p>
                     <p>최고 기록: {bestTime ?? "-"} ms</p>
                     <p>당신은 {you} 입니다.</p>
                     <div className={Reaction.reactionStars}>
                         {Array.from({ length: 5 }, (_, i) => (
-                            <span key={i} className={`${Reaction.reactionStar} ${i < stars ? Reaction.reactionFilled : Reaction.reactionEmpty}`}>
-                                {i < stars ? "★" : "☆"}
+                            <span key={i} className={Reaction.reactionStarWrapper}>
+                                <span className={Reaction.reactionStarEmpty}>☆</span>
+                                {i < stars && (
+                                    <span
+                                        className={Reaction.reactionStarFilled}
+                                        style={{ animationDelay: `${i * 0.3}s` }} // 왼쪽부터 순차적
+                                    >
+                                        ★
+                                    </span>
+                                )}
                             </span>
                         ))}
                     </div>
                     <p>{stars * 10} POINT 획득!!</p>
-                    <p>탭하여 메인화면으로 돌아가세요.</p>
+                    <p className={Reaction.floatUpDown}>탭하여 메인화면으로 돌아가세요.</p>
                 </div>
             )}
         </div >

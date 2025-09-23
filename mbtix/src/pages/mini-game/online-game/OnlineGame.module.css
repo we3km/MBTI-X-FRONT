@@ -1,27 +1,21 @@
-/* 폰트 import (public/index.html에 이미 있다면 생략) */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
-/* --- 전체 레이아웃 --- */
-body,
-html {
-    height: 100%;
-    margin: 0;
-}
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 
 .lobbyContainer {
     height: 90vh;
-    width: 90vw;
+    width: 1200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px;
     background: linear-gradient(135deg, #667eea 0%, #6a8cff 100%);
     font-family: 'Pretendard', sans-serif;
+    position: relative;
+    border-radius: 5%;
+    color: white;
 }
 
 .lobbyBox {
-    width: 100%;
-    max-width: 1200px;
+    width: 80%;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 24px;
     padding: 30px 40px;
@@ -29,10 +23,10 @@ html {
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     position: relative;
-    padding: 20px;
+    margin-top: -50px;
+    /* 필요에 따라 숫자 조절 */
 }
 
-/* --- 헤더 --- */
 .header {
     display: flex;
     justify-content: space-between;
@@ -42,11 +36,33 @@ html {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+@keyframes floatUpDown {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
 .title {
-    color: #ffffff;
-    font-size: 2.2rem;
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 50px;
     font-weight: 700;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Audiowide', sans-serif;
+    margin-bottom: 10px;
+    color: white;
+    animation: floatUpDown 2s ease-in-out infinite;
 }
 
 /* --- 버튼 --- */
@@ -64,26 +80,27 @@ html {
 }
 
 .createRoom {
-    background-color: #ffffff;
-    color: #6a8cff;
+    color: #ffffff;
+    background-color: #6a8dff00;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
 }
 
 .createRoom:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-    background-color: #f0f0ff;
+    background-color: #f0f0ff87;
 }
 
 .closeButton {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
     width: 85px;
     height: 85px;
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
-    z-index: 1000;
+    z-index: 10;
 }
 
 .closeButton:hover {
@@ -123,7 +140,7 @@ html {
 
 .roomItemContainer {
     background-color: #ffffff;
-    border-radius: 16px;
+    border-radius: 50px;
     padding: 16px 24px;
     margin-bottom: 15px;
     display: flex;
@@ -156,6 +173,22 @@ html {
     flex: 2;
     /* 비율 조정 */
     min-width: 200px;
+}
+
+.userInfo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    transition: transform 0.3s ease;
+    /* 부드러운 확대 */
+}
+
+.userInfo img:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    /* 20% 확대 */
 }
 
 .nameMbti {
@@ -201,11 +234,93 @@ html {
     min-width: 80px;
 }
 
+.roomPlayerCount {
+    flex: 1;
+    text-align: right;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    min-width: 80px;
+}
+
 /* 상태별 텍스트 색상 */
 .statusWaiting {
     color: #28a745;
+    animation: blink 2s infinite;
+    /* 초록 텍스트 깜빡임 */
 }
 
 .statusPlaying {
     color: #dc3545;
+    animation: blink 2s infinite;
+    /* 빨강 텍스트 깜빡임 */
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes fadeSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.roomItemContainer {
+    opacity: 0;
+    animation: fadeSlideUp 1.2s ease forwards;
+}
+
+/* 방 추가될 때 순차적으로 시간차 적용 */
+.roomList .roomItemContainer:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.roomList .roomItemContainer:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.roomList .roomItemContainer:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.roomList .roomItemContainer:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.roomList .roomItemContainer:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+/* ✨ 새 방 하이라이트 효과 */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 0px rgba(106, 140, 255, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(106, 140, 255, 1);
+    }
+
+    100% {
+        box-shadow: 0 0 0px rgba(106, 140, 255, 0.5);
+    }
+}
+
+.newRoom {
+    animation: glow 1s ease-in-out, fadeSlideUp 0.4s ease forwards;
 }

@@ -2,7 +2,7 @@ import mini from "./main.module.css";
 import speedIcon from "../../assets/mini-game/main/Speed.png";
 import quizIcon from "../../assets/mini-game/main/Quiz.png";
 import picIcon from "../../assets/mini-game/main/Wrong.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../api/mainPageApi";
 import type { RootState } from "../../store/store";
@@ -74,9 +74,9 @@ const GameCard: React.FC<GameCardProps> = ({ game, ranks }) => {
 
 export default function GameMenu() {
     const user = useSelector((state: RootState) => state.auth.user);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     console.log("로그인한 회원 권한 :", user?.roles);
-    
+
     interface RankItem {
         GAME_CODE: number;
         TOTAL_SCORE: number;
@@ -102,8 +102,8 @@ export default function GameMenu() {
 
     return (
         <div className={mini.container}>
-            <img src="/icons/exit.png" alt="나가기" className={mini.closeButon}
-                onClick={() => navigate("/")} />
+            {/* <img src="/icons/exit.png" alt="나가기" className={mini.closeButon}
+                onClick={() => navigate("/")} /> */}
             <img src="/icons/mini-game.png" alt="미니게임" className={mini.title} />
             <div className={mini.topbutton}>
                 <Link to="/miniGame/GameRank">

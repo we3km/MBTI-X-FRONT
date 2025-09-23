@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 5%;
 }
 
 .quizGameWrapper {
@@ -11,13 +12,14 @@
     background: #6b8cff;
     color: white;
     font-weight: bold;
-    width: 1500px;
+    width: 1200px;
     height: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     border-radius: 12px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .quizBtnClose {
@@ -39,9 +41,9 @@
 }
 
 .quizGameScreen {
-  text-align: center;
-  font-size: 30px;
-  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-size: 30px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .quizFirst {
@@ -55,13 +57,13 @@
 
 .quizAnswer {
     margin-top: 50px;
-    width: 1200px;
     height: 100px;
     background-color: white;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     font-weight: bold;
+    width: 1000px;
     font-size: 25px;
     border-radius: 40px;
     border: none;
@@ -103,17 +105,51 @@
 }
 
 .quizCount {
-  font-size: 80px;
-  color: white;
-  font-weight: bold;
-  display: inline-block; 
-  animation: bounceCount 1s ease-in-out infinite; /* 계속 반복 */
+    font-size: 80px;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    animation: bounceCount 1s ease-in-out infinite;
+    /* 계속 반복 */
 }
 
 @keyframes bounceCount {
-  0% { transform: translateY(0); }
-  25% { transform: translateY(-40px); }
-  50% { transform: translateY(0); }
-  75% { transform: translateY(-20px); }
-  100% { transform: translateY(0); }
+    0% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-40px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    75% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.floatText {
+    display: inline-block;
+    animation: floatAnimation 2s ease-in-out infinite;
+}
+
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }

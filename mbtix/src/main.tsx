@@ -15,7 +15,6 @@ import { setupInterceptors as setupApiClientInterceptors } from './api/apiClient
 const queryClient = new QueryClient();
 
 setupApiClientInterceptors(store);
-//setupAuthApiInterceptors(store);
 
 createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

@@ -1,0 +1,180 @@
+:root {
+  --brand: #0ea5e9;
+  --brand-dark: #0284c7;
+  --ink-1: #0f172a;
+  --ink-2: #334155;
+  --bg-grad: linear-gradient(180deg, #bae6fd, #e0f2fe, #f0f9ff);
+  --shadow-1: 0 6px 20px rgba(15, 23, 42, 0.08);
+}
+
+.page {
+  min-height: 100vh;
+  background: var(--bg-grad);
+  display: flex;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+}
+
+.topLeftFab {
+  font-size: 14px;
+  background: #fff;
+  color: var(--brand);
+  border: 2px solid var(--brand);
+  border-radius: 20px;
+  padding: 6px 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  position: fixed;
+  top: 50px;
+  left: 50px;
+}
+.topLeftFab:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--brand-dark);
+  margin-bottom: 3.2rem;
+  letter-spacing: -0.02em;
+}
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e0f2fe;
+  border-radius: 1.25rem;
+  padding: 2rem 1.75rem;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
+}
+
+.question {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink-1);
+}
+
+.options {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.option {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+  font-weight: 600;
+}
+.option:hover {
+  border-color: var(--brand);
+  background: #e0f7ff;
+  transform: translateY(-2px);
+}
+
+.optionSelected {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+  box-shadow: 0 6px 12px rgba(14, 165, 233, 0.3);
+}
+
+.submitArea {
+  margin-top: 4rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 2.5rem;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 1.1rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.submitBtn:hover {
+  background: var(--brand-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(2, 6, 23, 0.1);
+}
+.progressContainer {
+  position: sticky;        /* ✅ 스크롤 내려도 고정됨 */
+  top: 6px;                /* 화면 상단과 간격 (헤더랑 겹치지 않게) */
+  z-index: 50;
+
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px 24px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+.progressText {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+  text-align: right;
+}
+
+.progressWrap {
+  width: 100%;
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 14px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #facc15, #22c55e, #3b82f6);
+  background-size: 200% 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease, background-position 0.3s ease;
+}
+
+.unanswered {
+  border: 2px solid #ef4444 !important;
+  outline: 2px solid #ef4444;
+  animation: blink 1s ease-in-out 4;
+}
+
+@keyframes blink {
+  0% { box-shadow: 0 0 0 rgba(239, 68, 68, 0); }
+  50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+  100% { box-shadow: 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+
+

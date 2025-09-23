@@ -113,7 +113,7 @@ return (
         <h3>게시글 목록</h3>
         {boards.length > 0 ? (
           boards.map((board) => (
-            <div key={board.boardId} className={styles.postItem}>
+            <div key={board.boardId} className={styles.postItem} onClick={() => navigate(`/board/${board.boardId}`)}>
               <span className={styles.postTitle}>{board.boardTitle}</span>
               <span className={styles.postMeta}>
                 {board.nickName} | {board.createdAt} | {board.viewCount}

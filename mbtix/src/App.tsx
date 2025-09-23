@@ -1,21 +1,15 @@
-import './App.css'
-
-import { Navigate, Route, Routes } from 'react-router-dom'
-
-import React from 'react';
 import './App.css';
-
-import { useDispatch } from 'react-redux';
-import { authApi } from './api/authApi';
-import { setAuth } from './features/authSlice';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import React from 'react';
 
 import Header from './components/Header';
 import AuthGate from './components/AuthGate';
 import ProtectedRoute from './components/ProtectedRoute';
+
+import Home from './pages/mainpage';
 import LoginPage from './pages/login/Login';
 import SignupPage from './pages/login/SignupPage';
 import MBTIGraph from './pages/MBTIGraph/MBTIGraph';
-import Home from './pages/mainpage';
 import OAuth2Success from './pages/login/OAuth2Success';
 import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
@@ -27,18 +21,9 @@ import PastBalance from './pages/balGame/PastBalance';
 import BalanceCreate from './pages/balGame/CreateBalGame';
 import MbtiTest from './pages/mbtiTest/MbtiTest';
 import MbtiResult from './pages/mbtiTest/MbtiResult';
-
-// import GameMenu from './pages/mini-game/GameMenu';
-// import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
-// import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
-// import GameRank from './pages/mini-game/Ranking';
-
-
-// 모든 페이지 컴포넌트 import
 import CustomerServicePage from './pages/faq/CustomerServicePage';
 import FaqListPage from './pages/faq/FaqListPage';
 import FaqDetailPage from './pages/faq/FaqDetailPage';
-import MainPage from './pages/mainpage';
 import CsInquiryFormPage from './pages/cs/CsInquiryFormPage';
 import CsInquiryHistoryPage from './pages/cs/CsInquiryHistoryPage';
 import CsInquiryDetailPage from './pages/cs/CsInquiryDetailPage';
@@ -52,25 +37,44 @@ import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
 
-
 function App() {
+  const location = useLocation();
+  const hideHeaderPaths = ['/', '/login'];
+  const shouldHideHeader = hideHeaderPaths.includes(location.pathname);
+
   return (
     <AuthGate>
-      <Header />
+      {!shouldHideHeader && <Header />}
       <section id="content">
         <Routes>
-          {/* --- 공개 경로 --- */}
+          {/* --- 메인 페이지 --- */}
+          <Route path="/" element={<Home />} />
+
+          {/* --- 로그인/회원가입 관련 경로 --- */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/find-id" element={<Findid />} />
+          <Route path="/find-pw" element={<Findpw />} />
+          <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path='/oauth2/success' element={<OAuth2Success />} />
+          <Route path='/social-signup' element={<SocialSignup />} />
+
+          {/* --- CS 및 FAQ 경로 --- */}
           <Route path="/cs-center" element={<CustomerServicePage />} />
           <Route path="/faqs" element={<FaqListPage />} />
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
-
-          {/* --- 로그인 필수 경로 --- */}
-          <Route path="/" element={<MainPage />} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
+
+          {/* --- 기타 콘텐츠 경로 --- */}
+          <Route path="/MBTIGraph" element={<MBTIGraph />} />
+          <Route path="/balance/today" element={<TodayGame />} />
+          <Route path="/balanceList" element={<BalanceList />} />
+          <Route path="/balance/:gameId" element={<PastBalance />} />
+          <Route path="/balance/new" element={<BalanceCreate />} />
+          <Route path="/MbtiTest" element={<MbtiTest />} />
+          <Route path="/MbtiResult" element={<MbtiResult />} />
 
           {/* --- 관리자 전용 경로 --- */}
           <Route path="/admin" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
@@ -83,31 +87,10 @@ function App() {
           <Route path="/admin/faqs/edit/:faqId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminFaqFormPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryListPage /></ProtectedRoute>} />
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
-
-          {/* --- 로그인 관련 경로 --- */}
-         
-          
-          <Route path="/login" element={<LoginPage />}/>
-          <Route path="find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid/>} />
-          <Route path="/signup" element={<SignupPage />} />
-          {/* <Route path="/miniGame" element={<GameMenu />} />
-          <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
-          <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
-          <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
-          <Route path="/MBTIGraph" element={<MBTIGraph />} />
-          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
-          <Route path='/social-signup' element={<SocialSignup/>}/>
-          <Route path="/signup-complete" element={<SignupComplete />} />
-           <Route path="/balance/today" element={<TodayGame />} />
-        <Route path="/balanceList" element={<BalanceList />} />
-        <Route path="/balance/:gameId" element={<PastBalance />} />
-        <Route path="/balance/new" element={<BalanceCreate />} />
-        <Route path="/MbtiTest" element={<MbtiTest />} />
-        <Route path="/MbtiResult" element={<MbtiResult />} />
         </Routes>
       </section>
     </AuthGate>
   );
 }
-export default App
+
+export default App;

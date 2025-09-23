@@ -14,45 +14,31 @@ export interface FaqPageResponse {
     list: Faq[];
 }
 
-// 관리자용
-export const fetchAdminFaqs = async (page: number): Promise<FaqPageResponse> => {
-    const response = await apiClient.get('/admin/faqs', {
-        params: { cpage: page }
-    });
-    return response.data;
-};
-
-// 사용자용 FAQ 목록 조회 함수
-export const fetchPublicFaqs = async (page: number): Promise<FaqPageResponse> => {
+// FAQ 목록 조회 (사용자, 관리자)
+export const fetchAllFaqs = async (page: number): Promise<FaqPageResponse> => {
     const response = await apiClient.get('/faqs', {
         params: { cpage: page }
     });
     return response.data;
 };
 
-// 관리자용 상세 조회
-export const fetchFaqById = async (faqId: number): Promise<Faq> => {
-    const response = await apiClient.get(`/admin/faqs/${faqId}`);
-    return response.data;
-};
-
-// 사용자용 상세 조회
-export const fetchPublicFaqById = async (faqId: number): Promise<Faq> => {
+// FAQ 상세 조회 (사용자, 관리자)
+export const fetchFaqDetail = async (faqId: number): Promise<Faq> => {
     const response = await apiClient.get(`/faqs/${faqId}`);
     return response.data;
-}
+};
 
 // 생성
 type CreateFaqData = Omit<Faq, 'faqId' | 'createdAt'>;
 
 export const createFaq = async (faqData: CreateFaqData): Promise<Faq> => {
-    const response = await apiClient.post('/admin/faqs', faqData);
+    const response = await apiClient.post('/faqs', faqData);
     return response.data;
 };
 
 // 수정
 export const updateFaq = async (faqId: number, faqData: CreateFaqData): Promise<Faq> => {
-    const response = await apiClient.put(`/admin/faqs/${faqId}`, faqData);
+    const response = await apiClient.put(`/faqs/${faqId}`, faqData);
     return response.data;
 };
 

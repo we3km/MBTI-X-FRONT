@@ -118,6 +118,8 @@ const AdminUserDetailPage = () => {
                 <div className="tab-header">
                     <button onClick={() => setActiveTab('info')} className={activeTab === 'info' ? 'active' : ''}>기본 정보</button>
                     <button onClick={() => setActiveTab('history')} className={activeTab === 'history' ? 'active' : ''}>관리 기록</button>
+                    <button onClick={() => setActiveTab('posts')} className={activeTab === 'posts' ? 'active' : ''}>작성한 게시글</button>
+                    <button onClick={() => setActiveTab('comments')} className={activeTab === 'comments' ? 'active' : ''}>작성한 댓글</button>
                 </div>
                 <div className="tab-content">
                     {activeTab === 'info' && (
@@ -145,6 +147,16 @@ const AdminUserDetailPage = () => {
                                 <h4>신고받은 내역 ({reportsReceived.length}건)</h4>
                                 <ul>{reportsReceived.map(r => <li key={r.reportId}>{r.createdAt}: {r.targetNickname}님에게 - {r.reportCategoryName} ({r.status})</li>)}</ul>
                             </div>
+                        </div>
+                    )}
+                    {activeTab === 'posts' && (
+                        <div className="placeholder-content">
+                            <p>여기에 해당 회원이 작성한 게시글 목록이 표시</p>
+                        </div>
+                    )}
+                    {activeTab === 'comments' && (
+                        <div className="placeholder-content">
+                            <p>여기에 해당 회원이 작성한 댓글 목록이 표시</p>
                         </div>
                     )}
                 </div>

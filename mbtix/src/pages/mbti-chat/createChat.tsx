@@ -26,6 +26,7 @@ interface CreateChatComponentProps {
     personality: string; // 'features' 대신 'personality'
     appearance: string;  // 'appearance' 추가
     botProfileImageUrl: string;
+    status: string;
   }) => void;
 }
 
@@ -67,7 +68,9 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
           timeout: 180000, 
       });
 
+      // ✅ FastAPI에서 반환하는 Base64 데이터 URL을 바로 저장
       const imageUrl = response.data.imageUrl;
+      console.log("이미지",imageUrl)
       setBotProfileImageUrl(imageUrl);
       setStep(3); // 이미지 확인 및 최종 생성 단계로 이동
     } catch (error) {
@@ -97,7 +100,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
         age,
         personality, // 'features' 대신 'personality'
         appearance,  // 'appearance' 추가
-        botProfileImageUrl,
+        botProfileImageUrl, // ✅ Base64 데이터 URL을 그대로 백엔드로 보냄
       };
 
       const res = await chatbotApi.post("", chatData, {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import Chat from "./chat";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import { store } from "../../store/store";
 import { chatbotApi } from "../../api/chatbot/catbotApi";
 import styles from "./MbtiChat.module.css";
 import CreateChat from "./createChat";
+import { FaTrashAlt } from 'react-icons/fa';
 
 interface ChatRoom{
   roomId:number;
@@ -18,6 +19,7 @@ interface ChatRoom{
   personality: string;
   appearance: string;
   botProfileImageUrl: string;
+  status: string; // 추가
 }
 
 export default function MbtiChat() {
@@ -30,7 +32,11 @@ export default function MbtiChat() {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const userId = getUserId();
   const [currentBot, setCurrentBot] = useState<ChatRoom | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 삭제 모달 상태 추가
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null); // 삭제할 방 ID 상태 추가
+  const navigate = useNavigate();
 
+  console.log("??", currentBot)
   // 채팅방 목록 불러오기
   const fetchRooms = () => {
     if (!userId) return; // 로그인 안 되어있으면 호출하지 않음
@@ -62,6 +68,7 @@ export default function MbtiChat() {
         personality: state.personality,
         appearance: state.appearance,
         botProfileImageUrl: state.botProfileImageUrl,
+        status: state.status,
       });
     }
   }, [roomId, state, userId]);
@@ -74,6 +81,36 @@ export default function MbtiChat() {
 
   const handleOpenImageModal = () => setIsImageModalOpen(true);
   const handleCloseImageModal = () => setIsImageModalOpen(false);
+
+  const handleOpenDeleteModal = (event: React.MouseEvent, roomId: number) => {
+    event.preventDefault(); // 링크 이동 방지
+    event.stopPropagation(); // 이벤트 버블링 방지
+    setSelectedRoomId(roomId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedRoomId(null);
+  };
+  
+  const handleConfirmDelete = async () => {
+    if (selectedRoomId === null) return;
+    try {
+      await chatbotApi.patch(`${selectedRoomId}/quit`);
+      // 삭제 성공 시 목록 갱신
+      fetchRooms();
+      // 만약 삭제된 방이 현재 열려있는 방이라면, 메인 화면으로 이동
+      if (currentBot && currentBot.roomId === selectedRoomId) {
+        navigate('/chatbot');
+        setCurrentBot(null);
+      }
+      handleCloseDeleteModal();
+    } catch (err) {
+      console.error("Failed to delete chatbot room:", err);
+      alert("챗봇 삭제에 실패했습니다.");
+    }
+  };
 
   // 새로운 채팅방이 성공적으로 생성되었을 때 호출될 함수
   const handleChatCreated = (newRoom: ChatRoom) => {
@@ -111,27 +148,33 @@ export default function MbtiChat() {
             <ul className={styles.roomList}>
                 {rooms.map(r => (
                   <li key={r.roomId} className={styles.roomItem}>
-                    <Link 
-                      to={`/chat/${r.roomId}`}
-                      state={{
-                        mbti:r.botMbti,
-                        botName:r.botName,
-                        gender:r.gender, 
-                        talkStyle:r.talkStyle, 
-                        age:r.age, 
-                        personality: r.personality,
-                        appearance: r.appearance,
-                        botProfileImageUrl: r.botProfileImageUrl
-                      }}
-                      className={styles.roomLink}
-                    >
-                      <div className={styles.roomLinkContent}>
+                    <div className={styles.roomLink}>
+                      <Link 
+                        to={`/chat/${r.roomId}`}
+                        state={{
+                          mbti:r.botMbti,
+                          botName:r.botName,
+                          gender:r.gender, 
+                          talkStyle:r.talkStyle, 
+                          age:r.age, 
+                          personality: r.personality,
+                          appearance: r.appearance,
+                          botProfileImageUrl: r.botProfileImageUrl,
+                          status: r.status
+                        }}
+                        className={styles.roomLinkContent}
+                      >
                         <img src={`http://localhost:8085/api${r.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/>
                         <div>
                           {r.botName} <span className={styles.mbti}>({r.botMbti})</span>
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                      <FaTrashAlt
+                        className={styles.deleteIcon}
+                        onClick={(e) => handleOpenDeleteModal(e, r.roomId)}
+                        title="챗봇 삭제"
+                      />
+                    </div>
                   </li>
                 ))}
             </ul>
@@ -178,6 +221,17 @@ export default function MbtiChat() {
                     alt="Full-size Profile"
                 />
             </div>
+        </div>
+      )}
+      {isDeleteModalOpen && (
+        <div className={styles.deleteConfirmModal}>
+          <div className={styles.deleteConfirmContent}>
+            <h4>챗봇을 삭제하시겠습니까?</h4>
+            <div>
+              <button onClick={handleConfirmDelete} className={styles.confirmYes}>예</button>
+              <button onClick={handleCloseDeleteModal} className={styles.confirmNo}>아니오</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

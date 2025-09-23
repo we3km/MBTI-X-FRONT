@@ -11,7 +11,6 @@ import type { RootState } from "../store/store";
 import { clearAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
-import {  useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);

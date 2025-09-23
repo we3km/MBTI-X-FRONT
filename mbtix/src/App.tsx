@@ -2,10 +2,12 @@ import './App.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import React from 'react';
 
+// Component Imports
 import Header from './components/Header';
 import AuthGate from './components/AuthGate';
 import ProtectedRoute from './components/ProtectedRoute';
 
+// Page Imports
 import Home from './pages/mainpage';
 import LoginPage from './pages/login/Login';
 import SignupPage from './pages/login/SignupPage';
@@ -27,6 +29,8 @@ import FaqDetailPage from './pages/faq/FaqDetailPage';
 import CsInquiryFormPage from './pages/cs/CsInquiryFormPage';
 import CsInquiryHistoryPage from './pages/cs/CsInquiryHistoryPage';
 import CsInquiryDetailPage from './pages/cs/CsInquiryDetailPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
 import UserManagementPage from './pages/admin/UserManagementPage';
 import ReportManagementPage from './pages/admin/ReportManagementPage';
 import ReportDetailPage from './pages/admin/ReportDetailPage';
@@ -34,8 +38,12 @@ import AdminFaqListPage from './pages/admin/AdminFaqListPage';
 import AdminFaqFormPage from './pages/admin/AdminFaqFormPage';
 import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
 import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
-import AdminDashboardPage from './pages/admin/AdminDashboardPage';
-import AdminUserDetailPage from './pages/admin/AdminUserDetailPage';
+
+import List from './pages/board/List';
+import Insert from './pages/board/Insert';
+import Detail from './pages/board/Detail';
+import Question from './pages/board/question';
+import Mbti from './pages/board/Mbti';
 
 function App() {
   const location = useLocation();
@@ -47,10 +55,8 @@ function App() {
       {!shouldHideHeader && <Header />}
       <section id="content">
         <Routes>
-          {/* --- 메인 페이지 --- */}
+          {/* --- 메인 및 로그인/회원가입 --- */}
           <Route path="/" element={<Home />} />
-
-          {/* --- 로그인/회원가입 관련 경로 --- */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/find-id" element={<Findid />} />
@@ -59,15 +65,13 @@ function App() {
           <Route path='/oauth2/success' element={<OAuth2Success />} />
           <Route path='/social-signup' element={<SocialSignup />} />
 
-          {/* --- CS 및 FAQ 경로 --- */}
+          {/* --- CS, FAQ, 및 기타 콘텐츠 --- */}
           <Route path="/cs-center" element={<CustomerServicePage />} />
           <Route path="/faqs" element={<FaqListPage />} />
           <Route path="/faqs/:faqId" element={<FaqDetailPage />} />
           <Route path="/cs-inquiry" element={<ProtectedRoute><CsInquiryFormPage /></ProtectedRoute>} />
           <Route path="/cs-history" element={<ProtectedRoute><CsInquiryHistoryPage /></ProtectedRoute>} />
           <Route path="/cs-history/:inquiryId" element={<ProtectedRoute><CsInquiryDetailPage /></ProtectedRoute>} />
-
-          {/* --- 기타 콘텐츠 경로 --- */}
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           <Route path="/balance/today" element={<TodayGame />} />
           <Route path="/balanceList" element={<BalanceList />} />
@@ -75,6 +79,16 @@ function App() {
           <Route path="/balance/new" element={<BalanceCreate />} />
           <Route path="/MbtiTest" element={<MbtiTest />} />
           <Route path="/MbtiResult" element={<MbtiResult />} />
+
+          {/* --- 게시판 관련 경로 --- */}
+          <Route path="/board">
+            <Route path="" element={<ProtectedRoute><List /></ProtectedRoute>} />
+            <Route path="all" element={<ProtectedRoute><List /></ProtectedRoute>} />
+            <Route path="new" element={<ProtectedRoute><Insert /></ProtectedRoute>} />
+            <Route path="curious" element={<ProtectedRoute><Question /></ProtectedRoute>} />
+            <Route path="mbti" element={<ProtectedRoute><Mbti /></ProtectedRoute>} />
+            <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} />
+          </Route>
 
           {/* --- 관리자 전용 경로 --- */}
           <Route path="/admin" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />

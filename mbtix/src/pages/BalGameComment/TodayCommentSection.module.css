@@ -16,6 +16,7 @@ padding-left: 50px;
   font-weight: 600;
   color: #334155;
   padding-right: 25px;
+  
 }
 
 .commentForm {
@@ -108,3 +109,8 @@ padding-left: 50px;
 .deleteBtn:hover {
   opacity: 0.85;
 }
+
+/* 신고 */
+
+
+

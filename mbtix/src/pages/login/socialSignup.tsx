@@ -76,49 +76,68 @@ export default function SocialSignup() {
      }
     };
 
-  return (
-      <form className={styles.signupBox} onSubmit={handleSubmit}>
-        <h2>소셜 회원가입</h2>
-        <div className={styles.inputCheck}>
-          <p>이메일</p>
-          <input value={email} readOnly/>
-          <p>이름</p>
-          <input value={name} readOnly/>
-        </div>
+return (
+  <form className={styles.signupBox} onSubmit={handleSubmit}>
+    <h2>소셜 회원가입</h2>
 
-        { nickMessage && <p style={{ color: nickMessageColor, fontSize: "13px",margin: "4px 0 0 0",textAlign: "right"  }}>{nickMessage}</p> }
-        <div className={styles.inputCheck}>
-          <input value={nickname} onChange={e => {setNickname(e.target.value); setnickCheck(false); setnickMessage("")}} placeholder="닉네임" />
-          <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
-        </div>
+    <div className={styles.formFields}>
+      {/* 읽기 전용 정보 */}
+      <div className={styles.displayRow}>
+        <input value={email} type="text" readOnly className={styles.readonlyField} />
+      </div>
 
-        <div>
-          <label>MBTI</label>
-          <select value={mbtiId} onChange={(e) => setMbtiId(e.target.value)} required>
-            <option value="">선택하세요</option>
-            <option value="1">ISTJ</option>
-            <option value="2">ISFJ</option>
-            <option value="3">INFJ</option>
-            <option value="4">INTJ</option>
-            <option value="5">ISTP</option>
-            <option value="6">ISFP</option>
-            <option value="7">INFP</option>
-            <option value="8">INTP</option>
-            <option value="9">ESTP</option>
-            <option value="10">ESFP</option>
-            <option value="11">ENFP</option>
-            <option value="12">ENTP</option>
-            <option value="13">ESTJ</option>
-            <option value="14">ESFJ</option>
-            <option value="15">ENFJ</option>
-            <option value="16">ENTJ</option>
-          </select>
-        </div>
+      <div className={styles.displayRow}>
+        <input type="text" value={name} readOnly className={styles.readonlyField} />
+      </div>
 
-        {error && <div style={{ color: "red" }}>{error}</div>}
+      {/* 닉네임 */}
+      {nickMessage && (
+        <p className={styles.msgRight} style={{ color: nickMessageColor }}>{nickMessage}</p>
+      )}
+      <div className={styles.inputCheck}>
+        <input
+          value={nickname}
+          onChange={(e) => { setNickname(e.target.value); setnickCheck(false); setnickMessage(""); }}
+          type="text"
+          placeholder="닉네임"
+        />
+        <button type="button" onClick={handleNicknameCheck} disabled={nickCheck}>중복 확인</button>
+      </div>
 
-        <button type="submit" className={styles.submitBtn} disabled={!nickCheck}>회원가입 완료</button>
-      </form>
-    
-  );
+      {/* MBTI (라벨 | 셀렉트) */}
+      <div className={styles.rowLabelSelect}>
+        <select
+          className={styles.selectField}
+          value={mbtiId}
+          onChange={(e) => setMbtiId(e.target.value)}
+          required
+        >
+          <option value="">MBTI를 선택해 주세요</option>
+          <option value="1">ISTJ</option>
+          <option value="2">ISFJ</option>
+          <option value="3">INFJ</option>
+          <option value="4">INTJ</option>
+          <option value="5">ISTP</option>
+          <option value="6">ISFP</option>
+          <option value="7">INFP</option>
+          <option value="8">INTP</option>
+          <option value="9">ESTP</option>
+          <option value="10">ESFP</option>
+          <option value="11">ENFP</option>
+          <option value="12">ENTP</option>
+          <option value="13">ESTJ</option>
+          <option value="14">ESFJ</option>
+          <option value="15">ENFJ</option>
+          <option value="16">ENTJ</option>
+        </select>
+      </div>
+
+      {error && <div className={styles.errorText}>{error}</div>}
+
+      <button type="submit" className={styles.submitBtn} disabled={!nickCheck}>
+        회원가입 완료
+      </button>
+    </div>
+  </form>
+);
 }

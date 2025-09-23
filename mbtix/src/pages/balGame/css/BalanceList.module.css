@@ -24,9 +24,9 @@
 .pastWrap { margin-top: 40px; }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 카드 너비 고정 + 반응형 */
+  grid-template-columns: repeat(2, 1fr); /* 무조건 2열 */
   gap: 1.5rem;
-  align-items: start; /* 각 카드 높이를 독립적으로 */
+  align-items: start; /* 각 카드 높이에 따라 독립 */
 }
 
 
@@ -115,8 +115,8 @@
 .topLeftFab {
   font-size: 14px;
   background: #fff;
-  color: #2563eb;
-  border: 2px solid #2563eb;
+  color: #5d9cec;
+  border: 2px solid #5d9cec;
   border-radius: 20px;
   padding: 6px 14px;
   margin-left: 10px;
@@ -127,3 +127,16 @@
   position: fixed;
 }
 .topLeftFab:hover { background: #5d9cec; color: #fff; }
+
+/* .accordion {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; 
+}
+
+.accordion.expanded {
+  max-height: 800px; 
+  transition: max-height 0.5s ease-in; 
+} */
+
+

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getMbtiQuestions, submitMbtiAnswers } from "../../api/mbtiTestApi";
 import type { RootState } from "../../store/store";

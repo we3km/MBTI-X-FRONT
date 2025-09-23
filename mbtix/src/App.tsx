@@ -77,7 +77,7 @@ function App() {
           <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
 
           {/* --- 로그인 관련 경로 --- */}
-          <Route path="/login" element={<LoginPage />}/>
+          <Route path="/login" element={<LoginPage />}/ >
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
           <Route path="/signup" element={<SignupPage />} />

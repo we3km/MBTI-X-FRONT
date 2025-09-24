@@ -1,8 +1,8 @@
 import axios, { AxiosHeaders } from 'axios';
 
 const apiClient = axios.create({
-    // baseURL: 'http://localhost:8085/api'
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: 'http://localhost:8085/api'
+    // baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 export const setupInterceptors = (store: any) => {

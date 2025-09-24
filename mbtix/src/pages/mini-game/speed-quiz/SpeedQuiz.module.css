@@ -1,0 +1,155 @@
+.quizBody {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5%;
+}
+
+.quizGameWrapper {
+    position: relative;
+    background: #6b8cff;
+    color: white;
+    font-weight: bold;
+    width: 1200px;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.quizBtnClose {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.quizBtnClose img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.quizGameScreen {
+    text-align: center;
+    font-size: 30px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.quizFirst {
+    font-size: 16px;
+    color: #ddd;
+    transition: transform 0.3s ease, color 0.3s ease;
+    /* 부드러운 변화 */
+    cursor: default;
+    text-align: center;
+}
+
+.quizAnswer {
+    margin-top: 50px;
+    height: 100px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: bold;
+    width: 1000px;
+    font-size: 25px;
+    border-radius: 40px;
+    border: none;
+    padding-left: 30px;
+    box-sizing: border-box;
+}
+
+.quizWarning {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.quizResultScore {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.quizFilled {
+    color: gold;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+}
+
+.quizEmpty {
+    color: lightgray;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.quizRoundScore {
+    font-size: 45px;
+}
+
+.quizPerRound {
+    position: absolute;
+    top: 5px;
+    left: 80px;
+    font-size: 30px;
+    color: white;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.quizCount {
+    font-size: 80px;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    animation: bounceCount 1s ease-in-out infinite;
+    /* 계속 반복 */
+}
+
+@keyframes bounceCount {
+    0% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-40px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    75% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.floatText {
+    display: inline-block;
+    animation: floatAnimation 2s ease-in-out infinite;
+}
+
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,166 @@
+/* ✨ 전체 페이지 배경 설정 */
+.container {
+    width: 90%;
+    min-height: 90vh;
+    padding: 40px 20px;
+    /* 상하 여백을 늘림 */
+    font-family: 'Pretendard', sans-serif;
+    box-sizing: border-box;
+}
+
+/* ✨ 페이지의 메인 콘텐츠 패널 (기존 modal 역할) */
+.contentPanel {
+    /* 클래스 이름을 의미에 맞게 변경하는 것을 추천 */
+    position: relative;
+    background-color: white;
+    border-radius: 40px;
+    padding: 30px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+    /* ✨ 최대 너비를 크게 설정 */
+    margin: 0 auto;
+    /* ✨ 페이지 중앙 정렬 */
+}
+
+/* ✨ 닫기 버튼을 패널 우측 상단으로 이동 */
+.closeButton {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.closeButton img {
+    width: 22px;
+    height: 22px;
+    /* ✨ 3. 아이콘 색상을 흰색으로 변경 (CSS filter 사용) */
+    filter: brightness(0) invert(1);
+}
+
+.contentBox {
+    /* ✨ 1. 포지셔닝의 기준이 되도록 position: relative 추가! (가장 중요) */
+    position: relative;
+    background: linear-gradient(135deg, #6a82fb 0%, #5b92e5 100%);
+    border-radius: 30px;
+    padding: 60px 50px;
+    /* ✨ padding 값은 이전 버전으로 복원 */
+    color: white;
+    text-align: center;
+}
+
+
+.title {
+    font-size: 3rem;
+    /* ✨ 페이지 타이틀에 맞게 크기 대폭 증가 */
+    font-weight: 800;
+    margin-bottom: 50px;
+    letter-spacing: -1.5px;
+}
+
+/* ✨ 두 개의 폼을 나란히 배치하기 위한 Flexbox 컨테이너 */
+.formsContainer {
+    display: flex;
+    justify-content: space-around;
+    /* 폼 사이에 공간 부여 */
+    gap: 40px;
+    /* 폼 사이의 간격 */
+    flex-wrap: wrap;
+    /* 화면이 좁아지면 자동으로 줄바꿈 */
+}
+
+.formSection {
+    flex: 1;
+    /* ✨ 공간을 균등하게 차지 */
+    min-width: 300px;
+    /* ✨ 최소 너비 지정 */
+    margin-bottom: 0;
+    /* ✨ 개별 마진 제거 */
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    /* ✨ 반투명 배경으로 구분 */
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sectionTitle {
+    font-size: 1.8rem;
+    /* ✨ 섹션 타이틀 크기 증가 */
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.inputField {
+    width: 100%;
+    padding: 18px 25px;
+    border-radius: 15px;
+    /* ✨ 둥근 사각형 형태로 변경 */
+    border: none;
+    font-size: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.9);
+    /* ✨ 약간의 투명도 추가 */
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.inputField:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.inputField::placeholder {
+    color: #888;
+}
+
+.submitButton {
+    width: 100%;
+    /* ✨ 버튼 너비를 폼에 꽉 채움 */
+    padding: 18px 25px;
+    border-radius: 15px;
+    border: none;
+    background-color: white;
+    color: #5b92e5;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.submitButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 💻📱 반응형 디자인: 화면 너비가 992px보다 작아지면 (태블릿/모바일) */
+@media (max-width: 992px) {
+    .formsContainer {
+        flex-direction: column;
+        /* 폼을 세로로 쌓음 */
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .contentBox {
+        padding: 40px 30px;
+    }
+}

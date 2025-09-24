@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+/* 전체 컨테이너 */
+.container {
+  font-family: 'Jua', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 닫기 버튼 */
+.closeButon {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+}
+
+.closeButon:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 상단 버튼 */
+.topbutton {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  /* 부모 전체 너비 사용 */
+  margin-bottom: 30px;
+}
+
+.topbutton button {
+  background-color: #6a8cff;
+  color: white;
+  border: 2px solid #6a8cff;
+  border-radius: 20px;
+  font-size: 14px;
+  padding: 5px 12px;
+  cursor: pointer;
+  box-shadow:
+    6px 3px 9px rgba(0, 0, 0, 0.2),
+    8px 6px 18px rgba(0, 0, 0, 0.12),
+    12px 12px 26px rgba(0, 0, 0, 0.1);
+  transition: 0.2s;
+  opacity: 0;
+  /* 기본 투명 */
+  transform: translateY(10px);
+  animation: buttonFadeIn 0.5s ease forwards;
+}
+
+.topbutton button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    12px 8px 16px rgba(0, 0, 0, 0.2),
+    16px 12px 32px rgba(0, 0, 0, 0.2),
+    24px 16px 48px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 카드 컨테이너 */
+.cardcontainer {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  font-weight: bold;
+  justify-content: center;
+  width: 100%;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* 그림자 */
+}
+
+/* 카드 */
+.card {
+  width: 300px;
+  height: 500px;
+  background-color: #6a8cff;
+  color: white;
+  border-radius: 20px;
+  box-shadow:
+    8px 4px 12px rgba(0, 0, 0, 0.3),
+    12px 8px 24px rgba(0, 0, 0, 0.2),
+    16px 16px 32px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardFadeIn 0.6s ease forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* hover 시 transform만 조정 */
+.card:hover {
+  transform: translateY(-5px) scale(1.05) rotate(0.5deg);
+  box-shadow:
+    12px 8px 16px rgba(0, 0, 0, 0.4),
+    16px 12px 32px rgba(0, 0, 0, 0.3),
+    24px 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+/* 카드 아이콘 */
+.cardicon {
+  font-size: 32px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  text-align: center;
+  width: 120px;
+  height: 120px;
+  height: auto;
+}
+
+/* 카드 타이틀 */
+.cardtitle {
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* 게임 시작 버튼 */
+.startbutton {
+  background-color: white;
+  color: #4da6ff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.startbutton:hover {
+  background-color: #f0f0f0;
+}
+
+/* 랭킹 */
+.ranking {
+  font-size: 15px;
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.cardcontainer .card:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.cardcontainer .card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.cardcontainer .card:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+.cardcontainer .card:nth-child(4) {
+  animation-delay: 0.7s;
+}
+
+.title {
+  width: 400px;
+  height: 100px;
+  position: relative;
+  /* 이동하려면 relative 필요 */
+  animation: smoothUpDown 1s infinite alternate;
+}
+
+/* 카드 등장 키프레임 */
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cardHoverWiggle {
+  0% {
+    transform: translateY(-5px) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+
+  75% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+
+  100% {
+    transform: translateY(-5px) rotate(0deg);
+  }
+}
+
+/* 버튼 순차적 등장 */
+.topbutton button:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.topbutton button:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.topbutton button:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* 버튼 fade-in 키프레임 */
+@keyframes buttonFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes smoothUpDown {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(15px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

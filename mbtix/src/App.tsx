@@ -64,11 +64,11 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
           <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" replace />} />
-          <Route path="find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid />} />
-          <Route path='/oauth2/success' element={<OAuth2Success />} />
-          <Route path='/social-signup' element={<SocialSignup />} />
-          <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path="/find-pw" element={!user ?<Findpw /> : <Navigate to="/" replace />} />
+          <Route path="/find-id" element={!user ?<Findid /> : <Navigate to="/" replace />} />
+          <Route path='/oauth2/success'  element={!user ?<OAuth2Success /> : <Navigate to="/" replace />} />
+          <Route path='/social-signup'   element={!user ?<SocialSignup />  : <Navigate to="/" replace />} />
+          <Route path="/signup-complete" element={!user ?<SignupComplete />: <Navigate to="/" replace />} />
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
 
           <Route path="/miniGame">

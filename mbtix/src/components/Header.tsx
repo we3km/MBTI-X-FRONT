@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
-import { useSelector } from 'react-redux';
-import { type RootState } from '../store/store';
-import { doLogout } from '../api/authApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { store, type RootState } from '../store/store';
+import { authApi } from '../api/authApi';
 import { getMyAlarms, markAlarmAsRead, deleteAllAlarms, type Alarm } from '../api/alarmApi';
 import { FaRegBell } from 'react-icons/fa';
+import { clearAuth } from "../features/authSlice";
 
 const Header = () => {
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
+
+    const dispatch = useDispatch();
 
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [alarms, setAlarms] = useState<Alarm[]>([]);
@@ -52,13 +55,17 @@ const Header = () => {
         setOpenMenu(prevOpenMenu => (prevOpenMenu === menuName ? null : menuName));
     };
 
-    const handleLogout = async () => {
-        if (window.confirm("로그아웃 하시겠습니까?")) {
-            setOpenMenu(null);
-            await doLogout();
-            navigate('/login');
-        }
-    };
+  const handleLogout = async () => {
+    const token = store.getState().auth.accessToken;
+    try {
+      await authApi.post("/logout", {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } finally {
+      dispatch(clearAuth());
+      navigate("/");
+    }
+  }
 
     const handleAlarmClick = async (alarm: Alarm) => {
         setOpenMenu(null);
@@ -136,7 +143,7 @@ const Header = () => {
                                 ) : (
                                     <Link to="/cs-center" onClick={() => setOpenMenu(null)}>고객센터</Link>
                                 )}
-                                <a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }} style={{ cursor: 'pointer' }}>로그아웃</a>
                             </div>
                         </div>
                         <div className="nav-item">

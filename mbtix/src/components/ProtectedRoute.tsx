@@ -10,12 +10,11 @@ interface Props {
 export default function ProtectedRoute({
   children,
   requiredRoles = [],
-  redirectTo = "/login"
+  redirectTo = "/"
 }: Props) {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
   if (!isAuthenticated) {
-    alert("로그인 후 이용해주세요.");
     return <Navigate to={redirectTo} replace />;
   }
 

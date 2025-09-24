@@ -3,17 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { store, type RootState } from '../store/store';
-import { authApi } from '../api/authApi';
+
+import { authApi, doLogout } from '../api/authApi';
 import { getMyAlarms, markAlarmAsRead, deleteAllAlarms, type Alarm } from '../api/alarmApi';
 import { FaRegBell } from 'react-icons/fa';
-import { clearAuth } from "../features/authSlice";
+import { clearAuth } from '../features/authSlice';
+
 
 const Header = () => {
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
-
+    
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [alarms, setAlarms] = useState<Alarm[]>([]);
 
@@ -55,7 +56,7 @@ const Header = () => {
         setOpenMenu(prevOpenMenu => (prevOpenMenu === menuName ? null : menuName));
     };
 
-  const handleLogout = async () => {
+    const handleLogout = async () => {
     const token = store.getState().auth.accessToken;
     try {
       await authApi.post("/logout", {}, {

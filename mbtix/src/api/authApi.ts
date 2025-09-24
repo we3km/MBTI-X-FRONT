@@ -45,7 +45,6 @@ authApi.interceptors.request.use((config) => {
   const isNoAuthUrl =
     (config.url && noAuthUrls.some((url) => config.url?.startsWith(url))) ||
     config.url?.includes("/refresh");
-
   if (!isNoAuthUrl && token) {
     if (!config.headers) {
       config.headers = new AxiosHeaders();

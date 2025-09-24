@@ -1,0 +1,375 @@
+/* 뷰포트 기준 80% 폭 + 가운데 정렬 + 확장 방지 */
+.container {
+  width: 80vw;
+  max-width: 1400px;
+  min-width: 900px;
+  height: 90vh;
+  margin: 5vh auto 0;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* 왼쪽 사이드바 */
+.sidebar {
+  background: #2c3e50;
+  color: #ecf0f1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,0.08);
+
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.createBtn {
+  display: block;
+  text-align: center;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #3498db;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .06s ease, background .2s ease;
+}
+
+.createBtn:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* 챗봇 상세정보 */
+.currentBotInfo {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.currentBotDetail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.currentBotImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #3498db;
+    cursor: pointer;
+}
+
+.currentBotName {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.currentBotMbti {
+    font-size: 14px;
+    opacity: .8;
+}
+
+.detailBtn {
+    width: 100%;
+    padding: 8px 0;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ecf0f1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .15s ease;
+}
+
+.detailBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.roomList {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 0 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.roomItem {
+  margin: 2px 0;
+}
+
+.roomLink {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #ecf0f1;
+  text-decoration: none;
+  transition: background .15s ease;
+}
+/* roomLink:hover를 없애고 roomLinkContent:hover를 추가하여 링크 영역에 마우스를 올릴 때만 색이 바뀌도록 수정 */
+.roomLink:hover { background: rgba(255,255,255,0.08); }
+
+.mbti { font-size: 12px; opacity: .8; }
+
+.roomLinkContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-grow: 1;
+  color: #fff;
+  transition: color .15s ease;
+}
+.roomLinkContent:hover {
+  color: #646CFF; /* 요청에 따라 마우스 오버 시 색상을 #646CFF로 변경 */
+}
+
+.profileImage {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3498db;
+}
+
+/* 삭제 아이콘 스타일 */
+.deleteIcon {
+  margin-left: auto;
+  color: #dbdbdb; /* 삭제 아이콘 색깔을 하얀색으로 변경 */
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background .15s ease, color .15s ease;
+}
+.deleteIcon:hover {
+  background: rgba(231, 76, 60, 0.2);
+  color: #c0392b;
+}
+
+/* 오른쪽 메인 영역 */
+.main {
+  background: #f5f6fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+.placeholder {
+  margin: auto;
+  text-align: center;
+  color: #555;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* 스크롤바 살짝 정리(선택) */
+.roomList::-webkit-scrollbar { width: 8px; }
+.roomList::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 8px; }
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: #fff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* 상세정보 모달 */
+.detailModalContent {
+  background: #fff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+}
+
+.detailBotInfo h3 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.detailBotInfo p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.detailBotInfo p:last-child {
+  border-bottom: none;
+}
+
+.detailBotInfo strong {
+  color: #2c3e50;
+  font-weight: 700;
+  display: inline-block;
+  min-width: 60px;
+  margin-right: 10px;
+}
+
+.detailCloseBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* 이미지 확대 모달 */
+.fullImageModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.fullImageContent {
+    position: relative;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.fullImageContent img {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 8px;
+}
+
+.downloadBtn {
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.downloadBtn:hover {
+    background: #2980b9;
+}
+
+/* 삭제 확인 모달 */
+.deleteConfirmModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.deleteConfirmContent {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 300px;
+}
+
+.deleteConfirmContent h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.deleteConfirmContent button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.confirmYes {
+  background: #e74c3c;
+  color: white;
+  transition: background .15s ease;
+}
+.confirmYes:hover {
+  background: #c0392b;
+}
+
+.confirmNo {
+  background: #bdc3c7;
+  color: #333;
+  transition: background .15s ease;
+}
+.confirmNo:hover {
+  background: #95a5a6;
+}

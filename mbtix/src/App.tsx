@@ -5,7 +5,7 @@ import React from 'react';
 // Component Imports
 import Header from './components/Header';
 import AuthGate from './components/AuthGate';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute'; // [수정] 경로 수정
 import LayoutWithHeader from './components/LayoutWithHeader';
 
 // Page Imports
@@ -43,6 +43,7 @@ import AdminFaqFormPage from './pages/admin/AdminFaqFormPage';
 import AdminInquiryListPage from './pages/admin/AdminInquiryListpage';
 import AdminInquiryDetailPage from './pages/admin/AdminInquiryDetailPage';
 
+// Board Page Imports
 import List from './pages/board/List';
 import Insert from './pages/board/Insert';
 import Detail from './pages/board/Detail';
@@ -53,27 +54,23 @@ import { useSelector } from 'react-redux';
 import type { RootState } from './store/store';
 
 function App() {
-  const location = useLocation();
-  const hideHeaderPaths = ['/', '/login'];
-  const shouldHideHeader = hideHeaderPaths.includes(location.pathname);
-
   return (
     <AuthGate>
-      {!shouldHideHeader && <Header />}
       <section id="content">
         <Routes>
-          {/* --- 메인 및 로그인/회원가입 (헤더 없음) --- */}
+          {/* --- 헤더가 없는 페이지들 --- */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/find-id" element={<Findid />} />
-          <Route path="/find-pw" element={<Findpw />} />
-          <Route path="/signup-complete" element={<SignupComplete />} />
-          <Route path='/oauth2/success' element={<OAuth2Success />} />
-          <Route path='/social-signup' element={<SocialSignup />} />
 
-          {/* --- 로그인 필수 경로 (헤더 있음) --- */}
+          {/* --- 헤더가 있는 모든 페이지들 --- */}
           <Route element={<LayoutWithHeader />}>
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/find-id" element={<Findid />} />
+            <Route path="/find-pw" element={<Findpw />} />
+            <Route path="/signup-complete" element={<SignupComplete />} />
+            <Route path='/oauth2/success' element={<OAuth2Success />} />
+            <Route path='/social-signup' element={<SocialSignup />} />
+
             {/* CS, FAQ, 및 기타 콘텐츠 */}
             <Route path="/cs-center" element={<CustomerServicePage />} />
             <Route path="/faqs" element={<FaqListPage />} />

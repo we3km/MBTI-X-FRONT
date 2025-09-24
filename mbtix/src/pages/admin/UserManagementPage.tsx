@@ -9,6 +9,8 @@ const UserManagementPage = () => {
     const [userList, setUserList] = useState<UserEntity[]>([]);
     const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+    
+    // 검색 및 필터링을 위한 state
     const [searchType, setSearchType] = useState('nickname');
     const [keyword, setKeyword] = useState('');
     const [status, setStatus] = useState('all');
@@ -95,8 +97,16 @@ const UserManagementPage = () => {
                                 <td>{user.nickname}</td>
                                 <td>{user.email}</td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
-                                <td>{user.statusName}</td>
-                                <td>{user.statusName === '정지' && user.relesaeDate ? new Date(user.relesaeDate).toLocaleDateString() : '-'}</td>
+                                <td>
+                                    <span className={`status-badge status-${user.statusName}`}>
+                                        {user.statusName}
+                                    </span>
+                                </td>
+                                <td>
+                                    {user.statusName === '정지' && user.relesaeDate 
+                                        ? new Date(user.relesaeDate).toLocaleDateString() 
+                                        : '-'}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

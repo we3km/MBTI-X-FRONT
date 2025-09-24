@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserDetail, banUser, updateUserRole, unbanUser, type UserDetail } from '../../api/adminApi';
 import toast from 'react-hot-toast';
 import './AdminUserDetailPage.css';
+import UserPostList from '../../components/UserPostList';
+import UserCommentList from '../../components/UserCommentList';
 
 const AdminUserDetailPage = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -150,14 +152,10 @@ const AdminUserDetailPage = () => {
                         </div>
                     )}
                     {activeTab === 'posts' && (
-                        <div className="placeholder-content">
-                            <p>여기에 해당 회원이 작성한 게시글 목록이 표시</p>
-                        </div>
+                        <UserPostList userId={Number(userId)} />
                     )}
                     {activeTab === 'comments' && (
-                        <div className="placeholder-content">
-                            <p>여기에 해당 회원이 작성한 댓글 목록이 표시</p>
-                        </div>
+                        <UserCommentList userId={Number(userId)} />
                     )}
                 </div>
             </div>

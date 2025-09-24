@@ -123,7 +123,7 @@ export default function OnlineGame() {
                                             onClick={
                                                 (e) => {
                                                     e.stopPropagation();
-                                                    // 그사람 마이페이지로 이동 로직 필요!!
+                                                    navigate("/user/"+ room.creatorId);
                                                 }
                                             }
                                         />

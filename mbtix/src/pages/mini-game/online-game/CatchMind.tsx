@@ -35,6 +35,11 @@ type GameStateMessage = {
     gamers?: Gamer[];
     captain?: Gamer;
     words?: string[];
+
+    // 방 속성
+    roomName?: string;
+    maxCount?: number;
+    kickedOutId?: number;
 };
 
 type GameRoomInfo = {
@@ -46,6 +51,8 @@ type GameRoomInfo = {
 };
 
 export default function CatchMind() {
+    const chatBoxRef = useRef<HTMLDivElement>(null);
+
     const getUserId = () => store.getState().auth.user?.userId;
     const userId = getUserId();
     const { roomId: roomIdStr } = useParams<{ roomId: string }>();
@@ -82,7 +89,12 @@ export default function CatchMind() {
 
     const [isClosing, setIsClosing] = useState(false);
 
-    // 최신 상태를 저장할 ref 생성
+    useEffect(() => {
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+    }, [chatMessages]);
+
     const stateRef = useRef({ amIDrawer, editor });
     useEffect(() => {
         stateRef.current = { amIDrawer, editor };
@@ -96,7 +108,7 @@ export default function CatchMind() {
         } catch (e) {
             console.error("Debounced snapshot load error:", e);
         }
-    }, 50), []); // ✅ 의존성 배열을 빈 배열 '[]'로 설정하여 최초 1회만 생성
+    }, 50), []);
 
     // GamerList불러오기
     const { data: gamersList } = useQuery<Gamer[]>({
@@ -126,10 +138,15 @@ export default function CatchMind() {
     const [newMaxCount, setNewMaxCount] = useState(gameRoomInfo?.maxCount || 5);
 
     // 사용자 강퇴시키기
-    const kickOut = (userId: number) => {
-        api.post("/leaveRoom", { roomId, userId })
-            .then(() => toast.success("강퇴 완료"))
-            .catch(() => toast.error("강퇴 실패"));
+    const kickOut = async (userIdOut: number) => {
+        try {
+            // isKickedOut = 1이면 강퇴, 0이면 자진 퇴소!!
+            await api.post("/leaveRoom", { roomId, userId: userIdOut, isKickedOut: 1 });
+            toast.success("강퇴 처리 완료");
+            queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
+        } catch (err) {
+            toast.error("강퇴 처리에 실패했습니다.");
+        }
     };
 
     useEffect(() => {
@@ -168,11 +185,23 @@ export default function CatchMind() {
                 // 게임 상태용 구독
                 client.subscribe(`/sub/game/${roomId}/state`, (message: IMessage) => {
                     console.log(message)
+                    const currentUserId = getUserId();
                     const receivedState: GameStateMessage = JSON.parse(message.body);
                     setGameState(prevState => ({
                         ...prevState,
                         ...receivedState
                     }));
+                    if (receivedState.kickedOutId) {
+                        console.log("강퇴 당하는 사람 ID :", receivedState.kickedOutId);
+                        if (receivedState.kickedOutId === currentUserId) {
+                            toast.error("방에서 강퇴당했습니다.", { duration: 3000 });
+                            stompClient.current?.deactivate();
+                            navigate("/miniGame/OnlineGame");
+                        } else {
+                            toast("플레이어가 강퇴되었습니다.");
+                            queryClient.invalidateQueries({ queryKey: ["gamersList", roomId] });
+                        }
+                    }
                 });
                 // 타이머용 구독
                 client.subscribe(`/sub/game/${roomId}/timer`, (message: IMessage) => {
@@ -285,14 +314,14 @@ export default function CatchMind() {
     // 게임 시작 요청
     const handleStartGame = () => {
         if (gamersList !== undefined && gamersList?.length < 2) {
-            alert("게임시작을위해선 최소 두명 이상의 플레이어가 있어야 합니다.")
-            queryClient.invalidateQueries({ queryKey: ['gamersList'] });
+            toast.error("게임시작을위해선 최소 두명 이상의 플레이어가 있어야 합니다.")
+            queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
             return;
         }
         if (stompClient.current && stompClient.current.connected) {
             stompClient.current.publish({ destination: `/pub/game/${roomId}/start` });
         } else {
-            alert("서버와 연결이 끊겼습니다. 잠시 후 다시 시도해주세요.");
+            toast.error("서버와 연결이 끊겼습니다. 잠시 후 다시 시도하거나 재입장해주세요.");
             console.error("STOMP connection is not active while trying to start game.");
         }
     };
@@ -355,10 +384,11 @@ export default function CatchMind() {
                             cursor: 'pointer'
                         }}
                         onClick={async () => {
-                            await api.post("/leaveRoom", { roomId, userId });
+                            await api.post("/leaveRoom", { roomId, userId, isKickedOut: 0 });
                             queryClient.invalidateQueries({ queryKey: ['gamersList'] });
                             queryClient.invalidateQueries({ queryKey: ['gamingRoomList'] });
                             toast.dismiss(t.id);
+                            toast.success("방을 퇴장하였습니다.");
                             navigate("/miniGame/OnlineGame");
                         }}
                     >
@@ -389,10 +419,10 @@ export default function CatchMind() {
                 <div className={styles.roomTitle}>
                     <button
                         className={styles.clickableTitle}
-                        disabled={gameRoomInfo?.creatorId !== userId} // 방장이 아니면 비활성화
+                        disabled={gameRoomInfo?.creatorId !== userId}
                         onClick={() => {
                             if (status !== "start") {
-                                toast.error("게임 시작 후에는 방 설정을 변경할 수 없습니다!", {
+                                toast.error("게임 시작 후 방 설정은 변경할 수 없습니다!", {
                                     duration: 3000,
                                 });
                                 return;
@@ -408,10 +438,10 @@ export default function CatchMind() {
                     {status === "drawing" && !amIDrawer && <span>{answerLength ? "_ ".repeat(answerLength) : ""} ({answerLength}글자)</span>}
                 </div>
                 <div
-                    className={`${styles.timer} ${timeLeft <= 10 ? styles.bounce : ''}`}
+                    className={`${styles.timer} ${(timeLeft <= 10 && status === "drawing") ? styles.bounce : ''}`}
                 >
                     {(status === "drawing" || status === "waiting") &&
-                        `⏰ ${timeLeft}s Round ${round} of ${maxRounds}`}
+                        `⏱️ ${timeLeft}s Round ${round} of ${maxRounds}`}
                 </div>
                 <button className={styles.closeBtn} onClick={handleExitRoom}>
                     <img src={exitImg} className={styles.exitImg} />
@@ -425,8 +455,6 @@ export default function CatchMind() {
                         <div key={gamer.userId} className={styles.rankItem}>
                             {status !== "start" && (<div>#{index + 1}</div>)}
                             <div className={styles.profileContainer}>
-                                {/* <img src={`/profile/default/${gamer.profile}`} alt={gamer.nickname} className={styles.profile} />
-                                 */}
                                 <img
                                     src={`/profile/default/${gamer.profile}`}
                                     alt={gamer.nickname}
@@ -515,12 +543,12 @@ export default function CatchMind() {
                 < div className={styles.centerPanel} >
                     {status === "start" && (
                         <div className={styles.overlayContainer}>
-                            {userId === gameRoomInfo?.creatorId ? ( // 백엔드에서 방장 설정 로직 필요
+                            {userId === gameRoomInfo?.creatorId ? (
                                 <button className={styles.startBtn} onClick={handleStartGame} disabled={!isConnected || (gamers?.length ?? 0) < 2}>
                                     {(gamers?.length ?? 0) < 2 ? "두 명 이상 필요!!" : (isConnected ? "게임 시작" : "연결 중...")}
                                 </button>
                             ) : (
-                                <h2>방장이 게임을 시작하기를 기다리는 중...</h2>
+                                <h2 className={styles.waitingCaptain}> 방장이 게임을 시작하기를 기다리는 중...</h2>
                             )}
                         </div>
                     )}
@@ -528,7 +556,7 @@ export default function CatchMind() {
                         <div className={styles.overlayContainer}>
                             {amIDrawer ? (
                                 <div className={styles.wordPickContainer}>
-                                    <h2>단어를 선택하세요! ({timeLeft}초)</h2>
+                                    <h2 className={styles.wordSelection}>단어를 선택하세요! ({timeLeft}초)</h2>
                                     {words?.map(word => (
                                         <button key={word} className={styles.userPick} onClick={() => handleSelectWord(word)}>
                                             {word}
@@ -536,7 +564,7 @@ export default function CatchMind() {
                                     ))}
                                 </div>
                             ) : (
-                                <h2>{drawer?.nickname}님이 단어를 선택 중입니다...</h2>
+                                <h2 className={styles.wordSelection}>{drawer?.nickname}님이 단어를 선택 중입니다...</h2>
                             )}
                         </div>
                     )}
@@ -545,25 +573,76 @@ export default function CatchMind() {
                             <Tldraw onMount={handleMount} hideUi={!amIDrawer} />
                         </div>
                     )}
-                    {(status === "result" || status === "final") && (
-                        <div className={styles.overlayContainer}>
-                            <h2 className={styles.resultTitle}>{status === "final" ? "🏆 최종 결과 🏆" : `Round ${round} 결과`}</h2>
-                            {status === "result" && <p className={styles.resultAnswer}>정답: {answer}</p>}
-                            {gamers?.sort((a, b) => b.points - a.points).map(gamer => (
-                                <div key={gamer.userId} className={styles.resultPlayer}>
-                                    {gamer.nickname}: {gamer.points} POINTS
-                                </div>
-                            ))}
-                            {round !== 4 ? (<div>{timeLeft}초 후에 다음 라운드 시작합니다.</div>) : (
-                                <div>{timeLeft}초 후에 최종 결과 화면으로 이동합니다.</div>
-                            )}
+                    {/* 라운드 결과 화면 */}
+                    {status === "result" && (
+                        <div className={`${styles.overlayContainer} ${styles.result}`}>
+                            <h2 className={styles.resultTitle}>Round {round} 결과</h2>
+                            <p className={styles.resultAnswer}>정답: {answer}</p>
+                            {gamers
+                                ?.sort((a, b) => b.points - a.points)
+                                .map((gamer) => (
+                                    <div key={gamer.userId} className={styles.resultPlayer}>
+                                        {gamer.nickname}: {gamer.points} POINTS
+                                    </div>
+                                ))}
+                            {round !== maxRounds ? (<div>{timeLeft}초 후에 다음 라운드를 시작합니다.</div>) :
+                                (<div>{timeLeft}초 후에 최종 결과화면으로 이동합니다.</div>)}
                         </div>
                     )}
+
+                    {/* 최종 결과 화면 */}
+                    {status === "final" && (
+                        <div className={`${styles.overlayContainer} ${styles.final}`}>
+                            <h2 className={styles.resultTitle}>🏆 우승자는 {<b className={styles.winnerName}>{sortedGamers[0].nickname}</b>} 입니다! 🏆</h2>
+                            <div className={styles.podium}>
+                                {/* 2위 */}
+                                {sortedGamers[1] && (
+                                    <div className={`${styles.podiumSlot} ${styles.second}`}>
+                                        <img src={`/profile/default/${sortedGamers[1].profile}`} className={styles.avatar} />
+                                        <span>{sortedGamers[1].nickname}</span>
+                                        <p>{sortedGamers[1].points} pts</p>
+                                    </div>
+                                )}
+
+                                {/* 1위 */}
+                                {sortedGamers[0] && (
+                                    <div className={`${styles.podiumSlot} ${styles.first}`}>
+                                        <img src={`/profile/default/${sortedGamers[0].profile}`} className={styles.avatar} />
+                                        <span>{sortedGamers[0].nickname}</span>
+                                        <p>{sortedGamers[0].points} pts</p>
+                                    </div>
+                                )}
+
+                                {/* 3위 */}
+                                {sortedGamers[2] && (
+                                    <div className={`${styles.podiumSlot} ${styles.third}`}>
+                                        <img src={`/profile/default/${sortedGamers[2].profile}`} className={styles.avatar} />
+                                        <span>{sortedGamers[2].nickname}</span>
+                                        <p>{sortedGamers[2].points} pts</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 4위 이하 */}
+                            <div className={styles.others}>
+                                {sortedGamers.slice(3).map((gamer, idx) => (
+                                    <div key={gamer.userId} className={styles.otherPlayer}>
+                                        #{idx + 4} {gamer.nickname} - {gamer.points} pts
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className={styles.countdown}>
+                                {timeLeft}초 후 게임이 종료됩니다.
+                            </div>
+                        </div>
+                    )}
+
                 </div>
 
                 {/* 우측 채팅창 */}
                 <div className={styles.rightPanel}>
-                    <div className={styles.chatBox}>
+                    <div className={styles.chatBox} ref={chatBoxRef}>
                         {chatMessages.map((msg, idx) => (
                             <div key={idx} className={msg.user ? styles.chatMessage : styles.systemMessage}>
                                 {msg.user ? `${msg.user}: ${msg.message}` : msg.message}
@@ -580,7 +659,7 @@ export default function CatchMind() {
                             }
                         }}
                         placeholder="정답을 입력해주세요"
-                        onChange={(e) => userAnswerRef.current = e.target.value}
+                        onChange={(e) => (userAnswerRef.current = e.target.value)}
                     />
                 </div>
             </div>
@@ -630,7 +709,7 @@ export default function CatchMind() {
                         <button
                             className={styles.createBtn}
                             onClick={() => {
-                                if (newMaxCount > gameRoomInfo!.playerCount) {
+                                if (newMaxCount < gameRoomInfo!.playerCount) {
                                     toast.error("최대인원 수는 접속중인 플레이어의 수보다 높게 설정해야합니다!");
                                     return;
                                 }

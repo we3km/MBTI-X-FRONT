@@ -11,9 +11,9 @@
 }
 
 .modal {
-  background: linear-gradient(135deg, #7495f5, #7495f5); /* 은은한 그라데이션 */
+  background: linear-gradient(135deg, #6a8cff, #94b0ff);
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 60px;
   position: relative;
   width: 600px;
   text-align: center;
@@ -57,13 +57,21 @@
 }
 
 .createBtn {
-  background-color: white;
+  background-color: #6a8dffcc;
   border: none;
   border-radius: 50px;
   padding: 12px 30px;
   font-size: 20px;
   font-weight: bold;
+  color: white;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.createBtn:hover {
+  background-color: #5578e6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* 모달 등장 애니메이션 */

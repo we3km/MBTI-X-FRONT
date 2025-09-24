@@ -1,5 +1,4 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 .lobbyContainer {
     height: 90vh;
@@ -8,7 +7,7 @@
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, #667eea 0%, #6a8cff 100%);
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Jua', sans-serif;
     position: relative;
     border-radius: 5%;
     color: white;
@@ -53,16 +52,15 @@
     top: 80px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 50px;
+    font-size: 70px;
     font-weight: 700;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Audiowide', sans-serif;
     margin-bottom: 10px;
     color: white;
-    animation: floatUpDown 2s ease-in-out infinite;
+    animation: floatUpDown 3s ease-in-out infinite;
 }
 
 /* --- 버튼 --- */

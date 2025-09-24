@@ -1,19 +1,13 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: white;
-  /* 연한 파란 배경 */
-}
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 /* 전체 컨테이너 */
 .container {
+  font-family: 'Jua', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  /* height: auto; */
 }
 
 /* 닫기 버튼 */

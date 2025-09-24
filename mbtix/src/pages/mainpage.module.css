@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     background-color: #ffffff;
+    min-height: 100vh;
     padding: 20px;
 }
 
@@ -20,25 +21,28 @@
     object-fit: contain;
     /* 이미지 비율 깨지지 않게 */
 }
+
 .headerLeft {
-  display: flex;
-  flex-direction: column; /* 세로 배치 */
-  gap: 10px;               /* 버튼 사이 간격 */
+    display: flex;
+    flex-direction: column;
+    /* 세로 배치 */
+    gap: 10px;
+    /* 버튼 사이 간격 */
 }
 
 .userInfo {
     font-size: 14px;
     background: #fff;
-    color: #6a8cff;
-    border: 2px solid #6a8cff;
+    color: #6A8CFF;
+    border: 2px solid #6A8CFF;
     border-radius: 20px;
     padding: 5px 12px;
     margin-left: 10px;
     cursor: pointer;
     transition: 0.2s;
-    
 }
-.mbtitest{
+
+.mbtitest {
     font-size: 14px;
     background: #fff;
     color: #6a8cff;
@@ -48,14 +52,13 @@
     margin-left: 10px;
     cursor: pointer;
     transition: 0.2s;
-    
-
 }
 
 .userInfo:hover {
-    background: #6a8cff;
+    background: #6A8CFF;
     color: #fff;
 }
+
 .mbtitest:hover {
     background: #6a8cff;
     color: #fff;
@@ -69,8 +72,8 @@
 .authButton {
     font-size: 14px;
     background: #fff;
-    color: #6a8cff;
-    border: 2px solid #6a8cff;
+    color: #6A8CFF;
+    border: 2px solid #6A8CFF;
     border-radius: 20px;
     padding: 5px 12px;
     cursor: pointer;
@@ -78,7 +81,7 @@
 }
 
 .authButton:hover {
-    background: #6a8cff;
+    background: #6A8CFF;
     color: #fff;
 }
 
@@ -92,7 +95,7 @@
 }
 
 .card {
-    background-color: #6a8cff;
+    background-color: #6A8CFF;
     border-radius: 20px;
     padding: 100px 30px;
     text-align: center;
@@ -132,7 +135,7 @@
 }
 
 .boardBtn {
-    background-color: #6a8cff;
+    background-color: #6A8CFF;
     border: none;
     border-radius: 25px;
     padding: 15px 20px;
@@ -147,7 +150,6 @@
 
 .boardBtn:hover {
     transform: translateY(-3px);
-    background-color: #5a7ae6;
 }
 
 .boardBtn span {
@@ -162,7 +164,9 @@
     height: 50px;
     border-radius: 50%;
     border: 2px solid #ddd;
+
 }
+
 .nickname {
     font-size: 14px;
     font-weight: 500;

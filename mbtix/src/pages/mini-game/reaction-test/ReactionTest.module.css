@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 .reactionBody {
-    font-family: 'Jua', sans-serif;
     margin: 0;
     height: 100vh;
     display: flex;
@@ -11,6 +10,7 @@
 }
 
 .reactionGameWrapper {
+    font-family: 'Jua', sans-serif;
     position: relative;
     background: #6b8cff;
     color: white;

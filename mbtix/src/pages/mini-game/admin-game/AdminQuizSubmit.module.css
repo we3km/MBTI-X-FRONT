@@ -46,6 +46,7 @@
 }
 
 .contentBox {
+    font-family: 'Jua', sans-serif;
     position: relative;
     background: linear-gradient(135deg, #6a82fb 0%, #5b92e5 100%);
     border-radius: 30px;

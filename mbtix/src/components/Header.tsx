@@ -103,7 +103,7 @@ const Header = () => {
                             <Link to="/board/curious" onClick={() => setOpenMenu(null)}>궁금해 게시판</Link>
                         </div>
                     </div>
-                    <Link to="/balance-game">밸런스 게임</Link>
+                    <Link to="/balanceList">밸런스 게임</Link>
                     <div className="nav-item">
                         <button className="nav-link-style" onClick={() => handleMenuToggle('minigame')}>미니게임</button>
                         <div className={`dropdown-menu ${openMenu === 'minigame' ? 'active' : ''}`}>

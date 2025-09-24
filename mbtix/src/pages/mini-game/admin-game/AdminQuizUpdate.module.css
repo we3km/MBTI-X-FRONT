@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
 .container {
     width: 1200px;
     min-height: 90vh;
@@ -46,6 +48,7 @@
 }
 
 .contentBox {
+    font-family: 'Jua', sans-serif;
     position: relative;
     background: linear-gradient(135deg, #6a82fb 0%, #5b92e5 100%);
     border-radius: 30px;

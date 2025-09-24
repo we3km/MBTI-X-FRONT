@@ -11,14 +11,17 @@ import type { RootState } from "../store/store";
 import { clearAuth, setAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
+import { useTodayGame } from "../hooks/useTodayGame";
+import toast from 'react-hot-toast';
 
 export default function Home() {
 
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const today = useTodayGame();
+
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -42,7 +45,7 @@ export default function Home() {
 
     fetch("http://localhost:8085/api/getQuizTitle")
       .then(res => res.text())
-      .then(data => setBalTitle(data))
+      // .then(data => setBalTitle(data))
       .catch(err => console.error(err));
   }, [userId, dispatch]);
 
@@ -92,6 +95,7 @@ export default function Home() {
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}
+
       </div>
       <h1 className={styles.logo}><img src={mainIcon} /></h1>
       <div className={styles.cardWrapper}>
@@ -100,7 +104,8 @@ export default function Home() {
           style={{ cursor: "pointer" }}
         >
           <div className={styles.cardTitle}>MBTI 챗봇</div>
-          <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>
+          {isLoggedIn && <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>}
+          {!isLoggedIn && <div className={styles.cardDesc}>로그인 후 이용 가능</div>}
           <img src={chatIcon} alt="MBTI 챗봇" />
         </div>
         <div
@@ -137,7 +142,7 @@ export default function Home() {
         ) : (
           <div
             className={styles.card}
-            onClick={() => alert("로그인 후 이용 가능합니다.")}
+            onClick={() => toast.error("로그인 후 이용 가능합니다.")}
           >
             <div className={styles.cardTitle}>미니게임</div>
             <div className={styles.cardDesc}>로그인 후 이용 가능</div>
@@ -147,7 +152,7 @@ export default function Home() {
 
         <div className={styles.card} onClick={() => navigate("/BalanceList")}>
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
-          <div className={styles.cardDesc}>{balTitle}</div>
+          <div className={styles.cardDesc}>{today?.title || "게임 없음"}</div>
           <img src={balanceIcon} alt="밸런스 게임" />
         </div>
 

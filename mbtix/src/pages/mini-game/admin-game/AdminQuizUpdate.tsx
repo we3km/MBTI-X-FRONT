@@ -13,7 +13,7 @@ interface SpeedQuiz {
 interface CatchMind {
     wordId: number;
     word: string;
-    createdAy: Date;
+    createdAt: Date;
 }
 
 const AdminQuizUpdate = () => {
@@ -57,7 +57,7 @@ const AdminQuizUpdate = () => {
 
     const handleSpeedQuizUpdate = async (item: SpeedQuiz) => {
         try {
-            await apiClient.patch(`/admin/updateSpeedQuiz/`, item);
+            await apiClient.patch(`/admin/updateSpeedQuiz`, item);
             toast.success("스피드 퀴즈가 수정되었습니다.");
         } catch (error) {
             console.error(error);
@@ -67,7 +67,7 @@ const AdminQuizUpdate = () => {
 
     const handleCatchMindUpdate = async (item: CatchMind) => {
         try {
-            await apiClient.patch(`/admin/updateCatchMindWord/`, item);
+            await apiClient.patch(`/admin/updateCatchMindWord`, item);
             toast.success("캐치마인드가 수정되었습니다.");
         } catch (error) {
             console.error(error);
@@ -78,9 +78,9 @@ const AdminQuizUpdate = () => {
     // 삭제 처리
     const handleSpeedQuizDelete = async (id: number) => {
         try {
-            await apiClient.delete(`/admin/deleteGameData/${id}`);
+            await apiClient.delete(`/admin/deleteSpeedQuiz`, { data: { id } });
             setSpeedQuizList(prev => prev.filter(item => item.questionId !== id));
-            toast.success("삭제 성공");
+            toast.success("스피드 퀴즈가 삭제되었습니다.");
         } catch (error) {
             console.error(error);
             toast.error("삭제 실패");
@@ -89,9 +89,9 @@ const AdminQuizUpdate = () => {
 
     const handleCatchMindDelete = async (id: number) => {
         try {
-            await apiClient.delete(`/admin/deleteGameData/${id}`);
+            await apiClient.delete(`/admin/deleteCatchMindWord`, { data: { id } });
             setCatchMindList(prev => prev.filter(item => item.wordId !== id));
-            toast.success("삭제 성공");
+            toast.success("캐치마인드가 삭제되었습니다.");
         } catch (error) {
             console.error(error);
             toast.error("삭제 실패");
@@ -164,14 +164,13 @@ const AdminQuizUpdate = () => {
                 >
                     <img src="/icons/exit.png" alt="Close" />
                 </button>
-                <h1 className={styles.title}>문제 관리</h1>
+                <h1 className={styles.title}>게임 데이터 관리 및 삭제</h1>
 
                 {/* 스피드 퀴즈 */}
                 <section className={styles.formSection}>
                     <h2 className={styles.sectionTitle}>스피드 퀴즈</h2>
                     {speedQuizPageList.map((item) => (
                         <div key={item.questionId} className={styles.listItem}>
-                            <div>{item.questionId}</div>
                             <input
                                 value={item.question}
                                 onChange={(e) =>
@@ -196,7 +195,6 @@ const AdminQuizUpdate = () => {
                     <h2 className={styles.sectionTitle}>캐치마인드</h2>
                     {catchMindPageList.map((item) => (
                         <div key={item.wordId} className={styles.listItem}>
-                            <div>{item.wordId}</div>
                             <input
                                 value={item.word}
                                 onChange={(e) => handleCatchMindChange(item.wordId, e.target.value)}

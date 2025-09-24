@@ -112,10 +112,6 @@ function App() {
           <Route path="find-pw" element={<Findpw />} />
           <Route path="/find-id" element={<Findid/>} />
           <Route path="/signup" element={<SignupPage />} />
-          {/* <Route path="/miniGame" element={<GameMenu />} />
-          <Route path="/miniGame/SpeedQuiz" element={<SpeedQuiz />} />
-          <Route path="/miniGame/ReactionTest" element={<ReactionTest />} />
-          <Route path="/miniGame/GameRank" element={<GameRank />} /> */}
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           <Route path='/oauth2/success' element={<OAuth2Success/>}/>
           <Route path='/social-signup' element={<SocialSignup/>}/>
@@ -129,7 +125,7 @@ function App() {
           <Route path='/createChat' element={<CreateChat/>}/>
           <Route path="/chat/:roomId" element={<MbtiChat />} />
 
-          <Route path='/mypage' element={<ProtectedRoute requiredRoles={['ROLE_USER']}><MyPage/></ProtectedRoute>}/>
+          <Route path='/mypage' element={<ProtectedRoute requiredRoles={['ROLE_USER', 'ROLE_ADMIN']}><MyPage/></ProtectedRoute>}/>
           <Route path="/user/:userId" element={<UserPage />} />
 
           <Route path="/balanceList" element={<BalanceList />} />

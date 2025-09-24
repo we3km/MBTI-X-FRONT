@@ -8,7 +8,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/store.ts';
 import { Toaster } from 'react-hot-toast';
 
-
 import { setupInterceptors as setupApiClientInterceptors } from './api/apiClient.ts';
 
 
@@ -17,14 +16,14 @@ const queryClient = new QueryClient();
 setupApiClientInterceptors(store);
 
 createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <Provider store={store}>
-                <BrowserRouter>
-                    <App />
-                    <Toaster position='top-center' />
-                </BrowserRouter>
-            </Provider>
-        </QueryClientProvider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+          <Toaster position='top-center' />
+        </BrowserRouter>
+      </Provider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );

@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+.lobbyContainer {
+    height: 90vh;
+    width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #6a8cff 100%);
+    font-family: 'Jua', sans-serif;
+    position: relative;
+    border-radius: 5%;
+    color: white;
+}
+
+.lobbyBox {
+    width: 80%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 30px 40px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    position: relative;
+    margin-top: -50px;
+    /* 필요에 따라 숫자 조절 */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes floatUpDown {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+.title {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 70px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    color: white;
+    animation: floatUpDown 3s ease-in-out infinite;
+}
+
+/* --- 버튼 --- */
+.header button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.createRoom {
+    color: #ffffff;
+    background-color: #6a8dff00;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
+}
+
+.createRoom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0ff87;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 85px;
+    height: 85px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 10;
+}
+
+.closeButton:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.closeButton:active {
+    transform: scale(0.9);
+    opacity: 1;
+}
+
+
+.roomList {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.roomList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.roomList::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.roomList::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+}
+
+.roomList::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.roomItemContainer {
+    background-color: #ffffff;
+    border-radius: 50px;
+    padding: 16px 24px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.roomItemContainer:hover {
+    cursor: pointer;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: #6a8cff;
+}
+
+/* --- 방 목록 아이템 내부 --- */
+.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 2;
+    /* 비율 조정 */
+    min-width: 200px;
+}
+
+.userInfo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    transition: transform 0.3s ease;
+    /* 부드러운 확대 */
+}
+
+.userInfo img:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    /* 20% 확대 */
+}
+
+.nameMbti {
+    display: flex;
+    flex-direction: column;
+    /* 세로 정렬 */
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.mbti {
+    font-size: 0.9rem;
+    color: #777;
+    background-color: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 8px;
+}
+
+.roomTitle {
+    flex: 3;
+    /* 비율 조정 */
+    text-align: left;
+    /* 왼쪽 정렬로 변경 */
+    padding-left: 20px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.roomStatus {
+    flex: 1;
+    /* 비율 조정 */
+    text-align: right;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    min-width: 80px;
+}
+
+.roomPlayerCount {
+    flex: 1;
+    text-align: right;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    min-width: 80px;
+}
+
+/* 상태별 텍스트 색상 */
+.statusWaiting {
+    color: #28a745;
+    animation: blink 2s infinite;
+    /* 초록 텍스트 깜빡임 */
+}
+
+.statusPlaying {
+    color: #dc3545;
+    animation: blink 2s infinite;
+    /* 빨강 텍스트 깜빡임 */
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes fadeSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.roomItemContainer {
+    opacity: 0;
+    animation: fadeSlideUp 1.2s ease forwards;
+}
+
+/* 방 추가될 때 순차적으로 시간차 적용 */
+.roomList .roomItemContainer:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.roomList .roomItemContainer:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.roomList .roomItemContainer:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.roomList .roomItemContainer:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.roomList .roomItemContainer:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+/* ✨ 새 방 하이라이트 효과 */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 0px rgba(106, 140, 255, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(106, 140, 255, 1);
+    }
+
+    100% {
+        box-shadow: 0 0 0px rgba(106, 140, 255, 0.5);
+    }
+}
+
+.newRoom {
+    animation: glow 1s ease-in-out, fadeSlideUp 0.4s ease forwards;
+}

@@ -1,8 +1,12 @@
 import './App.css'
-
 import { Navigate, Route, Routes } from 'react-router-dom'
 import MbtiChat from './pages/mbti-chat/mbtiChat'
 import CreateChat from './pages/mbti-chat/createChat'
+import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
+import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
+import GameRank from './pages/mini-game/Ranking';
+import OnlineGame from './pages/mini-game/online-game/OnlineGame';
+import CatchMind from './pages/mini-game/online-game/CatchMind';
 import SignupPage from './pages/login/SignupPage'
 import LoginPage from './pages/login/Login'
 import ProtectedRoute from './components/ProtectedRoute';
@@ -13,18 +17,16 @@ import SocialSignup from './pages/login/socialSignup';
 import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
+import GameMenu from './pages/mini-game/GameMenu';
+import AdminQuizSubmit from './pages/mini-game/admin-game/AdminQuizSubmit';
 import MyPage from './pages/myPage/MyPage';
-
 import TodayGame from './pages/balGame/TodayGame';
 import BalanceList from './pages/balGame/BalanceList';
 import PastBalance from './pages/balGame/PastBalance';
 import BalanceCreate from './pages/balGame/CreateBalGame';
 import MbtiTest from './pages/mbtiTest/MbtiTest';
 import MbtiResult from './pages/mbtiTest/MbtiResult';
-// import GameMenu from './pages/mini-game/GameMenu';
-// import ReactionTest from './pages/mini-game/reaction-test/ReactionTest';
-// import SpeedQuiz from './pages/mini-game/speed-quiz/SpeedQuiz';
-// import GameRank from './pages/mini-game/Ranking';
+
 // 모든 페이지 컴포넌트 import
 import CustomerServicePage from './pages/faq/CustomerServicePage';
 import FaqListPage from './pages/faq/FaqListPage';
@@ -59,16 +61,26 @@ function App() {
       <section id="content">
         {/* 헤더없어요 */}
         {/* --- 공개 경로 --- */}
-          <Routes>
-          <Route path="/" element={<MainPage />}/>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid/>} />
-          <Route path='/oauth2/success' element={<OAuth2Success/>}/>
-          <Route path='/social-signup' element={<SocialSignup/>}/>
+          <Route path="/find-id" element={<Findid />} />
+          <Route path='/oauth2/success' element={<OAuth2Success />} />
+          <Route path='/social-signup' element={<SocialSignup />} />
           <Route path="/signup-complete" element={<SignupComplete />} />
-          
+          <Route path="/MBTIGraph" element={<MBTIGraph />} />
+
+          <Route path="/miniGame">
+            <Route index element={<GameMenu />} />
+            <Route path="OnlineGame" element={<OnlineGame />} />
+            <Route path="SpeedQuiz" element={<SpeedQuiz />} />
+            <Route path="ReactionTest" element={<ReactionTest />} />
+            <Route path="GameRank" element={<GameRank />} />
+            <Route path="AdminQuizSubmit" element={<AdminQuizSubmit />} />
+            <Route path="CatchMind/:roomId" element={<CatchMind />} />
+          </Route>
 
           {/* --- 로그인 필수 경로 --- */}
           {/* 헤더 있어요 */}
@@ -130,7 +142,7 @@ function App() {
             <Route path="mbti" element={<ProtectedRoute><Mbti /></ProtectedRoute>} />
             <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} /> 
           </Route>
-          </Route>        
+          </Route>
         </Routes>
       </section>
     </AuthGate>

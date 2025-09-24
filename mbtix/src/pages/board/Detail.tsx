@@ -26,6 +26,9 @@ export default function Detail() {
   const [showReport, setShowReport] = useState(false);
   const [reportType, setReportType] = useState("1");
   const [reportContent, setReportContent] = useState("");
+  const [targetNickname, setTargetNickname] = useState("");
+
+  const [reportTarget, setReportTarget] = useState<{ boardId: number | null, commentId: number | null }>({ boardId: null, commentId: null });
 
   // 대댓글 상태 (한번에 하나만 열리도록)
   const [replyTarget, setReplyTarget] = useState<number | null>(null);
@@ -49,9 +52,16 @@ export default function Detail() {
   useEffect(() => {
     // 게시글 불러오기
     getBoard();
-
     // 댓글 불러오기
-    getComments();    
+    getComments();
+
+    if (window.location.hash) {
+        const commentId = window.location.hash.replace('#', '');
+        const commentElement = document.getElementById(commentId);
+        if (commentElement) {
+            commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
   }, [param.id]);
   
   const getBoard = () => {
@@ -129,7 +139,7 @@ export default function Detail() {
         parentId: null,
       };
       const res = await api.post("/board/comments", newComment);
-      setComments([...comments, res.data || newComment]);
+      getComments();
       setCommentInput("");
     } catch (err) {
       console.error(err);
@@ -158,7 +168,7 @@ export default function Detail() {
         parentId,
       };
       const res = await api.post("/board/comments", newReply);
-      setComments([...comments, res.data || newReply]);
+      getComments();
       setReplyInput("");
       setReplyTarget(null);
     } catch (err) {
@@ -175,9 +185,11 @@ export default function Detail() {
     }
     api
       .post("/board/report", {
-        reason: reportContent,
-        reportCateogry: reportType,
+        reson: reportContent,
+        reportCategory: reportType,
         targetUserNum,
+        boardId: reportTarget.boardId,
+        commentId: reportTarget.commentId,
       })
       .then(() => {
         alert("신고가 접수되었습니다.");
@@ -251,6 +263,8 @@ export default function Detail() {
               onClick={() => {
                 setShowReport(true);
                 setTargetUserNum(board.userId);
+                setTargetNickname(board.nickname);
+                setReportTarget({ boardId: board.boardId, commentId: null });
               }}
             >
               🚨 신고
@@ -302,6 +316,8 @@ export default function Detail() {
                       onClick={() => {
                         setShowReport(true);
                         setTargetUserNum(cmt.userId);
+                        setTargetNickname(cmt.nickname);
+                        setReportTarget({ boardId: board.boardId, commentId: cmt.commentId || null });
                       }}
                     >
                       🚨 신고
@@ -407,7 +423,7 @@ export default function Detail() {
           <div className={styles.modal}>
             <h2>🚨 신고하기</h2>
             <p>
-              <b>신고 회원:</b> <u>{board.nickname}</u>
+              <b>신고 대상:</b> <u>{targetNickname}</u>
             </p>
 
             <label>신고 유형:</label>
@@ -415,8 +431,11 @@ export default function Detail() {
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
             >
-              <option value={1}>욕설</option>
-              <option value={2}>도배</option>
+              <option value={1}>욕설 및 어그로</option>
+              <option value={2}>음란 및 선정성</option>
+              <option value={3}>도배 및 광고</option>
+              <option value={4}>악의적 혐오 조장</option>
+              <option value={5}>기타</option>
             </select>
 
             <label>신고 내용:</label>

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
 import toast from 'react-hot-toast';
 import './ReportDetailPage.css';
+import { rejectReport } from '../../api/adminApi';
 
 interface ReportDetail {
     reportId: number;
@@ -15,6 +16,8 @@ interface ReportDetail {
     createdAt: string;
     processedAt: string | null;
     reportCategoryName: string;
+    boardId?: number;
+    commentId?: number;
 }
 
 const ReportDetailPage = () => {
@@ -32,6 +35,21 @@ const ReportDetailPage = () => {
                 console.error("신고 상세 정보를 불러오는 중 에러 발생:", error);
             });
     }, [reportId]);
+
+    const handleReject = async () => {
+        if (!reportId) return;
+
+        if (window.confirm("이 신고를 반려 처리하시겠습니까?")) {
+            try {
+                const message = await rejectReport(Number(reportId));
+                toast.success(message);
+                navigate('/admin/reports');
+            } catch (error) {
+                console.error("신고 반려 처리 중 에러 발생:", error);
+                toast.error("처리 중 오류가 발생했습니다.");
+            }
+        }
+    };
 
     const handleBanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedBan(parseInt(e.target.value));
@@ -55,6 +73,16 @@ const ReportDetailPage = () => {
                 console.error("신고 처리 중 에러 발생:", error);
                 toast.error("신고 처리 중 오류가 발생했습니다.");
             });
+    };
+
+    const handleGoToContent = () => {
+        if (report && report.boardId) {
+            let url = `/board/${report.boardId}`;
+            if (report.commentId) {
+                url += `#comment-${report.commentId}`;
+            }
+            window.open(url, '_blank');
+        }
     };
 
     if (!report) {
@@ -107,6 +135,11 @@ const ReportDetailPage = () => {
                 <div className="detail-card full-width">
                     <div className="card-header">
                         <h3>신고 내용</h3>
+                        {report.boardId && (
+                            <button className="go-to-board-btn" onClick={handleGoToContent}>
+                                {report.commentId ? '원본 댓글 바로가기' : '원본 게시글 바로가기'}
+                            </button>
+                        )}
                     </div>
                     <div className="card-content">
                         <div className="info-row">
@@ -140,6 +173,11 @@ const ReportDetailPage = () => {
             </div>
             
             <div className="action-box">
+                <button onClick={handleReject}
+                        disabled={report.status === 'Y'}
+                        className="reject-btn">반려
+                </button>
+            <div className="sanction-group">
                 <select onChange={handleBanChange} disabled={report.status === 'Y'}>
                     <option value="0">제재 기간 선택</option>
                     <option value="3">3일 정지</option>
@@ -147,9 +185,10 @@ const ReportDetailPage = () => {
                     <option value="30">30일 정지</option>
                     <option value="-1">영구 정지</option>
                 </select>
-                <button onClick={handleSubmit} disabled={report.status === 'Y'}>
+                <button onClick={handleSubmit} disabled={report.status === 'Y' || selectedBan === 0}>
                     {report.status === 'Y' ? '처리 완료됨' : '제재 적용'}
                 </button>
+                </div>
             </div>
         </div>
     );

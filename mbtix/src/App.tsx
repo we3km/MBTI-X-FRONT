@@ -20,6 +20,10 @@ import Findid from './pages/login/FindId';
 import Findpw from './pages/login/Findpw';
 import SignupComplete from './pages/login/SignupComplete';
 
+// MBTI Chat Imports
+import MbtiChat from './pages/mbti-chat/mbtiChat';
+import CreateChat from './pages/mbti-chat/createChat';
+
 // Mini Game Imports
 import GameMenu from './pages/mini-game/GameMenu';
 import AdminQuizSubmit from './pages/mini-game/admin-game/AdminQuizSubmit';
@@ -70,19 +74,20 @@ import Question from './pages/board/question';
 import Mbti from './pages/board/Mbti';
 
 function App() {
+  const user = useSelector((state: RootState) => state.auth.user);
   return (
     <AuthGate>
       <section id="content">
         <Routes>
           {/* --- 헤더가 없는 페이지들 --- */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid />} />
-          <Route path='/oauth2/success' element={<OAuth2Success />} />
-          <Route path='/social-signup' element={<SocialSignup />} />
-          <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
+          <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" replace />} />
+          <Route path="/find-pw" element={!user ? <Findpw /> : <Navigate to="/" replace />} />
+          <Route path="/find-id" element={!user ? <Findid /> : <Navigate to="/" replace />} />
+          <Route path='/oauth2/success' element={!user ? <OAuth2Success /> : <Navigate to="/" replace />} />
+          <Route path='/social-signup' element={!user ? <SocialSignup /> : <Navigate to="/" replace />} />
+          <Route path="/signup-complete" element={!user ? <SignupComplete /> : <Navigate to="/" replace />} />
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
 
           {/* 미니게임 메뉴 (헤더 없음) */}
@@ -131,6 +136,15 @@ function App() {
             {/* MBTI 테스트 */}
             <Route path="/MbtiTest" element={useSelector((state: RootState) => state.auth.retestAllowed) ? <MbtiTest /> : <Navigate to="/" replace />} />
             <Route path="/MbtiResult" element={<MbtiResult />} />
+
+            {/* MBTI 챗봇 관련 */}
+            <Route path='/chatbot' element={
+              <ProtectedRoute>
+                <MbtiChat />
+              </ProtectedRoute>
+            } />
+            <Route path='/createChat' element={<CreateChat />} />
+            <Route path="/chat/:roomId" element={<MbtiChat />} />
 
             {/* 게시판 관련 경로 */}
             <Route path="/board">

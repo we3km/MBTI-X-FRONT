@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 
 import { setupInterceptors as setupApiClientInterceptors } from './api/apiClient.ts';
 
+
 const queryClient = new QueryClient();
 
 setupApiClientInterceptors(store);

@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   define: {
@@ -10,6 +9,6 @@ export default defineConfig({
   server: {
     host: true,        // LAN 내 다른 PC 접속 허용
     port: 5173,
-    strictPort: true,
+    strictPort: true
   }
 })

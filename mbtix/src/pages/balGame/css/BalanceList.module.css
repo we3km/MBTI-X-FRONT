@@ -2,82 +2,141 @@
   max-width: 1080px;
   margin: 0 auto;
   padding: 24px 16px 80px;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
-/* 오늘의 카드 */
+/* 오늘의 게임 */
 .todayWrap { margin-top: 24px; }
 .todayCard {
-  background: #60a5fa;            /* 파란 카드 */
+  background: linear-gradient(135deg,  #5d9cec); /* 파란 그라데이션 */
   color: #fff;
-  border-radius: 20px;
-  padding: 32px 200px;
+  border-radius: 18px;
+  padding: 40px 20px;
   text-align: center;
-  box-shadow: 0 10px 0 #9fbff3;   /* 아래 그림자(도형) 느낌 */
-  transition: transform .12s ease, box-shadow .12s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
-.todayTitle { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
-.todaySubtitle { font-size: 16px; opacity: 0.95; margin: 0; }
-
-.todayCard:hover { transform: translateY(-2px); }
-.todayCard:focus-visible { box-shadow: 0 8px 0 #9fbff3, 0 0 0 3px rgba(99,102,241,.45); }
+.todayTitle { font-size: 26px; font-weight: 800; margin: 0 0 8px; }
+.todaySubtitle { font-size: 15px; opacity: 0.95; margin: 0; }
+.todayCard:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.25); }
 
 /* 지난 게임 그리드 */
 .pastWrap { margin-top: 40px; }
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px 28px;
+  grid-template-columns: repeat(2, 1fr); /* 무조건 2열 */
+  gap: 1.5rem;
+  align-items: start; /* 각 카드 높이에 따라 독립 */
 }
+
+
 .card {
-  background: #60a5fa;
-  color: #fff;
+  background: linear-gradient(145deg, #60a5fa, #3b82f6); /* 파란 배경 */
   border-radius: 16px;
-  padding: 32px 20px;
-  cursor: pointer;
-  text-align: center;
-  box-shadow: 0 8px 0 #9fbff3;
-  transition: transform .12s ease, box-shadow .12s ease;
-  outline: none;
+  color: #fff;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
-.card:hover { transform: translateY(-2px); }
-.card:focus-visible { box-shadow: 0 8px 0 #9fbff3, 0 0 0 3px rgba(99,102,241,.45); }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+}
 
-.date { font-size: 14px; opacity: .95; margin-bottom: 10px; }
-.cardTitle { font-size: 18px; font-weight: 800; }
+/* 카드 헤더 */
+.cardHeader {
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+}
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
 
-/* 우하단 고정 버튼 */
+/* 미리보기 */
+.previewList {
+  padding: 0.8rem 1.2rem 1rem;
+}
+.previewItem {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.6rem;
+  transition: background 0.2s;
+}
+.previewItem:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+.previewItem strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.previewItem p {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* 더보기 버튼 */
+.moreBtn {
+  display: block;
+  margin: 0.5rem auto 0;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.moreBtn:hover { background: rgba(255, 255, 255, 0.35); }
+
+/* floating buttons */
 .fab {
   position: fixed;
-  right: 50px;
-  bottom: 50px;
+  right: 40px;
+  bottom: 40px;
   padding: 12px 18px;
-  background: #60a5fa;
+  background: #5d9cec;
   color: #fff;
   border: 0;
   border-radius: 12px;
   font-weight: 700;
-  box-shadow: 0 6px 0 #9fbff3;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
   cursor: pointer;
+  transition: transform 0.15s ease;
 }
-.fab:hover { transform: translateY(-1px); }
+.fab:hover { transform: translateY(-2px); }
 
 .topLeftFab {
-    font-size: 14px;
-    background: #fff;
-    color: #6a8cff;
-    border: 2px solid #6a8cff;
-    border-radius: 20px;
-    padding: 5px 12px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-    left: 50px;       /* 좌측 고정 */
-    top: 50px;
-    position: fixed;
+  font-size: 14px;
+  background: #fff;
+  color: #5d9cec;
+  border: 2px solid #5d9cec;
+  border-radius: 20px;
+  padding: 6px 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  left: 40px;
+  top: 40px;
+  position: fixed;
+}
+.topLeftFab:hover { background: #5d9cec; color: #fff; }
+
+/* .accordion {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; 
 }
 
-.topLeftFab:hover {
-    background: #6a8cff;
-    color: #fff;
-}
+.accordion.expanded {
+  max-height: 800px; 
+  transition: max-height 0.5s ease-in; 
+} */
+
 

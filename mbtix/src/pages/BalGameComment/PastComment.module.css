@@ -1,9 +1,13 @@
 .commentBox {
+              /* 화면 중앙 */
+  
   border-radius: 1rem;
-  background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
+ background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  padding: 2rem;  
-  padding-bottom: 2rem;             /* ⬅️ 좌우 패딩 통일 */
+padding-bottom: 2rem;
+padding-left: 40px;
+
+  
 }
 
 .commentTitle {
@@ -11,15 +15,17 @@
   font-size: 1.2rem;
   font-weight: 600;
   color: #334155;
-  margin-bottom: 1rem;
+  padding-right: 25px;
 }
 
 .commentForm {
   display: flex;
   gap: 0.5rem;
-  width: 100%;
-  max-width: 600px;             /* ⬅️ 리스트와 동일한 폭 */
-  margin: 0 auto 1.5rem;        /* ⬅️ 가운데 정렬 + 아래 간격 */
+
+  width: 100%;                    /* ✅ 박스 안에서 가득 */
+  max-width: 636px;     
+  padding-left: 5px;
+  
 }
 
 .commentForm input {
@@ -41,7 +47,6 @@
   cursor: pointer;
   transition: 0.2s;
 }
-
 .commentForm button:hover {
   opacity: 0.9;
 }
@@ -51,9 +56,11 @@
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 600px;   
+  padding-left: 5px;
   
-   margin-left: -60px;                 /* ⬅️ 가운데 정렬 */
+     
+            
 }
 
 .commentItem {
@@ -62,6 +69,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
   padding: 1rem 1.2rem;
+
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -97,7 +105,120 @@
   cursor: pointer;
   font-size: 0.75rem;
 }
-
 .deleteBtn:hover {
   opacity: 0.85;
+}
+
+
+/* 신고 */
+
+/* 모달 오버레이 (화면 전체 덮기) */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999; /* 최상단 */
+}
+
+/* 모달 박스 */
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* 모달 제목 */
+.modal h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+/* 라벨 */
+.modal label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 12px 0 6px;
+  color: #444;
+}
+
+/* 셀렉트 박스 */
+.modal select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+/* 텍스트 입력 */
+.modal textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  resize: vertical;
+  margin-bottom: 16px;
+}
+
+/* 버튼 그룹 */
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* 버튼 스타일 */
+.modalButtons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalButtons button:first-child {
+  background: #2563eb; /* 파란색 */
+  color: #fff;
+}
+
+.modalButtons button:first-child:hover {
+  background: #1d4ed8;
+}
+
+.modalButtons button:last-child {
+  background: #e5e7eb; /* 회색 */
+  color: #333;
+}
+
+.modalButtons button:last-child:hover {
+  background: #d1d5db;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

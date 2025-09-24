@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserDetail, banUser, updateUserRole, unbanUser, type UserDetail } from '../../api/adminApi';
 import toast from 'react-hot-toast';
 import './AdminUserDetailPage.css';
+import UserPostList from '../../components/UserPostList';
+import UserCommentList from '../../components/UserCommentList';
 
 const AdminUserDetailPage = () => {
     const { userId } = useParams<{ userId: string }>();
@@ -118,6 +120,8 @@ const AdminUserDetailPage = () => {
                 <div className="tab-header">
                     <button onClick={() => setActiveTab('info')} className={activeTab === 'info' ? 'active' : ''}>기본 정보</button>
                     <button onClick={() => setActiveTab('history')} className={activeTab === 'history' ? 'active' : ''}>관리 기록</button>
+                    <button onClick={() => setActiveTab('posts')} className={activeTab === 'posts' ? 'active' : ''}>작성한 게시글</button>
+                    <button onClick={() => setActiveTab('comments')} className={activeTab === 'comments' ? 'active' : ''}>작성한 댓글</button>
                 </div>
                 <div className="tab-content">
                     {activeTab === 'info' && (
@@ -146,6 +150,12 @@ const AdminUserDetailPage = () => {
                                 <ul>{reportsReceived.map(r => <li key={r.reportId}>{r.createdAt}: {r.targetNickname}님에게 - {r.reportCategoryName} ({r.status})</li>)}</ul>
                             </div>
                         </div>
+                    )}
+                    {activeTab === 'posts' && (
+                        <UserPostList userId={Number(userId)} />
+                    )}
+                    {activeTab === 'comments' && (
+                        <UserCommentList userId={Number(userId)} />
                     )}
                 </div>
             </div>

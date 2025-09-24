@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchPublicFaqs, type Faq } from '../../api/faqApi';
+import { fetchAllFaqs, type Faq } from '../../api/faqApi';
 import { type PageInfo } from '../../type/logintype';
 import Pagination from '../../components/Pagination';
 import './Faq.css';
@@ -14,7 +14,7 @@ const FaqListPage = () => {
     useEffect(() => {
         const getFaqs = async () => {
             try {
-                const response = await fetchPublicFaqs(currentPage); 
+                const response = await fetchAllFaqs(currentPage); 
                 setFaqs(response.list);
                 setPageInfo(response.pi);
             } catch (error) {

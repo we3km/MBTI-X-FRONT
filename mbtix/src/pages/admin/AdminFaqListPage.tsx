@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchAdminFaqs, deleteFaq, type Faq } from '../../api/faqApi';
+import { fetchAllFaqs, deleteFaq, type Faq } from '../../api/faqApi';
 import { type PageInfo } from '../../type/logintype';
 import Pagination from '../../components/Pagination';
 import toast from 'react-hot-toast';
@@ -16,7 +16,7 @@ const AdminFaqListPage = () => {
 
     const loadFaqs = async (page: number) => {
         try {
-            const data = await fetchAdminFaqs(page);
+            const data = await fetchAllFaqs(page);
             setFaqs(data.list);
             setPageInfo(data.pi);
         } catch (error) {

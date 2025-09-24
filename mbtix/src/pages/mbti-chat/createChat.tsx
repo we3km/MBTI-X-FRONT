@@ -212,7 +212,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
       {step === 2 && (
         <>
           <div className={styles.inputContainer}>
-            <p>성격:</p>
+            <p>특징:</p>
             <textarea
               value={personality}
               onChange={(e) => setPersonality(e.target.value)}

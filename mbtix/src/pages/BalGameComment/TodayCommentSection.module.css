@@ -5,7 +5,8 @@
  background: linear-gradient(to bottom, #c3e5fc, #f0f9ff, #f0f9ff);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 padding-bottom: 2rem;
-padding-left: 28px;
+padding-left: 50px;
+
   
 }
 
@@ -15,6 +16,7 @@ padding-left: 28px;
   font-weight: 600;
   color: #334155;
   padding-right: 25px;
+  
 }
 
 .commentForm {
@@ -23,7 +25,7 @@ padding-left: 28px;
 
   width: 100%;                    /* ✅ 박스 안에서 가득 */
   max-width: 636px;     
-   padding-left: 5px;
+  padding-left: 5px;
   
 }
 
@@ -107,3 +109,8 @@ padding-left: 28px;
 .deleteBtn:hover {
   opacity: 0.85;
 }
+
+/* 신고 */
+
+
+

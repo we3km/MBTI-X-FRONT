@@ -1,77 +1,70 @@
 :root {
-  --brand: #4dabf7;
-  --brand-light: #74c0fc;
-  --ink-1: #0f172a;
-  --ink-2: #334155;
-  --ink-3: #64748b;
-  --ring: #e2e8f0;
-  --shadow-1: 0 6px 20px rgba(15, 23, 42, 0.08);
+  --brand:#3b82f6;
+  --brand-2:#38bdf8;
+  --ink-1:#0f172a;
+  --ink-2:#334155;
+  --ink-3:#64748b;
+  --bg-1:#f0f9ff;
+  --card:#60a5fa;
+  --ring:#e2e8f0;
+  --shadow-1:0 8px 20px rgba(2,6,23,.08);
 }
 
 .main {
-  max-width: 960px;
-  margin: 60px auto;
-  padding: 0 20px 80px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 3rem 1rem 6rem;
 }
 
+/* 상단 타이틀 */
 .head {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 28px;
+  text-align: center;
+  margin-bottom: 2rem;
 }
-
 .head h1 {
   font-size: clamp(1.8rem, 1.2rem + 1.5vw, 2.3rem);
   font-weight: 800;
   color: var(--ink-1);
 }
 
+/* 게임 카드 */
 .panel {
-  background: var(--brand);
-  border-radius: 20px;
-  padding: 40px 30px;
-  color: #fff;
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: 1.25rem;
+  padding: 2.5rem 2rem;
   box-shadow: var(--shadow-1);
+  max-width: 920px;
+  margin: 0 auto 3rem;
 }
 
 .title {
   text-align: center;
-  font-size: 1.6rem;
+  font-size: clamp(1.2rem, .9rem + .8vw, 1.6rem);
   font-weight: 700;
-  margin-bottom: 8px;
+  color: #fff;
+  margin-bottom: 1.5rem;
 }
 
-.subtitle {
-  text-align: center;
-  margin-bottom: 32px;
-  font-size: 1rem;
-  color: #e0f2ff;
-}
-
+/* 옵션 grid */
 .optionGrid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
   justify-content: center;
-  gap: 32px;
-  flex-wrap: wrap;
 }
 
 .optionCard {
-  background: #fff;
-  border: 1px solid var(--ring);
-  border-radius: 16px;
-  width: 300px;
-  height: 400px;
-
-  /* ✅ flex로 내부 중앙 정렬 */
   display: flex;
   flex-direction: column;
-  align-items: center;         /* ← 수평 중앙 */
+  align-items: center;
   justify-content: space-between;
-
-  padding: 28px 20px;
-  text-align: center;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  min-height: 340px;
+  background: #fff;
+  border: 1px solid var(--ring);
+  border-radius: 1.25rem;
+  padding: 2rem 1.5rem;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
 .optionCard:hover {
   transform: translateY(-4px);
@@ -80,88 +73,74 @@
 
 .optHead {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 16px;
+  gap: .75rem;
 }
-
 .optBadge {
-  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  display: grid;
   place-content: center;
-  background: #e7f5ff;
-  color: #1c7ed6;
-  font-weight: 700;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  margin-bottom: 8px;
+  border-radius: .9rem;
+  font-weight: 800;
+  color: #075985;
+  background: #e0f2fe;
 }
-
 .optTitle {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-1);
 }
 
+/* 차트/결과 */
 .chartTitle {
-  font-size: 0.85rem;
+  font-size: .9rem;
   font-weight: 600;
   margin: 10px 0 6px;
   color: var(--ink-2);
 }
-
 .legend {
+  margin-top: .75rem;
+  font-size: 14px;
+  line-height: 1.6;
   list-style: none;
   padding: 0;
-  margin: 10px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
 }
 
-.countLine {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  font-size: 15px;
-  color: var(--ink-2);
-}
-
+/* 댓글 영역 */
 .commentSection {
-  background: #f1f9ff;
-  margin-top: 36px;
-  border-radius: 16px;
-  padding: 28px;
-  color: var(--ink-2);
-  border: 1px solid var(--ring);
+ 
+  margin-top: 2rem;
+  border-radius: 1rem;
+  
 }
 
+/* 페이지네이션 */
 .pagination {
-  margin-top: 30px;
+  margin-top: 2.5rem;
   text-align: center;
 }
-
 .pagination button {
-  margin: 0 8px;
-  padding: 8px 16px;
+  margin: 0 6px;
+  padding: 8px 14px;
   border-radius: 10px;
   border: none;
   background: var(--brand);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background .2s ease;
 }
 .pagination button:hover {
-  background: var(--brand-light);
+  background: var(--brand-2);
 }
-
 .pagination span {
-  margin: 0 12px;
+  margin: 0 10px;
   font-weight: 600;
   color: var(--ink-2);
 }
 
+/* 목록으로 버튼 */
 .topLeftFab {
   font-size: 14px;
   background: #fff;
@@ -173,12 +152,10 @@
   cursor: pointer;
   transition: 0.2s;
   position: fixed;
-  left: 50px;
   top: 50px;
+  left: 50px;
 }
 .topLeftFab:hover {
   background: var(--brand);
   color: #fff;
 }
-
-

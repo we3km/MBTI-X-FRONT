@@ -1,11 +1,12 @@
 .container {
-  max-width: 520px;
+  max-width: 640px;
   margin: 5rem auto;
-  padding: 3rem 2.5rem;
-  background: white;
+  padding: 3.5rem 3rem;
+  background: linear-gradient(135deg, #60a5fa);
   border-radius: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  animation: fadeIn 0.4s ease-in-out;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease;
+  border: 1px solid #e2e8f0; /* 살짝 고급스러운 라인 */
 }
 
 @keyframes fadeIn {
@@ -13,48 +14,62 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* 제목 */
 .title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.4rem;
+  font-weight: 800;
   text-align: center;
-  margin-bottom: 2.5rem;
-  color: #1e293b; /* slate-900 */
+  margin-bottom: 3rem;
+  color: #0f172a;
+  letter-spacing: -0.8px;
+  background: linear-gradient(90deg, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  /* 텍스트를 투명 처리해서 그라데이션이 보이도록 */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
+/* 폼 */
 .form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
+/* 라벨 */
 .label {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  color: #334155; /* slate-700 */
+  color: #334155;
   margin-bottom: 0.5rem;
   display: block;
 }
 
+/* 입력창 */
 .input {
-  width: 100%;
-  padding: 0.9rem 1.2rem;
-  border-radius: 0.75rem;
-  border: 1.5px solid #cbd5e1; /* slate-300 */
+  
+  padding: 1.1rem 1.4rem;
+  border-radius: 0.85rem;
+  border: 2px solid #e2e8f0;
   font-size: 1rem;
-  color: #1e293b;
-  background-color: #f8fafc;
+  background: #f8fafc;
+  color: #0f172a;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .input:focus {
-  border-color: #3b82f6; /* sky-500 */
-  background-color: #fff;
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
+/* 옵션 A/B */
 .optionWrap {
   display: flex;
-  gap: 1.2rem;
+  gap: 1.5rem;
 }
 
 .option {
@@ -62,48 +77,58 @@
 }
 
 .optLabel {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-  color: #1e293b;
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2563eb;
+  background: #e0f2fe;
+  border-radius: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
+/* 버튼 영역 */
 .btnWrap {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.2rem;
+  margin-top: 1rem;
 }
 
 .goBackBtn,
 .submitBtn {
   flex: 1;
-  padding: 0.9rem 1.2rem;
-  border-radius: 0.75rem;
-  border: none;
-  font-weight: 600;
-  font-size: 1rem;
+  padding: 1rem 1.4rem;
+  border-radius: 0.9rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  transition: all 0.25s ease;
 }
 
+/* 돌아가기 버튼 */
 .goBackBtn {
-  background: #e2e8f0; /* slate-200 */
-  color: #334155;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
 }
 
 .goBackBtn:hover {
-  background: #cbd5e1; /* slate-300 */
-  transform: translateY(-2px);
+ background: linear-gradient(135deg, #ffffff);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 18px
 }
 
+/* 생성하기 버튼 */
 .submitBtn {
-  background: #3b82f6; /* sky-500 */
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: white;
-  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
 }
 
 .submitBtn:hover {
-  background: #2563eb; /* sky-600 */
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.4);
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 18px rgba(29, 78, 216, 0.45);
 }

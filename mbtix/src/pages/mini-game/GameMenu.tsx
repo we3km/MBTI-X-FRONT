@@ -113,7 +113,14 @@ export default function GameMenu() {
                 {user?.roles?.includes("ROLE_ADMIN") &&
                     <Link to="/miniGame/AdminQuizSubmit">
                         <button>게임 데이터 넣기</button>
-                    </Link>}
+                    </Link>
+                }
+                {/* 관리자 권한으로 게임 데이터 삭제 */}
+                {user?.roles?.includes("ROLE_ADMIN") &&
+                    <Link to="/miniGame/AdminQuizUpdate">
+                        <button>게임 데이터 조회 및 삭제</button>
+                    </Link>
+                }
             </div>
             <div className={mini.cardcontainer}>
                 {gameList.map((game) => (

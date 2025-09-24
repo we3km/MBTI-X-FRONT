@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './AdminQuizSubmit.module.css';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../../api/apiClient';
+import toast from 'react-hot-toast';
 
 const AdminQuizSubmit = () => {
     // 스피드 퀴즈 입력값을 위한 state
@@ -32,7 +33,7 @@ const AdminQuizSubmit = () => {
             setSpeedQuizAnswer('');
         } catch (error) {
             console.error('스피드 퀴즈 제출 실패:', error);
-            alert('제출에 실패했습니다.');
+            toast.error("제출에 실패했습니다.")
         }
     };
 
@@ -53,7 +54,7 @@ const AdminQuizSubmit = () => {
             setCatchMindWord('');
         } catch (error) {
             console.error('캐치마인드 단어 제출 실패:', error);
-            alert('제출에 실패했습니다.');
+            toast.error("제출에 실패했습니다.")
         }
     };
     return (
@@ -102,7 +103,7 @@ const AdminQuizSubmit = () => {
                     <button type="submit" className={styles.submitButton}>
                         캐치마인드 문제 제출
                     </button>
-                </form>
+                </form>            
             </div>
         </div>
     );

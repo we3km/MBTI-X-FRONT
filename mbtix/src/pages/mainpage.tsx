@@ -29,7 +29,6 @@ export default function Home() {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
 
-
     dispatch(
       setAuth({
         accessToken,
@@ -40,10 +39,9 @@ export default function Home() {
       })
     );
 
-    // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
     fetch("http://localhost:8085/api/getQuizTitle")
       .then(res => res.text())
-      .then(data => setBalTitle(data)) // data는 String
+      .then(data => setBalTitle(data))
       .catch(err => console.error(err));
   }, [userId, dispatch]);
 
@@ -81,17 +79,6 @@ export default function Home() {
 
             <Link to={`/mypage`}>
               <img
-
-                //                 src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
-                //                 alt="프로필"
-                //                 className={styles.profileImage}
-                //               />
-                //               {/* <div className={styles.nickname}>"{user?.nickname}"님 환영합니다.</div>
-                //             src={`/profile/default/${mbtiMap[user?.mbtiId || 0] || "default"}.jpg`}
-                //             alt="프로필"
-                //             className={styles.profileImage}
-                //             /> */}
-
                 src={
                   user?.profileType === "UPLOAD"
                     ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`

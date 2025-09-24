@@ -53,6 +53,7 @@ import Insert from './pages/board/Insert'
 import Detail from './pages/board/Detail'
 import Question from './pages/board/question'
 import Mbti from './pages/board/Mbti'
+import AdminQuizUpdate from './pages/mini-game/admin-game/AdminQuizUpdate';
 function App() {
   return (
     <AuthGate>
@@ -77,6 +78,7 @@ function App() {
             <Route path="ReactionTest" element={<ReactionTest />} />
             <Route path="GameRank" element={<GameRank />} />
             <Route path="AdminQuizSubmit" element={<AdminQuizSubmit />} />
+            <Route path="AdminQuizUpdate" element={<AdminQuizUpdate />} />
             <Route path="CatchMind/:roomId" element={<CatchMind />} />
           </Route>
 

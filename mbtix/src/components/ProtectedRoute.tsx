@@ -17,7 +17,7 @@ export default function ProtectedRoute({
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   // 로그인하지 않은 경우
   if (!isAuthenticated) {
-    alert("로그인 후 이용해주세요.");
+    toast.error("로그인 후 이용해주세요.");
     return <Navigate to={redirectTo} replace />;
   }
   // roles 배열 안전하게 처리
@@ -28,7 +28,7 @@ export default function ProtectedRoute({
       : [];            // undefined면 빈 배열
   // 권한 검사
   if (requiredRoles.length > 0 && !roles.some((role: string) => requiredRoles.includes(role))) {
-    alert("접근 권한이 없습니다.");
+    toast.error("접근 권한이 없습니다.");
     return <Navigate to="/" replace />;
   }
   return <>{children}</>;

@@ -5,6 +5,7 @@ import { initBoard, type Board } from "../../type/board";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
+import toast from "react-hot-toast";
 
 // 댓글 타입
 type Comment = {
@@ -94,11 +95,11 @@ export default function Detail() {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     try {
       await api.delete(`/board/${param.id}`);
-      alert("삭제되었습니다.");
+      toast.success("삭제되었습니다.");
       navigate("/board");
     } catch (err) {
       console.error(err);
-      alert("삭제 실패");
+      toast.error("삭제 실패");
     }
   };
 
@@ -111,14 +112,14 @@ export default function Detail() {
       //setComments(comments.filter((c) => c.commentId !== commentId));
     } catch (err) {
       console.error(err);
-      alert("댓글 삭제 실패");
+      toast.error("댓글 삭제에 실패했습니다.");
     }
   };
 
   // 일반 댓글 저장
   const saveComment = async () => {
     if (!commentInput.trim()) {
-      alert("댓글 내용을 입력해주세요.");
+      toast.error("댓글 내용을 입력해주세요.");
       return;
     }
 
@@ -126,7 +127,7 @@ export default function Detail() {
     // 게시글의 mbtiname과 질문자의 mbtiname이 일치하는 경우만 댓글작성가능
 
     if(categoryId == '1' && userMbti != board.mbtiId ){
-        alert(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
+        toast.error(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
         return;
     }
 
@@ -143,19 +144,19 @@ export default function Detail() {
       setCommentInput("");
     } catch (err) {
       console.error(err);
-      alert("댓글 작성 실패");
+      toast.error("댓글 작성에 실패했습니다.");
     }
   };
 
   // 대댓글 저장
   const saveReply = async (parentId: number) => {
     if (!replyInput.trim()) {
-      alert("대댓글 내용을 입력해주세요.");
+      toast.error("대댓글 내용을 입력해주세요.");
       return;
     }
 
     if(categoryId == '1' && userMbti != board.mbtiId ){
-        alert(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
+        toast.error(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
         return;
     }
     
@@ -173,14 +174,14 @@ export default function Detail() {
       setReplyTarget(null);
     } catch (err) {
       console.error(err);
-      alert("대댓글 작성 실패");
+      toast.error("대댓글 작성에 실패했습니다.");
     }
   };
 
   // 신고 제출
   const submitReport = () => {
     if (!reportContent.trim()) {
-      alert("신고 내용을 입력해주세요.");
+      toast.error("신고 내용을 입력해주세요.");
       return;
     }
     api
@@ -192,13 +193,13 @@ export default function Detail() {
         commentId: reportTarget.commentId,
       })
       .then(() => {
-        alert("신고가 접수되었습니다.");
+        toast.success("신고가 접수되었습니다.");
         setShowReport(false);
         setReportContent("");
       })
       .catch((err) => {
         console.error(err);
-        alert("신고 접수 실패");
+        toast.error("신고 접수 실패");
       });
   };
 
@@ -213,7 +214,7 @@ export default function Detail() {
       })
       .catch((err) => {
         console.error(err);
-        alert("좋아요 실패");
+        toast.error("좋아요 실패");
       });
   }
 

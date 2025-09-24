@@ -4,7 +4,7 @@ import { api } from "../../api/boardApi";
 import { categorys, mbtiTypes } from "../../type/board";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom"; // [추가] useNavigate
 
 export default function Insert() {
   const [title, setTitle] = useState("");
@@ -13,22 +13,21 @@ export default function Insert() {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate(); // [추가]
 
-  // 'id' 파라미터의 값 가져오기
   const categoryId = searchParams.get('categoryId'); 
 
-  const user = useSelector((state:RootState) => state.auth.user);    
+  const user = useSelector((state:RootState) => state.auth.user);
   const mbtiId = user?.mbtiId || 0 ;
   const userMbti = mbtiTypes.find( mbti => mbti.mbtiId == mbtiId)?.mbtiName || '';
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setImageFiles((prev) => [...prev, ...files]); // 기존 것 + 새로 선택한 것
+    setImageFiles((prev) => [...prev, ...files]);
     const urls = files.map((file) => URL.createObjectURL(file));
     setPreviewUrls((prev) => [...prev, ...urls]);
   };
 
-  // 특정 이미지 삭제
   const removeImage = (index: number) => {
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
     setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
@@ -47,26 +46,28 @@ export default function Insert() {
     formData.append("mbtiName", userMbti);
 
     if(categoryId == '1'){
-      // 궁금해 게시판인 경우, 선택한 대상 MBIT가 서버로 전송될 수 있도록 수정
       formData.append("boardMbti",selectedCategory);
     }
-
 
     imageFiles.forEach((file) => {
       formData.append("images", file);
     });
 
-    api
-      .post("/board", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then(() => {
-        window.location.href = `/board?boardMbti=${selectedCategory}`;
-      })
-      .catch((err) => {
-        console.error(err);
+    try {
+        // [수정] 백엔드로부터 생성된 게시글 정보를 response로 받습니다.
+        const response = await api.post('/board', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
+        // [수정] 응답 데이터에서 새로운 게시글의 ID를 추출하여 상세 페이지로 이동합니다.
+        const newBoardId = response.data.boardId;
+        alert('게시글이 성공적으로 등록되었습니다.');
+        navigate(`/board/${newBoardId}?categoryId=${categoryId}`); // categoryId도 함께 전달
+
+    } catch (err) {
+        console.error("게시글 등록 실패:", err);
         alert("서버 연결에 실패했습니다.");
-      });
+    }
   };
 
   return (
@@ -96,9 +97,7 @@ export default function Insert() {
               </select>
             </div>
           }
-         
-
-            {/* 이미지 첨부 */}
+          
             <div className={styles.imageUpload}>
               <input
                 type="file"

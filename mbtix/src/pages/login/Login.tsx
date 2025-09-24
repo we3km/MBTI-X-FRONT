@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+
+import { Link, useNavigate, useSearchParams,} from "react-router-dom";
 import { login } from "../../api/authApi";
 import styles from "./login.module.css";
 import Findid from "./FindId";
@@ -19,6 +20,7 @@ const LoginPage: React.FC = () => {
 
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [rememberMe, setRememberMe] = useState(false);

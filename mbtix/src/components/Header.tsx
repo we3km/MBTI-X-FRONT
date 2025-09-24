@@ -102,9 +102,10 @@ const Header = () => {
                     <div className="nav-item">
                         <button className="nav-link-style" onClick={() => handleMenuToggle('minigame')}>미니게임</button>
                         <div className={`dropdown-menu ${openMenu === 'minigame' ? 'active' : ''}`}>
-                            <Link to="/game/a" onClick={() => setOpenMenu(null)}>미니게임A</Link>
-                            <Link to="/game/b" onClick={() => setOpenMenu(null)}>미니게임B</Link>
-                            <Link to="/game/c" onClick={() => setOpenMenu(null)}>미니게임C</Link>
+                            <Link to="/miniGame" onClick={() => setOpenMenu(null)}>미니 게임 메인페이지</Link>
+                            <Link to="/miniGame/SpeedQuiz" onClick={() => setOpenMenu(null)}>스피드 퀴즈</Link>
+                            <Link to="/miniGame/ReactionTest" onClick={() => setOpenMenu(null)}>순발력 테스트</Link>
+                            <Link to="/miniGame/OnlineGame" onClick={() => setOpenMenu(null)}>캐치마인드</Link>
                         </div>
                     </div>
                     <Link to="/chatbot">MBTI 챗봇</Link>

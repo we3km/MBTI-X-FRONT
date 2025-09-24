@@ -3,7 +3,8 @@ import { store } from "../store/store";
 
 /** -------- Axios instance -------- */
 const http = axios.create({
-  baseURL: "http://localhost:8085/api", // 스프링부트 API 기본 경로
+  // baseURL: "http://localhost:8085/api", // 스프링부트 API 기본 경로
+  baseURL: import.meta.env.VITE_API_BASE_URL, // 스프링부트 API 기본 경로
   timeout: 10000,
 });
 

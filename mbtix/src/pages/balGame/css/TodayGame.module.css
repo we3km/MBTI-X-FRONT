@@ -80,6 +80,59 @@
   border-radius: 1.25rem;
   padding: 2rem 1.5rem;
   transition: transform .18s ease, box-shadow .18s ease;
+   perspective: 1000px; /* 3D 효과 */
+}
+
+.cardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.option.flipped .cardInner {
+  transform: rotateY(180deg);
+}
+
+/* 앞/뒷면 공통 */
+.cardFront,
+.cardBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* 뒷면 숨김 */
+  border-radius: 1.25rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  right: -24.5px;
+  bottom: -30px;
+}
+
+/* 앞면 */
+.cardFront {
+  padding: 2rem 1.5rem;
+  
+}
+.cardFront .optHead {
+  
+  margin-bottom: auto;     /* 위쪽 고정 */
+  
+}
+
+/* 앞면 버튼 */
+.cardFront .voteBtn {
+  margin-top: auto; /* 항상 맨 아래로 내려감 */
+  width: 100%;
+}
+
+/* 뒷면 */
+.cardBack {
+  transform: rotateY(180deg);
+  padding: 2rem 1.5rem;
 }
 .option:hover {
   transform: translateY(-4px);
@@ -110,6 +163,7 @@
   font-weight: 700;
   color: var(--ink-1);
 }
+
 
 /* ========== BUTTONS ========== */
 .voteBtn {
@@ -206,3 +260,5 @@
   background: var(--brand);
   color: #fff;
 }
+
+

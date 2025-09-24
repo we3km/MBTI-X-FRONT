@@ -4,36 +4,28 @@ import styles from "./MbtiResult.module.css";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-import { getMbtiRatio } from "../../api/mbtiTestApi";
+import { submitMbtiAnswersDetail, type MbtiDetailRes } from "../../api/mbtiTestApi";
 
 export default function MbtiResult() {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useSelector((s: RootState) => s.auth.user);
 
-  const mbti = (location.state as { mbti: string })?.mbti;
+  // 이전 페이지에서 answers를 함께 전달했다고 가정
+  const { mbti, answers } = location.state as { mbti: string; answers: { questionId: number; choice: string }[] };
   const info: MbtiInfo | undefined = mbtiData[mbti as keyof typeof mbtiData];
 
-  const [ratio, setRatio] = useState<number | null>(null);
-  const [ratioError, setRatioError] = useState(false);
+  const [result, setResult] = useState<MbtiDetailRes | null>(null);
 
   useEffect(() => {
-  if (!user?.userId) return;
-
-  getMbtiRatio(user.userId)
-    .then((data) => {
-      const r = Number(data?.ratio);
-      if (!isNaN(r) && r > 0) {
-        setRatio(r);
-      } else {
-        setRatioError(true);
-      }
+  if (!user?.userId || !answers) return;
+  submitMbtiAnswersDetail(user.userId, answers)
+    .then((res) => {
+      console.log("👉 MBTI 상세 결과 API 응답:", res); // ✅ 응답 확인
+      setResult(res);
     })
-    .catch((err) => {
-      console.error("비율 가져오기 실패:", err);
-      setRatioError(true);
-    });
-}, [user?.userId]);
+    .catch((err) => console.error("MBTI 결과 불러오기 실패:", err));
+}, [user?.userId, answers]);
 
   if (!info || !mbti) {
     return (
@@ -59,21 +51,39 @@ export default function MbtiResult() {
         <p className={styles.name}>{info.name}</p>
         <p className={styles.description}>{info.description}</p>
 
-        {/* ✅ 안전한 비율 출력 */}
-        {ratio !== null ? (
-          <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "#334155" }}>
-            당신과 같은 유형은 전체 사용자 중{" "}
-            <strong style={{ color: "#0ea5e9" }}>{ratio}%</strong> 입니다.
-          </p>
-        ) : ratioError ? (
-          <p style={{ fontSize: "1rem", marginBottom: "2rem", color: "#999" }}>
-            비율 데이터를 불러올 수 없습니다.
-          </p>
-        ) : (
-          <p style={{ fontSize: "1rem", marginBottom: "2rem", color: "#999" }}>
-            불러오는 중...
-          </p>
-        )}
+        {/* ✅ 퍼센트 바 차트 */}
+        {result ? (
+  <div className={styles.chartBox}>
+    {[
+      { left: "E", right: "I", leftPct: result.ratios.EI.E, rightPct: result.ratios.EI.I },
+      { left: "S", right: "N", leftPct: result.ratios.SN.S, rightPct: result.ratios.SN.N },
+      { left: "T", right: "F", leftPct: result.ratios.TF.T, rightPct: result.ratios.TF.F },
+      { left: "P", right: "J", leftPct: result.ratios.JP.P, rightPct: result.ratios.JP.J }, // PJ 순서
+    ].map((d) => (
+      <div key={`${d.left}${d.right}`} className={styles.barRow}>
+        <div className={styles.barLabels}>
+          <span>{d.left}</span>
+          <span>{d.right}</span>
+        </div>
+        <div className={styles.bar}>
+  {d.leftPct > 0 && (
+    <div className={styles.barLeft} style={{ width: `${d.leftPct}%` }}>
+      {d.left} {d.leftPct}%
+    </div>
+  )}
+  {d.rightPct > 0 && (
+    <div className={styles.barRight} style={{ width: `${d.rightPct}%` }}>
+      {d.right} {d.rightPct}%
+    </div>
+  )}
+</div>
+
+      </div>
+    ))}
+  </div>
+) : (
+  <p style={{ fontSize: "1rem", marginBottom: "2rem", color: "#999" }}>불러오는 중...</p>
+)}
 
         <div className={styles.strengthWeakness}>
           <div className={styles.section}>

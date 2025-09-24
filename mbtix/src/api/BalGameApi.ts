@@ -107,3 +107,5 @@ export type CreateGameRes = {
   gameId: number;
   title: string;
 };
+
+

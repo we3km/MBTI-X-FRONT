@@ -82,11 +82,12 @@ export default function PastBalance() {
             );
           })}
         </div>
-      </section>
-
-      <div className={styles.commentSection}>
+        <div className={styles.commentSection}>
         <BalGameComment balId={game.gameId} currentUserId={user?.userId ?? 0} variant="past" />
       </div>
+      </section>
+
+      
 
       <div className={styles.pagination}>
         {page > 1 && (

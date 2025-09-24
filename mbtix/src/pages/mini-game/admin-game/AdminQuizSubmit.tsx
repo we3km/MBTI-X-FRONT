@@ -28,7 +28,7 @@ const AdminQuizSubmit = () => {
                 answer: speedQuizAnswer
             };
             await apiClient.post('/admin/insertGameData', quizData);
-            alert('스피드 퀴즈 문제가 성공적으로 제출되었습니다.');
+            toast.success('스피드 퀴즈 문제가 성공적으로 제출되었습니다.');
             setSpeedQuizProblem('');
             setSpeedQuizAnswer('');
         } catch (error) {
@@ -41,7 +41,7 @@ const AdminQuizSubmit = () => {
     const handleCatchMindSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!catchMindWord.trim()) {
-            alert('캐치마인드 단어를 입력해주세요.');
+            toast.error('캐치마인드 단어를 입력해주세요.');
             return;
         }
         try {
@@ -50,7 +50,7 @@ const AdminQuizSubmit = () => {
                 type: "catchMind"
             };
             await apiClient.post('/admin/insertGameData', wordData);
-            alert('캐치마인드 단어가 성공적으로 제출되었습니다.');
+            toast.success('캐치마인드 단어가 성공적으로 제출되었습니다.');
             setCatchMindWord('');
         } catch (error) {
             console.error('캐치마인드 단어 제출 실패:', error);

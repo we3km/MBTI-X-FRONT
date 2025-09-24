@@ -19,6 +19,11 @@ interface CatchMind {
 const AdminQuizUpdate = () => {
     const [speedQuizList, setSpeedQuizList] = useState<SpeedQuiz[]>([]);
     const [catchMindList, setCatchMindList] = useState<CatchMind[]>([]);
+
+    const [speedQuizPage, setSpeedQuizPage] = useState(1);
+    const [catchMindPage, setCatchMindPage] = useState(1);
+
+    const itemsPerPage = 5;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,9 +43,9 @@ const AdminQuizUpdate = () => {
     }, []);
 
     // 수정 처리
-    const handleSpeedQuizChange = (qusetionId: number, field: 'question' | 'answer', value: string) => {
+    const handleSpeedQuizChange = (questionId: number, field: 'question' | 'answer', value: string) => {
         setSpeedQuizList(prev =>
-            prev.map(item => item.questionId === qusetionId ? { ...item, [field]: value } : item)
+            prev.map(item => item.questionId === questionId ? { ...item, [field]: value } : item)
         );
     };
 
@@ -52,7 +57,7 @@ const AdminQuizUpdate = () => {
 
     const handleSpeedQuizUpdate = async (item: SpeedQuiz) => {
         try {
-            await apiClient.patch(`/admin/updateGameData/${item.questionId}`, item);
+            await apiClient.patch(`/admin/updateSpeedQuiz/`, item);
             toast.success("스피드 퀴즈가 수정되었습니다.");
         } catch (error) {
             console.error(error);
@@ -62,7 +67,7 @@ const AdminQuizUpdate = () => {
 
     const handleCatchMindUpdate = async (item: CatchMind) => {
         try {
-            await apiClient.patch(`/admin/updateGameData/${item.wordId}`, item);
+            await apiClient.patch(`/admin/updateCatchMindWord/`, item);
             toast.success("캐치마인드가 수정되었습니다.");
         } catch (error) {
             console.error(error);
@@ -93,41 +98,103 @@ const AdminQuizUpdate = () => {
         }
     };
 
+    // 페이지네이션 계산
+    const speedQuizTotalPages = Math.ceil(speedQuizList.length / itemsPerPage);
+    const catchMindTotalPages = Math.ceil(catchMindList.length / itemsPerPage);
+
+    const speedQuizPageList = speedQuizList.slice(
+        (speedQuizPage - 1) * itemsPerPage,
+        speedQuizPage * itemsPerPage
+    );
+
+    const catchMindPageList = catchMindList.slice(
+        (catchMindPage - 1) * itemsPerPage,
+        catchMindPage * itemsPerPage
+    );
+
+    // 페이징 처리
+    const renderPagination = (
+        totalPages: number,
+        currentPage: number,
+        setPage: React.Dispatch<React.SetStateAction<number>>
+    ) => {
+        const maxPageButtons = 5;
+        const startPage = Math.floor((currentPage - 1) / maxPageButtons) * maxPageButtons + 1;
+        const endPage = Math.min(startPage + maxPageButtons - 1, totalPages);
+
+        return (
+            <div className={styles.pagination}>
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setPage(currentPage - 1)}
+                >
+                    이전
+                </button>
+
+                {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map(
+                    (page) => (
+                        <button
+                            key={page}
+                            className={`${styles.pageButton} ${currentPage === page ? styles.activePage : ""}`}
+                            onClick={() => setPage(page)}
+                        >
+                            {page}
+                        </button>
+                    )
+                )}
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setPage(currentPage + 1)}
+                >
+                    다음
+                </button>
+            </div>
+        );
+    };
     return (
         <div className={styles.container}>
             <div className={styles.contentBox}>
-                <button className={styles.closeButton} onClick={(e) => {
-                    e.stopPropagation();
-                    navigate("/miniGame");
-                }}>
+                <button
+                    className={styles.closeButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/miniGame");
+                    }}
+                >
                     <img src="/icons/exit.png" alt="Close" />
                 </button>
-                <h1 className={styles.title}>문제 DB 관리</h1>
+                <h1 className={styles.title}>문제 관리</h1>
 
-                {/* 스피드 퀴즈 리스트 */}
+                {/* 스피드 퀴즈 */}
                 <section className={styles.formSection}>
                     <h2 className={styles.sectionTitle}>스피드 퀴즈</h2>
-                    {speedQuizList.map(item => (
+                    {speedQuizPageList.map((item) => (
                         <div key={item.questionId} className={styles.listItem}>
                             <div>{item.questionId}</div>
                             <input
                                 value={item.question}
-                                onChange={(e) => handleSpeedQuizChange(item.questionId, 'question', e.target.value)}
+                                onChange={(e) =>
+                                    handleSpeedQuizChange(item.questionId, "question", e.target.value)
+                                }
                             />
                             <input
                                 value={item.answer}
-                                onChange={(e) => handleSpeedQuizChange(item.questionId, 'answer', e.target.value)}
+                                onChange={(e) =>
+                                    handleSpeedQuizChange(item.questionId, "answer", e.target.value)
+                                }
                             />
                             <button onClick={() => handleSpeedQuizUpdate(item)}>수정</button>
                             <button onClick={() => handleSpeedQuizDelete(item.questionId)}>삭제</button>
                         </div>
                     ))}
+                    {renderPagination(speedQuizTotalPages, speedQuizPage, setSpeedQuizPage)}
                 </section>
 
-                {/* 캐치마인드 리스트 */}
+                {/* 캐치마인드 */}
                 <section className={styles.formSection}>
                     <h2 className={styles.sectionTitle}>캐치마인드</h2>
-                    {catchMindList.map(item => (
+                    {catchMindPageList.map((item) => (
                         <div key={item.wordId} className={styles.listItem}>
                             <div>{item.wordId}</div>
                             <input
@@ -138,10 +205,10 @@ const AdminQuizUpdate = () => {
                             <button onClick={() => handleCatchMindDelete(item.wordId)}>삭제</button>
                         </div>
                     ))}
+                    {renderPagination(catchMindTotalPages, catchMindPage, setCatchMindPage)}
                 </section>
             </div>
         </div>
     );
-};
-
+}
 export default AdminQuizUpdate;

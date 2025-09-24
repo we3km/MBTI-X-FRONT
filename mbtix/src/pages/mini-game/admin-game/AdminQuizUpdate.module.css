@@ -173,10 +173,47 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .smallButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pagination button:hover {
+    background: #eaeaea;
+}
+
+.pageButton {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #333;
+}
+
+.activePage {
+    background: #ff6f6a !important;
+    font-weight: bold;
+    border-color: 1px !important;
+    color: #fff !important;
 }

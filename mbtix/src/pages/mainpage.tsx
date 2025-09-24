@@ -25,6 +25,7 @@ export default function Home() {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const refreshToken = useSelector((state: RootState) => state.auth.refreshToken);
 
+
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
@@ -94,7 +95,10 @@ export default function Home() {
       </div>
       <h1 className={styles.logo}><img src={mainIcon} /></h1>
       <div className={styles.cardWrapper}>
-        <div className={styles.card}>
+        <div className={styles.card}
+          onClick={() => navigate("/chatbot")}
+          style={{ cursor: "pointer" }}
+        >
           <div className={styles.cardTitle}>MBTI 챗봇</div>
           <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>
           <img src={chatIcon} alt="MBTI 챗봇" />

@@ -19,32 +19,33 @@ export default function Home() {
   const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
 
-    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const refreshToken = useSelector((state: RootState) => state.auth.refreshToken);
 
   useEffect(() => {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
 
-  dispatch(
-    setAuth({
-      accessToken,
-      refreshToken,  
-      userId: userId!,
-      user: user ?? null,
-      retestAllowed: false,  
-    })
-  );
+
+    dispatch(
+      setAuth({
+        accessToken,
+        refreshToken,
+        userId: userId!,
+        user: user ?? null,
+        retestAllowed: false,
+      })
+    );
+
     // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
     fetch("http://localhost:8085/api/getQuizTitle")
       .then(res => res.text())
       .then(data => setBalTitle(data)) // data는 String
       .catch(err => console.error(err));
-  }, [userId,dispatch]);
+  }, [userId, dispatch]);
 
   const handleLogout = async () => {
     const token = store.getState().auth.accessToken;
@@ -56,6 +57,7 @@ export default function Home() {
       dispatch(clearAuth());
     }
   }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -78,16 +80,16 @@ export default function Home() {
           <div className={styles.authButtons}>
 
             <Link to={`/mypage`}>
-            <img
-          src={
-            user?.profileType === "UPLOAD"
-              ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
-              : `/profile/default/${user?.profileFileName || "default.jpg"}`
-          }
-          alt="프로필"
-          className={styles.profileImage}
-        />
-        </Link>
+              <img
+                src={
+                  user?.profileType === "UPLOAD"
+                    ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
+                    : `/profile/default/${user?.profileFileName || "default.jpg"}`
+                }
+                alt="프로필"
+                className={styles.profileImage}
+              />
+            </Link>
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}
@@ -115,10 +117,10 @@ export default function Home() {
               <button className={styles.boardBtn} onClick={() => navigate("/board")}>
                 전체 <span>자유로운 주제로 이야기 하세요!</span>
               </button>
-              <button className={styles.boardBtn}  onClick={() => navigate("/board/curious")}>
+              <button className={styles.boardBtn} onClick={() => navigate("/board/curious")}>
                 궁금해! <span>다른 MBTI는 어떨까??</span>
               </button>
-              <button className={styles.boardBtn}  onClick={() => navigate(`/board/mbti`)}>
+              <button className={styles.boardBtn} onClick={() => navigate(`/board/mbti`)}>
                 MBTI <span>같은 MBTI들과 이야기 해봐요!</span>
               </button>
             </div>
@@ -126,9 +128,9 @@ export default function Home() {
         </div>
         {isLoggedIn ? (
           <Link to="/miniGame" className={styles.card}>
-              <div className={styles.cardTitle}>미니게임</div>
-              <div className={styles.cardDesc}>다른 MBTI와 경쟁해보세요!</div>
-              <img src={miniIcon} alt="미니게임" />
+            <div className={styles.cardTitle}>미니게임</div>
+            <div className={styles.cardDesc}>다른 MBTI와 경쟁해보세요!</div>
+            <img src={miniIcon} alt="미니게임" />
           </Link>
         ) : (
           <div
@@ -141,13 +143,13 @@ export default function Home() {
           </div>
         )}
 
-        <div className={styles.card} onClick={() => navigate("/BalanceList")}>  
+        <div className={styles.card} onClick={() => navigate("/BalanceList")}>
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
           <div className={styles.cardDesc}>{balTitle}</div>
           <img src={balanceIcon} alt="밸런스 게임" />
         </div>
 
       </div>
-    </div>
+    </div >
   );
 };

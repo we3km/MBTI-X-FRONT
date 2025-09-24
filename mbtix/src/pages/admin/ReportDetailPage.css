@@ -32,6 +32,9 @@
 .card-header {
     padding: 16px 20px;
     border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .card-header h3 {
@@ -45,7 +48,6 @@
     padding: 20px;
 }
 
-/* 새로운 레이아웃을 위한 Grid */
 .report-detail-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -83,7 +85,6 @@
     color: #495057;
 }
 
-/* 뱃지 스타일 */
 .report-badge {
     padding: 4px 10px;
     border-radius: 20px;
@@ -95,8 +96,6 @@
 .report-badge.status-Y { background-color: #40c057; }
 .report-badge.status-N { background-color: #fab005; }
 
-
-/* 상세 사유 영역 */
 .reason-box {
     margin-top: 20px;
 }
@@ -120,12 +119,9 @@
     background-color: #f8f9fa;
 }
 
-/* 하단 액션 박스 */
 .action-box {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    gap: 12px;
     margin-top: 30px;
     padding: 20px;
     background-color: #fff;
@@ -133,6 +129,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
+.action-box button,
 .action-box select {
     padding: 10px 16px;
     border-radius: 8px;
@@ -141,22 +138,50 @@
 }
 
 .action-box button {
-    padding: 10px 25px;
-    border: none;
-    border-radius: 8px;
     cursor: pointer;
-    font-size: 15px;
     font-weight: 600;
     color: white;
-    background-color: #fa5252;
-    transition: all 0.2s ease;
+    border: none;
+    transition: background-color 0.2s;
 }
 
-.action-box button:hover {
+.action-box .reject-btn {
+    background-color: #868e96;
+}
+.action-box .reject-btn:hover {
+    background-color: #495057;
+}
+
+.sanction-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.sanction-group button {
+    background-color: #fa5252;
+}
+.sanction-group button:hover {
     background-color: #e03131;
 }
-
-.action-box button:disabled {
+.sanction-group button:disabled {
     background-color: #adb5bd;
     cursor: not-allowed;
+}
+
+.go-to-board-btn {
+    padding: 6px 14px;
+    border: none;
+    background-color: #5D9CEC;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.go-to-board-btn:hover {
+    background-color: #4a8cd8;
 }

@@ -55,3 +55,9 @@ export const unbanUser = async (userId: number): Promise<string> => {
     const response = await apiClient.delete(`/admin/users/${userId}/ban`);
     return response.data;
 };
+
+// 신고 반려
+export const rejectReport = async (reportId: number): Promise<string> => {
+    const response = await apiClient.post(`/admin/reports/${reportId}/reject`);
+    return response.data;
+};

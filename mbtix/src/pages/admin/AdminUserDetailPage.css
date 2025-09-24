@@ -54,9 +54,18 @@
     font-weight: 500;
 }
 
-.status-활동중 { background: #e6fcf5; color: #087f5b; }
-.status-정지 { background: #fff5f5; color: #c92a2a; }
-.status-탈퇴 { background: #f1f3f5; color: #868e96; }
+.status-활동중 { 
+    background: #28a745;
+    color: white; 
+}
+.status-정지 { 
+    background: #dc3545;
+    color: white; 
+}
+.status-탈퇴 { 
+    background: #6c757d;
+    color: white; 
+}
 
 
 .action-buttons {
@@ -259,11 +268,28 @@
     background-color: #fa5252;
     color: white;
 }
-
 .unban-button {
     background: #e6fcf5;
     color: #087f5b;
 }
 .unban-button:hover {
     background: #c3fae8;
+}
+.placeholder-content {
+    padding: 40px;
+    text-align: center;
+    color: #868e96;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+.tab-header button:focus {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px rgba(93, 156, 236, 0.5);
+}
+.activity-table {
+    margin-top: 20px;
+}
+.activity-title {
+    text-align: left;
 }

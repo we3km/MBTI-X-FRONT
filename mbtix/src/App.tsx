@@ -56,6 +56,7 @@ import Detail from './pages/board/Detail'
 import Question from './pages/board/question'
 import Mbti from './pages/board/Mbti'
 function App() {
+  const user = useSelector((state: RootState) => state.auth.user);
   return (
     <AuthGate>
       <section id="content">
@@ -63,13 +64,13 @@ function App() {
         {/* --- 공개 경로 --- */}
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="find-pw" element={<Findpw />} />
-          <Route path="/find-id" element={<Findid />} />
-          <Route path='/oauth2/success' element={<OAuth2Success />} />
-          <Route path='/social-signup' element={<SocialSignup />} />
-          <Route path="/signup-complete" element={<SignupComplete />} />
+          <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
+          <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" replace />} />
+          <Route path="/find-pw" element={!user ?<Findpw /> : <Navigate to="/" replace />} />
+          <Route path="/find-id" element={!user ?<Findid /> : <Navigate to="/" replace />} />
+          <Route path='/oauth2/success'  element={!user ?<OAuth2Success /> : <Navigate to="/" replace />} />
+          <Route path='/social-signup'   element={!user ?<SocialSignup />  : <Navigate to="/" replace />} />
+          <Route path="/signup-complete" element={!user ?<SignupComplete />: <Navigate to="/" replace />} />
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
 
           <Route path="/miniGame">

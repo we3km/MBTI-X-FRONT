@@ -151,3 +151,22 @@
 .search-form button:hover {
     background-color: #4a8cd8;
 }
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+}
+
+.status-활동중 { 
+    background: #28a745;
+}
+.status-정지 { 
+    background: #dc3545;
+}
+.status-탈퇴 { 
+    background: #6c757d;
+}

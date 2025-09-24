@@ -5,6 +5,7 @@ import { initBoard, type Board } from "../../type/board";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
+import toast from "react-hot-toast";
 
 // 댓글 타입
 type Comment = {
@@ -26,6 +27,9 @@ export default function Detail() {
   const [showReport, setShowReport] = useState(false);
   const [reportType, setReportType] = useState("1");
   const [reportContent, setReportContent] = useState("");
+  const [targetNickname, setTargetNickname] = useState("");
+
+  const [reportTarget, setReportTarget] = useState<{ boardId: number | null, commentId: number | null }>({ boardId: null, commentId: null });
 
   // 대댓글 상태 (한번에 하나만 열리도록)
   const [replyTarget, setReplyTarget] = useState<number | null>(null);
@@ -49,9 +53,16 @@ export default function Detail() {
   useEffect(() => {
     // 게시글 불러오기
     getBoard();
-
     // 댓글 불러오기
-    getComments();    
+    getComments();
+
+    if (window.location.hash) {
+        const commentId = window.location.hash.replace('#', '');
+        const commentElement = document.getElementById(commentId);
+        if (commentElement) {
+            commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
   }, [param.id]);
   
   const getBoard = () => {
@@ -84,11 +95,11 @@ export default function Detail() {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     try {
       await api.delete(`/board/${param.id}`);
-      alert("삭제되었습니다.");
+      toast.success("삭제되었습니다.");
       navigate("/board");
     } catch (err) {
       console.error(err);
-      alert("삭제 실패");
+      toast.error("삭제 실패");
     }
   };
 
@@ -101,14 +112,14 @@ export default function Detail() {
       //setComments(comments.filter((c) => c.commentId !== commentId));
     } catch (err) {
       console.error(err);
-      alert("댓글 삭제 실패");
+      toast.error("댓글 삭제에 실패했습니다.");
     }
   };
 
   // 일반 댓글 저장
   const saveComment = async () => {
     if (!commentInput.trim()) {
-      alert("댓글 내용을 입력해주세요.");
+      toast.error("댓글 내용을 입력해주세요.");
       return;
     }
 
@@ -116,7 +127,7 @@ export default function Detail() {
     // 게시글의 mbtiname과 질문자의 mbtiname이 일치하는 경우만 댓글작성가능
 
     if(categoryId == '1' && userMbti != board.mbtiId ){
-        alert(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
+        toast.error(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
         return;
     }
 
@@ -130,22 +141,23 @@ export default function Detail() {
       };
       const res = await api.post("/board/comments", newComment);
       getComments();          
+
       setCommentInput("");
     } catch (err) {
       console.error(err);
-      alert("댓글 작성 실패");
+      toast.error("댓글 작성에 실패했습니다.");
     }
   };
 
   // 대댓글 저장
   const saveReply = async (parentId: number) => {
     if (!replyInput.trim()) {
-      alert("대댓글 내용을 입력해주세요.");
+      toast.error("대댓글 내용을 입력해주세요.");
       return;
     }
 
     if(categoryId == '1' && userMbti != board.mbtiId ){
-        alert(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
+        toast.error(`${board.mbtiName}만 달 수 있는 댓글입니다.`);
         return;
     }
     
@@ -158,35 +170,38 @@ export default function Detail() {
         parentId,
       };
       const res = await api.post("/board/comments", newReply);
-      getComments();     
+      getComments();    
+
       setReplyInput("");
       setReplyTarget(null);
     } catch (err) {
       console.error(err);
-      alert("대댓글 작성 실패");
+      toast.error("대댓글 작성에 실패했습니다.");
     }
   };
 
   // 신고 제출
   const submitReport = () => {
     if (!reportContent.trim()) {
-      alert("신고 내용을 입력해주세요.");
+      toast.error("신고 내용을 입력해주세요.");
       return;
     }
     api
       .post("/board/report", {
-        reason: reportContent,
-        reportCateogry: reportType,
+        reson: reportContent,
+        reportCategory: reportType,
         targetUserNum,
+        boardId: reportTarget.boardId,
+        commentId: reportTarget.commentId,
       })
       .then(() => {
-        alert("신고가 접수되었습니다.");
+        toast.success("신고가 접수되었습니다.");
         setShowReport(false);
         setReportContent("");
       })
       .catch((err) => {
         console.error(err);
-        alert("신고 접수 실패");
+        toast.error("신고 접수 실패");
       });
   };
 
@@ -201,7 +216,7 @@ export default function Detail() {
       })
       .catch((err) => {
         console.error(err);
-        alert("좋아요 실패");
+        toast.error("좋아요 실패");
       });
   }
 
@@ -251,6 +266,8 @@ export default function Detail() {
               onClick={() => {
                 setShowReport(true);
                 setTargetUserNum(board.userId);
+                setTargetNickname(board.nickname);
+                setReportTarget({ boardId: board.boardId, commentId: null });
               }}
             >
               🚨 신고
@@ -303,6 +320,8 @@ export default function Detail() {
                       onClick={() => {
                         setShowReport(true);
                         setTargetUserNum(cmt.userId);
+                        setTargetNickname(cmt.nickname);
+                        setReportTarget({ boardId: board.boardId, commentId: cmt.commentId || null });
                       }}
                     >
                       🚨 신고
@@ -408,7 +427,7 @@ export default function Detail() {
           <div className={styles.modal}>
             <h2>🚨 신고하기</h2>
             <p>
-              <b>신고 회원:</b> <u>{board.nickname}</u>
+              <b>신고 대상:</b> <u>{targetNickname}</u>
             </p>
 
             <label>신고 유형:</label>
@@ -416,8 +435,11 @@ export default function Detail() {
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
             >
-              <option value={1}>욕설</option>
-              <option value={2}>도배</option>
+              <option value={1}>욕설 및 어그로</option>
+              <option value={2}>음란 및 선정성</option>
+              <option value={3}>도배 및 광고</option>
+              <option value={4}>악의적 혐오 조장</option>
+              <option value={5}>기타</option>
             </select>
 
             <label>신고 내용:</label>

@@ -258,7 +258,7 @@ export default function CreateChat({ onChatCreated }: CreateChatComponentProps) 
           <img
             src={botProfileImageUrl}
             alt="Generated Profile"
-            style={{ width: "150px", height: "150px", borderRadius: "50%", objectFit: "cover" }}
+            style={{ width: "500px", height: "500px", objectFit: "cover" }}
           />
           <p style={{ marginTop: "10px" }}>이미지가 마음에 드시면 챗봇을 생성하세요.</p>
           <div style={{ marginTop: "20px" }}>

@@ -5,9 +5,9 @@ import { Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 interface Props {
-    children: ReactNode;
-    requiredRoles?: string[];
-    redirectTo?: string;
+  children: ReactNode;
+  requiredRoles?: string[];
+  redirectTo?: string;
 }
 export default function ProtectedRoute({
   children,

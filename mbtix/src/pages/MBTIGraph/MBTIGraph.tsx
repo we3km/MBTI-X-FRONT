@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import styles from "./MBTIGraph.module.css"
+import type { PieProps } from "recharts";
+import styles from "./MBTIGraph.module.css";
 import { useNavigate } from "react-router-dom";
-// import exitBtn from "../../assets/mini-game/main/나가기.png"
-
-interface MBTIData {
-    type: string;
-    count: number;
-}
 
 const COLORS = [
     "#0088FE", "#00C49F", "#FFBB28", "#FF8042",
@@ -16,43 +11,53 @@ const COLORS = [
     "#92A8D1", "#955251", "#B565A7", "#009B77"
 ];
 
+type PieData = NonNullable<PieProps['data']>[number];
+
 export default function MBTIGraph() {
-    const [data, setData] = useState<MBTIData[]>([]);
+    const [data, setData] = useState<PieData[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         fetch("http://localhost:8085/api/getUserMBTI")
             .then(res => res.json())
-            .then((rawData) => {
-                const formatted = rawData.map((item: any) => ({
-                    type: item.MBTI_NAME,
-                    count: item.USER_COUNT
+            .then((rawData: any[]) => {
+                const formattedData: PieData[] = rawData.map(item => ({
+                    name: item.MBTI_NAME,
+                    value: item.USER_COUNT
                 }));
-                setData(formatted);
+                setData(formattedData);
+            })
+            .catch(err => {
+                console.error("MBTI 데이터 로드 실패:", err);
             });
     }, []);
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>사이트 회원의 MBTI 비율</h2>
+            <h2 className={styles.title}>
+                <img src="/icons/MBTIofUsers.png" alt="MBTI of Users" />
+            </h2>
             <button className={styles.exit} onClick={() => navigate(-1)}>
-                {/* <img src={exitBtn} alt="뒤로가기" /> */}
+                <img src="/icons/exit.png" alt="Close" />
             </button>
             <div className={styles.graphWrapper}>
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
                             data={data}
-                            dataKey="count"
-                            nameKey="type"
+                            dataKey="value"
+                            nameKey="name"
                             cx="50%"
                             cy="50%"
-                            outerRadius={180}  /* radius도 크게 */
+                            outerRadius={180}
                             fill="#8884d8"
                             label
                         >
                             {data.map((_, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={COLORS[index % COLORS.length]}
+                                />
                             ))}
                         </Pie>
                         <Tooltip />

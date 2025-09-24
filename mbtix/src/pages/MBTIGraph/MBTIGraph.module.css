@@ -4,8 +4,8 @@ body {
 }
 
 .container {
-  width: 1500px;
   height: 100%;
+  width: 1200px;
   margin: 0 auto;
   padding: 3rem;
   box-sizing: border-box;
@@ -15,12 +15,8 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-.title {
-  text-align: center;
-  font-size: 32px; /* 크게 */
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: #333;
+.title img{
+  width: 500px;
 }
 
 .exit {

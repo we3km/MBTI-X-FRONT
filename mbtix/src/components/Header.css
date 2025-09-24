@@ -249,6 +249,18 @@
 .nav-link-style:hover {
     opacity: 0.8;
 }
+:is(.header-nav button, .user-profile-button, .notification-button):focus {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.5);
+}
+
+.notification-header button:focus {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7);
+}
+
 .profileImage {
     width: 50px;
     height: 50px;

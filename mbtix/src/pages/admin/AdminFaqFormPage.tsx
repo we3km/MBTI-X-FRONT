@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { createFaq, updateFaq, fetchFaqById, type Faq } from '../../api/faqApi';
+import { createFaq, updateFaq, fetchFaqDetail, type Faq } from '../../api/faqApi';
 import toast from 'react-hot-toast';
 import './AdminFaq.css';
 
@@ -19,7 +19,7 @@ const AdminFaqFormPage = () => {
         if (isEditMode && faqId) {
             const getFaqData = async () => {
                 try {
-                    const data = await fetchFaqById(Number(faqId));
+                    const data = await fetchFaqDetail(Number(faqId));
                     setFormData({
                         faqCategory: data.faqCategory,
                         question: data.question,
@@ -44,11 +44,9 @@ const AdminFaqFormPage = () => {
         e.preventDefault();
         try {
             if (isEditMode && faqId) {
-                // 수정
                 await updateFaq(Number(faqId), formData);
                 toast.success('FAQ가 성공적으로 수정되었습니다.');
             } else {
-                // 생성
                 await createFaq(formData);
                 toast.success('FAQ가 성공적으로 등록되었습니다.');
             }
@@ -60,13 +58,12 @@ const AdminFaqFormPage = () => {
     };
 
     return (
-        <div className="admin-page-container"> {/* --- [수정] 클래스명 변경 --- */}
+        <div className="admin-page-container">
             <div className="page-header">
                 <div className="page-icon">✍️</div>
                 <h1>{isEditMode ? 'FAQ 수정' : 'FAQ 작성'}</h1>
             </div>
 
-            {/* --- [수정] form을 카드로 감싸기 --- */}
             <div className="detail-card">
                 <form className="admin-faq-form" onSubmit={handleSubmit}>
                     <div className="form-group">

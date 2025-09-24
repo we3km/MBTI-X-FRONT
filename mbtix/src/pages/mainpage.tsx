@@ -11,6 +11,7 @@ import type { RootState } from "../store/store";
 import { clearAuth, setAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
+import toast from "react-hot-toast";
 import { useTodayGame } from "../hooks/useTodayGame";
 
 export default function Home() {
@@ -149,7 +150,7 @@ export default function Home() {
         ) : (
           <div
             className={styles.card}
-            onClick={() => alert("로그인 후 이용 가능합니다.")}
+            onClick={() => toast.error("로그인 후 이용 가능합니다.")}
           >
             <div className={styles.cardTitle}>미니게임</div>
             <div className={styles.cardDesc}>로그인 후 이용 가능</div>

@@ -12,14 +12,16 @@ import { clearAuth, setAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
 import toast from "react-hot-toast";
+import { useTodayGame } from "../hooks/useTodayGame";
 
 export default function Home() {
 
   const [isBoardOpen, setIsBoardOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [balTitle, setBalTitle] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const today = useTodayGame();
+
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -43,11 +45,8 @@ export default function Home() {
     );
 
     // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
-    fetch("http://localhost:8085/api/getQuizTitle")
-      .then(res => res.text())
-      .then(data => setBalTitle(data)) // data는 String
-      .catch(err => console.error(err));
-  }, [userId, dispatch]);
+   
+  }, [userId,dispatch]);
 
   const handleLogout = async () => {
     const token = store.getState().auth.accessToken;
@@ -161,7 +160,7 @@ export default function Home() {
 
         <div className={styles.card} onClick={() => navigate("/BalanceList")}>
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
-          <div className={styles.cardDesc}>{balTitle}</div>
+          <div className={styles.cardDesc}>{today?.title || "게임 없음"}</div>
           <img src={balanceIcon} alt="밸런스 게임" />
         </div>
 

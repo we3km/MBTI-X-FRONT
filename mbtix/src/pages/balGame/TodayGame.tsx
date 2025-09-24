@@ -95,53 +95,71 @@ export default function TodayGame() {
             <p className={styles.question}>{game.title}</p>
             <div className={styles.grid}>
               {game.options.map((o) => (
+                // TodayGame.tsx (일부 수정)
                 <article
                   key={o.label}
-                  className={`${styles.option} ${game.myVote === o.label ? styles.selected : ""}`}
+                  className={`${styles.option} ${game.myVote ? styles.flipped : ""}`}
+
                 >
-                  <div className={styles.optHead}>
-                    <div className={styles.optBadge}>{o.label}</div>
-                    <h3 className={styles.optTitle}>{o.textContent}</h3>
-                  </div>
+                  <div className={styles.cardInner}>
+                    {/* 앞면 */}
+                    <div className={styles.cardFront}>
+                      <div className={styles.optHead}>
+                        <div className={styles.optBadge}>{o.label}</div>
+                        <h3 className={styles.optTitle}>{o.textContent}</h3>
+                      </div>
 
-                  {!game.myVote && (
-                    <button
-                      className={styles.voteBtn}
-                      onClick={() => handleVote(game, o.label as "A" | "B")}
-                    >
-                      투표하기
-                    </button>
-                  )}
+                      {!game.myVote && (
+                        <button
+                          className={styles.voteBtn}
+                          onClick={() => handleVote(game, o.label as "A" | "B")}
+                        >
+                          투표하기
+                        </button>
+                      )}
+                    </div>
 
-                  {game.myVote && stats && (
-                    <div className={styles.donutBox}>
-                      <h4>MBTI 분포</h4>
-                      <Donut data={o.label === "A" ? pieA : pieB} />
-                      <div className={styles.legend}>
-                        {(o.label === "A" ? pieA : pieB).map((d) => {
-                          const color = MBTI_COLORS[d.label] || "#ADB5BD";
-                          return (
-                            <div key={d.label} style={{ color }}>
-                              ■ {d.label} {d.value}표
+                    {/* 뒷면 — ✅ 헤더(뱃지+옵션명) 추가 */}
+                    <div className={styles.cardBack}>
+                      <div className={styles.optHead}>
+                        <div className={styles.optBadge}>{o.label}</div>
+                        <h3 className={styles.optTitle}>{o.textContent}</h3>
+                      </div>
+
+                      {stats && (
+                        <>
+                          <div className={styles.donutBox}>
+                            <h4>MBTI 분포</h4>
+                            <Donut data={o.label === "A" ? pieA : pieB} />
+                            <div className={styles.legend}>
+                              {(o.label === "A" ? pieA : pieB).map((d) => {
+                                const color = MBTI_COLORS[d.label] || "#ADB5BD";
+                                return (
+                                  <div key={d.label} style={{ color }}>
+                                    ■ {d.label} {d.value}표
+                                  </div>
+                                );
+                              })}
                             </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
+                          </div>
 
-                  {game.myVote && (
-                    <div
-                      className={styles.result}
-                      style={{ ["--pct" as any]: o.label === "A" ? pctA : pctB }}
-                    >
-                      <div className={styles.resultTop}>
-                        <strong>{o.label === "A" ? pctA : pctB}%</strong>
-                        <span>{Number(o.votes) || 0}표</span>
-                      </div>
+                          <div
+                            className={styles.result}
+                            style={{ ["--pct" as any]: o.label === "A" ? pctA : pctB }}
+                          >
+                            <div className={styles.resultTop}>
+                              <strong>{o.label === "A" ? pctA : pctB}%</strong>
+                              <span>{Number(o.votes) || 0}표</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </article>
+
+
+
               ))}
             </div>
 

@@ -19,7 +19,7 @@ export default function List() {
   const user = useSelector((state: RootState) => state.auth.user);
   const mbtiId = user?.mbtiId || 0;
   const userMbti =
-    mbtiTypes.find((mbti) => mbti.mbtiId === mbtiId)?.mbtiName || "";
+    mbtiTypes.find((mbti) => mbti.mbtiId == mbtiId)?.mbtiName || "";
 
   // 게시글 불러오기 (로그인한 유저 MBTI 기준)
   useEffect(() => {

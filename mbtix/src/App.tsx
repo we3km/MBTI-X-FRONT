@@ -62,6 +62,7 @@ import Detail from './pages/board/Detail';
 import Question from './pages/board/question';
 import Mbti from './pages/board/Mbti';
 import AdminQuizUpdate from './pages/mini-game/admin-game/AdminQuizUpdate';
+
 function App() {
   const user = useSelector((state: RootState) => state.auth.user);
   return (

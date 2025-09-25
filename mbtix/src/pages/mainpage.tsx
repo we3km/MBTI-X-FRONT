@@ -84,7 +84,6 @@ export default function Home() {
                   className={styles.profileImage}
                 />
               </Link>
-              {<span className={styles.userNickname}>{user?.nickname}</span>}
             </div>
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>

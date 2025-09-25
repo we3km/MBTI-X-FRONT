@@ -464,3 +464,11 @@
   border-radius: 6px;
   object-fit: cover;
 }
+
+.commentNickname {
+  cursor: pointer;
+}
+.commentNickname:hover {
+  text-decoration: underline;
+  color: #0077CC;
+}

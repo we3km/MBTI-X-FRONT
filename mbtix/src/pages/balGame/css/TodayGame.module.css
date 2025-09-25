@@ -206,8 +206,10 @@
 }
 
 .donutBox {
-  margin-top: 1.5rem;
-  text-align: center;
+    font-size: .9rem;
+  font-weight: 600;
+  margin: 10px 0 6px;
+  color: var(--ink-2);
 }
 .legend {
   margin-top: .75rem;

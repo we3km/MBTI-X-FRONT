@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { Navigate } from "react-router-dom";
@@ -16,8 +16,13 @@ export default function ProtectedRoute({
 }: Props) {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
+  const hasShownToast = useRef(false);
+
   if (!isAuthenticated) {
-    toast.error("로그인 후 이용해주세요.");
+    if (!hasShownToast.current) {
+      toast.error("로그인 후 이용해주세요.");
+      hasShownToast.current = true;
+    }
     return <Navigate to={redirectTo} replace />;
   }
 

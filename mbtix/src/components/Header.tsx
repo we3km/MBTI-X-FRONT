@@ -80,6 +80,8 @@ const Header = () => {
         }
         if (alarm.type === 'INQUIRY_ANSWER') {
             navigate(`/cs-history/${alarm.refId}`);
+        } else if (alarm.type === 'NEW_COMMENT' || alarm.type === 'NEW_REPLY') { 
+            navigate(`/board/${alarm.refId}`);
         }
     };
 
@@ -159,7 +161,12 @@ const Header = () => {
                                 </div>
                                 {alarms.length > 0 ? (
                                     alarms.map(alarm => (
-                                        <div key={alarm.alarmId} className={`notification-item ${alarm.isRead !== 'Y' ? 'unread' : ''}`} onClick={() => handleAlarmClick(alarm)}>
+                                        <div
+                                        key={alarm.alarmId}
+                                        className={`notification-item notification-${alarm.type} ${alarm.isRead !== 'Y' ? 'unread' : ''}`}
+                                        onClick={() => handleAlarmClick(alarm)}
+                                        >
+                                            
                                             {alarm.content}
                                         </div>
                                     ))

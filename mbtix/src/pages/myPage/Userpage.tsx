@@ -1,11 +1,13 @@
 // src/pages/mypage/UserPage.tsx
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./MyPage.module.css";
 import { getUserProfile, getUserScores, getUserBoards } from "../../api/mypageApi";
 
 export default function UserPage() {
   const { userId } = useParams<{ userId: string }>();
+
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<any>(null);
   const [boards, setBoards] = useState<
@@ -78,7 +80,7 @@ export default function UserPage() {
         <h3>작성한 게시글</h3>
         {boards.length > 0 ? (
           boards.map((board) => (
-            <div key={board.boardId} className={styles.postItem}>
+            <div key={board.boardId} className={styles.postItem} onClick={() => navigate(`/board/${board.boardId}`)}>
               <span className={styles.postTitle}>{board.boardTitle}</span>
               <span className={styles.postMeta}>
                 {board.nickName} | {board.createdAt} | {board.viewCount}

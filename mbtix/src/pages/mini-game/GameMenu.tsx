@@ -75,7 +75,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, ranks }) => {
 export default function GameMenu() {
     const user = useSelector((state: RootState) => state.auth.user);
     const navigate = useNavigate();
-    console.log("로그인한 회원 권한 :", user?.roles);
+    // console.log("로그인한 회원 권한 :", user?.roles);
 
     interface RankItem {
         GAME_CODE: number;
@@ -113,7 +113,14 @@ export default function GameMenu() {
                 {user?.roles?.includes("ROLE_ADMIN") &&
                     <Link to="/miniGame/AdminQuizSubmit">
                         <button>게임 데이터 넣기</button>
-                    </Link>}
+                    </Link>
+                }
+                {/* 관리자 권한으로 게임 데이터 삭제 */}
+                {user?.roles?.includes("ROLE_ADMIN") &&
+                    <Link to="/miniGame/AdminQuizUpdate">
+                        <button>게임 데이터 조회 및 삭제</button>
+                    </Link>
+                }
             </div>
             <div className={mini.cardcontainer}>
                 {gameList.map((game) => (

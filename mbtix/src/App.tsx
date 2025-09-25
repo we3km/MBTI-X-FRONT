@@ -1,6 +1,5 @@
 import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from './store/store';
 // Component Imports
@@ -62,6 +61,8 @@ import Insert from './pages/board/Insert';
 import Detail from './pages/board/Detail';
 import Question from './pages/board/question';
 import Mbti from './pages/board/Mbti';
+import AdminQuizUpdate from './pages/mini-game/admin-game/AdminQuizUpdate';
+
 function App() {
   const user = useSelector((state: RootState) => state.auth.user);
   return (
@@ -79,13 +80,14 @@ function App() {
           <Route path="/signup-complete" element={!user ? <SignupComplete /> : <Navigate to="/" replace />} />
           <Route path="/MBTIGraph" element={<MBTIGraph />} />
           {/* 미니게임 메뉴 (헤더 없음) */}
-          <Route path="/miniGame">
+          <Route path="/miniGame" element={<ProtectedRoute />}>
             <Route index element={<GameMenu />} />
             <Route path="OnlineGame" element={<OnlineGame />} />
             <Route path="SpeedQuiz" element={<SpeedQuiz />} />
             <Route path="ReactionTest" element={<ReactionTest />} />
             <Route path="GameRank" element={<GameRank />} />
             <Route path="AdminQuizSubmit" element={<AdminQuizSubmit />} />
+            <Route path="AdminQuizUpdate" element={<AdminQuizUpdate />} />
             <Route path="CatchMind/:roomId" element={<CatchMind />} />
           </Route>
           {/* --- 헤더가 있는 모든 페이지들 --- */}

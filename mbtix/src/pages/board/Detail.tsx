@@ -309,7 +309,7 @@ export default function Detail() {
               <div key={idx} className={styles.commentItem}>
                 <div className={styles.commentMain}>
                   <div>
-                    <strong>{cmt.nickname}</strong>: {cmt.content}
+                    <strong className={styles.commentNickname}  onClick={() => navigate (`/user/${cmt.userId}`)}>{cmt.nickname}</strong>: {cmt.content}
                     {/* 대댓글 개수 표시 */}
                     {replyCount > 0 && (
                       <span className={styles.replyCount}> ({replyCount}개의 대댓글)</span>

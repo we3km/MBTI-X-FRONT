@@ -18,14 +18,14 @@ export default function MbtiResult() {
   const [result, setResult] = useState<MbtiDetailRes | null>(null);
 
   useEffect(() => {
-  if (!user?.userId || !answers) return;
-  submitMbtiAnswersDetail(user.userId, answers)
-    .then((res) => {
-      console.log("👉 MBTI 상세 결과 API 응답:", res); // ✅ 응답 확인
-      setResult(res);
-    })
-    .catch((err) => console.error("MBTI 결과 불러오기 실패:", err));
-}, [user?.userId, answers]);
+    if (!user?.userId || !answers) return;
+    submitMbtiAnswersDetail(user.userId, answers)
+      .then((res) => {
+        console.log("👉 MBTI 상세 결과 API 응답:", res); // ✅ 응답 확인
+        setResult(res);
+      })
+      .catch((err) => console.error("MBTI 결과 불러오기 실패:", err));
+  }, [user?.userId, answers]);
 
   if (!info || !mbti) {
     return (
@@ -53,37 +53,37 @@ export default function MbtiResult() {
 
         {/* ✅ 퍼센트 바 차트 */}
         {result ? (
-  <div className={styles.chartBox}>
-    {[
-      { left: "E", right: "I", leftPct: result.ratios.EI.E, rightPct: result.ratios.EI.I },
-      { left: "S", right: "N", leftPct: result.ratios.SN.S, rightPct: result.ratios.SN.N },
-      { left: "T", right: "F", leftPct: result.ratios.TF.T, rightPct: result.ratios.TF.F },
-      { left: "P", right: "J", leftPct: result.ratios.JP.P, rightPct: result.ratios.JP.J }, // PJ 순서
-    ].map((d) => (
-      <div key={`${d.left}${d.right}`} className={styles.barRow}>
-        <div className={styles.barLabels}>
-          <span>{d.left}</span>
-          <span>{d.right}</span>
-        </div>
-        <div className={styles.bar}>
-  {d.leftPct > 0 && (
-    <div className={styles.barLeft} style={{ width: `${d.leftPct}%` }}>
-      {d.left} {d.leftPct}%
-    </div>
-  )}
-  {d.rightPct > 0 && (
-    <div className={styles.barRight} style={{ width: `${d.rightPct}%` }}>
-      {d.right} {d.rightPct}%
-    </div>
-  )}
-</div>
+          <div className={styles.chartBox}>
+            {[
+              { left: "E", right: "I", leftPct: result.ratios.EI.E, rightPct: result.ratios.EI.I },
+              { left: "S", right: "N", leftPct: result.ratios.SN.S, rightPct: result.ratios.SN.N },
+              { left: "T", right: "F", leftPct: result.ratios.TF.T, rightPct: result.ratios.TF.F },
+              { left: "P", right: "J", leftPct: result.ratios.JP.P, rightPct: result.ratios.JP.J }, // PJ 순서
+            ].map((d) => (
+              <div key={`${d.left}${d.right}`} className={styles.barRow}>
+                <div className={styles.barLabels}>
+                  <span>{d.left}</span>
+                  <span>{d.right}</span>
+                </div>
+                <div className={styles.bar}>
+                  {d.leftPct > 0 && (
+                    <div className={styles.barLeft} style={{ width: `${d.leftPct}%` }}>
+                      {d.left} {d.leftPct}%
+                    </div>
+                  )}
+                  {d.rightPct > 0 && (
+                    <div className={styles.barRight} style={{ width: `${d.rightPct}%` }}>
+                      {d.right} {d.rightPct}%
+                    </div>
+                  )}
+                </div>
 
-      </div>
-    ))}
-  </div>
-) : (
-  <p style={{ fontSize: "1rem", marginBottom: "2rem", color: "#999" }}>불러오는 중...</p>
-)}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ fontSize: "1rem", marginBottom: "2rem", color: "#999" }}>불러오는 중...</p>
+        )}
 
         <div className={styles.strengthWeakness}>
           <div className={styles.section}>

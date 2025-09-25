@@ -6,12 +6,15 @@
     height: 80px;
     background-color: #5D9CEC;
     color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1000;
 }
 
-.header-left, .header-right, .header-nav, .user-profile-button {
+.header-left,
+.header-right,
+.header-nav,
+.user-profile-button {
     display: flex;
     align-items: center;
     height: 100%;
@@ -24,6 +27,13 @@
     text-decoration: none;
     margin-right: 40px;
     line-height: 1;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.header-logo:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .header-nav {
@@ -31,7 +41,7 @@
     height: 100%;
 }
 
-.header-nav > * {
+.header-nav>* {
     height: 100%;
     display: flex;
     align-items: center;
@@ -105,7 +115,7 @@
     left: 50%;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 10px 0;
     min-width: 150px;
     z-index: 1001;
@@ -124,13 +134,15 @@
     transform: translateX(-50%) translateY(0);
 }
 
-.user-menu, .notification-menu {
+.user-menu,
+.notification-menu {
     left: auto;
     right: 0;
     transform: translateY(-10px);
 }
 
-.user-menu.active, .notification-menu.active {
+.user-menu.active,
+.notification-menu.active {
     transform: translateY(0);
 }
 
@@ -151,7 +163,8 @@
     white-space: nowrap;
 }
 
-.dropdown-menu a, .dropdown-menu .notification-item {
+.dropdown-menu a,
+.dropdown-menu .notification-item {
     color: #333;
     padding: 10px 20px;
     text-decoration: none;
@@ -161,7 +174,8 @@
     display: block;
 }
 
-.dropdown-menu a:hover, .notification-item:hover {
+.dropdown-menu a:hover,
+.notification-item:hover {
     background-color: #f5f5f5;
 }
 
@@ -249,6 +263,19 @@
 .nav-link-style:hover {
     opacity: 0.8;
 }
+
+:is(.header-nav button, .user-profile-button, .notification-button):focus {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.5);
+}
+
+.notification-header button:focus {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7);
+}
+
 .profileImage {
     width: 50px;
     height: 50px;

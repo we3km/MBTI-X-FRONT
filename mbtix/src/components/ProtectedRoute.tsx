@@ -1,32 +1,40 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import { Navigate } from "react-router-dom";
-
+import { Navigate, Outlet } from "react-router-dom";
+import toast from "react-hot-toast";
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
   requiredRoles?: string[];
   redirectTo?: string;
 }
 export default function ProtectedRoute({
   children,
   requiredRoles = [],
-  redirectTo = "/",
+  redirectTo = "/"
 }: Props) {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
-  // 로그인하지 않은 경우
+  const hasShownToast = useRef(false);
+
   if (!isAuthenticated) {
+    if (!hasShownToast.current) {
+      toast.error("로그인 후 이용 가능합니다.");
+      hasShownToast.current = true;
+    }
     return <Navigate to={redirectTo} replace />;
   }
-  // roles 배열 안전하게 처리
+
   const roles: string[] = Array.isArray(user?.roles)
     ? user.roles
     : user?.roles
-      ? [user.roles]   // 단일 string이면 배열로 감싸기
-      : [];            // undefined면 빈 배열
-  // 권한 검사
+      ? [user.roles]
+      : [];
+
   if (requiredRoles.length > 0 && !roles.some((role: string) => requiredRoles.includes(role))) {
+    toast.error("접근 권한이 없습니다.");
     return <Navigate to="/" replace />;
   }
-  return <>{children}</>;
+
+  // 여기서 children 없으면 Outlet 렌더링
+  return <>{children ?? <Outlet />}</>;
 }

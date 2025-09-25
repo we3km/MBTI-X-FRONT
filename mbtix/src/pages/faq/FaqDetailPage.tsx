@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchPublicFaqById, type Faq } from '../../api/faqApi';
+import { fetchFaqDetail, type Faq } from '../../api/faqApi';
 import './Faq.css';
 import './FaqDetailPage.css';
 
@@ -13,11 +13,11 @@ const FaqDetailPage = () => {
         if (faqId) {
             const getFaq = async () => {
                 try {
-                    const data = await fetchPublicFaqById(Number(faqId));
+                    const data = await fetchFaqDetail(Number(faqId));
                     setFaq(data);
                 } catch (error) {
                     console.error("FAQ 상세 정보를 불러오는 중 에러 발생:", error);
-                    navigate('/faqs'); // 에러 발생 시 목록으로
+                    navigate('/faqs');
                 }
             };
             getFaq();

@@ -79,8 +79,8 @@ const AdminInquiryListPage = () => {
         <div className="inquiry-filters">
             <div className="filter-group">    
                 <button onClick={() => handleFilterChange('all')} className={filter === 'all' ? 'active' : ''}>전체</button>
-                <button onClick={() => handleFilterChange('N')} className={filter === 'N' ? 'active' : ''}>미처리</button>
-                <button onClick={() => handleFilterChange('Y')} className={filter === 'Y' ? 'active' : ''}>처리 완료</button>
+                <button onClick={() => handleFilterChange('N')} className={filter === 'N' ? 'active' : ''}>대기중</button>
+                <button onClick={() => handleFilterChange('Y')} className={filter === 'Y' ? 'active' : ''}>답변 완료</button>
             </div>
             <button className="delete-btn" onClick={handleDelete}>삭제</button>
         </div>

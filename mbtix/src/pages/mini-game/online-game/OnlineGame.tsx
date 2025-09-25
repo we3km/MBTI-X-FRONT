@@ -40,7 +40,6 @@ export default function OnlineGame() {
         staleTime: 1000 * 60 * 5,
         retry: 1,
     });
-    console.log("게임방 리스트 각 속성", gameRooms);
 
     // 새로 생긴 방 찾기
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./CatchMind.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { store } from "../../../store/store";
@@ -6,11 +6,14 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import type { IMessage } from "@stomp/stompjs";
 import api from "../../../api/mainPageApi";
+import exitImg from "../../../assets/mini-game/reaction/퀴즈 나가기.png";
 
 // tldraw 관련 타입과 컴포넌트를 import 합니다.
 import { Tldraw, Editor, getSnapshot, loadSnapshot } from '@tldraw/tldraw'
 import '@tldraw/tldraw/tldraw.css'
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { debounce } from 'lodash';
+import toast from 'react-hot-toast';
 
 // --- 백엔드의 Gamer DTO와 일치하는 타입 정의 ---
 type Gamer = {
@@ -31,7 +34,12 @@ type GameStateMessage = {
     answerLength?: number;
     gamers?: Gamer[];
     captain?: Gamer;
-    words?: string[]; // 출제자에게만 보이는 단어 목록
+    words?: string[];
+
+    // 방 속성
+    roomName?: string;
+    maxCount?: number;
+    kickedOutId?: number;
 };
 
 type GameRoomInfo = {
@@ -39,9 +47,12 @@ type GameRoomInfo = {
     creatorId: number;
     roomName: string;
     playerCount: number;
+    maxCount: number;
 };
 
 export default function CatchMind() {
+    const chatBoxRef = useRef<HTMLDivElement>(null);
+
     const getUserId = () => store.getState().auth.user?.userId;
     const userId = getUserId();
     const { roomId: roomIdStr } = useParams<{ roomId: string }>();
@@ -63,6 +74,8 @@ export default function CatchMind() {
     const amIDrawer = drawer?.userId === userId;
     const maxRounds = gamers ? gamers.length * 2 : 0;
 
+    const [isRoomModalOpen, setIsRoomModalOpen] = useState(false);
+
     const amIDrawerRef = useRef(amIDrawer);
     useEffect(() => { amIDrawerRef.current = amIDrawer; }, [amIDrawer]);
 
@@ -71,11 +84,31 @@ export default function CatchMind() {
     const editorRef = useRef(editor);
     useEffect(() => { editorRef.current = editor; }, [editor]);
 
-    // 최신 상태를 저장할 ref 생성
+    const [hoveredGamer, setHoveredGamer] = useState<null | Gamer>(null);
+    const [popupPos, setPopupPos] = useState({ x: 0, y: 0 });
+
+    const [isClosing, setIsClosing] = useState(false);
+
+    useEffect(() => {
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+    }, [chatMessages]);
+
     const stateRef = useRef({ amIDrawer, editor });
     useEffect(() => {
         stateRef.current = { amIDrawer, editor };
     }, [amIDrawer, editor]);
+
+    const debouncedLoadSnapshot = useCallback(debounce((editor: Editor, snapshot: any) => {
+        try {
+            if (snapshot) {
+                loadSnapshot(editor.store, snapshot);
+            }
+        } catch (e) {
+            console.error("Debounced snapshot load error:", e);
+        }
+    }, 50), []);
 
     // GamerList불러오기
     const { data: gamersList } = useQuery<Gamer[]>({
@@ -85,45 +118,64 @@ export default function CatchMind() {
             console.log("플레이어들 :", res.data);
             return res.data;
         },
-        staleTime: 1000 * 60 * 5,
         retry: 1,
         enabled: !!roomId,
     });
 
-    useEffect(() => {
-        if (gamersList) {
-            setGameState(prevState => ({
-                ...prevState,
-                gamers: gamersList
-            }));
-        }
-    }, [gamersList]);
-
     // 현재 방 정보 불러오기
     const { data: gameRoomInfo } = useQuery<GameRoomInfo>({
-        queryKey: ["gameRoomInfo", roomId],
+        queryKey: ["gameRoomInfo", roomId, gameState.gamers],
         queryFn: async () => {
             const res = await api.get("/selectGameRoomInfo", { params: { roomId } });
             console.log("방 정보 :", res.data);
             return res.data;
         },
-        staleTime: 1000 * 60 * 5,
         retry: 1,
         enabled: !!roomId,
     });
+
+    const [newRoomName, setNewRoomName] = useState(gameRoomInfo?.roomName || "");
+    const [newMaxCount, setNewMaxCount] = useState(gameRoomInfo?.maxCount || 5);
+
+    // 사용자 강퇴시키기
+    const kickOut = async (userIdOut: number) => {
+        try {
+            // isKickedOut = 1이면 강퇴, 0이면 자진 퇴소!!
+            await api.post("/leaveRoom", { roomId, userId: userIdOut, isKickedOut: 1 });
+            toast.success("강퇴 처리 완료");
+            queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
+        } catch (err) {
+            toast.error("강퇴 처리에 실패했습니다.");
+        }
+    };
+
+    useEffect(() => {
+        if (gamersList && gameRoomInfo && !gameState.gamers) {
+            const captain = gamersList.find(g => g.userId === gameRoomInfo.creatorId);
+
+            setGameState(prevState => ({
+                ...prevState,
+                gamers: gamersList,
+                captain: captain
+            }));
+        }
+    }, [gamersList, gameRoomInfo, gameState.gamers]);
 
     const connectStomp = useCallback(() => {
         if (stompClient.current?.active) {
             console.log("Client is already active.");
             return;
         }
-        const socket = new SockJS("http://localhost:8085/api/ws");
+        // const socket = new SockJS("http://localhost:8085/api/ws", null, {
+        const socket = new SockJS("http://192.168.10.230:8085/api/ws", null, {
+            transports: ["websocket", "xhr-streaming", "xhr-polling"]
+        });
         const client = new Client({
             webSocketFactory: () => socket,
             maxWebSocketChunkSize: 1024 * 1024,
-            heartbeatIncoming: 10000, // 10초
-            heartbeatOutgoing: 10000, // 10초
-            reconnectDelay: 5000,     // 5초 후 자동 재연결
+            heartbeatIncoming: 10000,
+            heartbeatOutgoing: 10000,
+            reconnectDelay: 5000,
 
             onConnect: () => {
                 console.log("✅ STOMP connected");
@@ -132,9 +184,24 @@ export default function CatchMind() {
 
                 // 게임 상태용 구독
                 client.subscribe(`/sub/game/${roomId}/state`, (message: IMessage) => {
+                    console.log(message)
+                    const currentUserId = getUserId();
                     const receivedState: GameStateMessage = JSON.parse(message.body);
-                    setGameState(prevState => ({ ...prevState, ...receivedState }));
-                    queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
+                    setGameState(prevState => ({
+                        ...prevState,
+                        ...receivedState
+                    }));
+                    if (receivedState.kickedOutId) {
+                        console.log("강퇴 당하는 사람 ID :", receivedState.kickedOutId);
+                        if (receivedState.kickedOutId === currentUserId) {
+                            toast.error("방에서 강퇴당했습니다.", { duration: 3000 });
+                            stompClient.current?.deactivate();
+                            navigate("/miniGame/OnlineGame");
+                        } else {
+                            toast("플레이어가 강퇴되었습니다.");
+                            queryClient.invalidateQueries({ queryKey: ["gamersList", roomId] });
+                        }
+                    }
                 });
                 // 타이머용 구독
                 client.subscribe(`/sub/game/${roomId}/timer`, (message: IMessage) => {
@@ -151,21 +218,23 @@ export default function CatchMind() {
                 // 그림판용 구독
                 client.subscribe(`/sub/draw/${roomId}`, (message: IMessage) => {
                     const { editor, amIDrawer } = stateRef.current;
-                    const snapshot = JSON.parse(message.body).data;
-                    if (editor && !amIDrawer && snapshot) {
-                        try {
-                            loadSnapshot(editor.store, snapshot);
-                        } catch (e) { console.error("Snapshot load error:", e); }
+                    if (editor && !amIDrawer) {
+                        const snapshot = JSON.parse(message.body);
+                        debouncedLoadSnapshot(editor, snapshot);
                     }
                 });
             },
-            onDisconnect: () => setIsConnected(false),
+            onDisconnect: () => {
+                console.log("STOMP disconnected.");
+                setIsConnected(false);
+            },
         });
 
         client.activate();
         stompClient.current = client;
 
         return () => {
+            console.log("Deactivating STOMP client.");
             stompClient.current?.deactivate();
         };
     }, [roomId]);
@@ -184,31 +253,48 @@ export default function CatchMind() {
     // ================== 그림판 ==================
     // ✅ 4. tldraw 에디터가 준비되면 state에 저장하는 함수
     const handleMount = (editor: Editor) => { setEditor(editor); };
-
-    // ✅ 5. 그림이 변경될 때마다 서버에 전송하는 로직
+    // ✅ 5. 그림이 변경될 때마다 서버에 '분할' 전송하는 로직
     useEffect(() => {
-
         if (!editor || !amIDrawer) return;
+
         let lastSnapshot: ReturnType<typeof getSnapshot> | null = null;
         const unsubscribe = editor.store.listen(() => { lastSnapshot = getSnapshot(editor.store); },
             { source: 'user', scope: 'document' });
 
         const interval = setInterval(() => {
             if (lastSnapshot && stompClient.current?.connected) {
-                stompClient.current.publish({
-                    destination: `/pub/draw/${roomId}`,
-                    body: JSON.stringify({ data: lastSnapshot })
-                });
+                const snapshotString = JSON.stringify(lastSnapshot);
+
+                // ✅ [수정] 추가 메타데이터(id, index 등)를 위한 여유 공간(약 200바이트) 확보
+                const overhead = 200;
+                const chunkSize = (10 * 1024) - overhead; // 실제 청크 크기를 10KB보다 작게 설정
+
+                const totalChunks = Math.ceil(snapshotString.length / chunkSize);
+                const chunkId = Date.now().toString();
+
+                for (let i = 0; i < totalChunks; i++) {
+                    const chunk = snapshotString.substring(i * chunkSize, (i + 1) * chunkSize);
+
+                    stompClient.current.publish({
+                        destination: `/pub/draw/${roomId}`,
+                        body: JSON.stringify({
+                            id: chunkId,
+                            index: i,
+                            total: totalChunks,
+                            chunk: chunk,
+                            userId: userId
+                        })
+                    });
+                }
                 lastSnapshot = null;
             }
-        }, 50);
+        }, 100);
 
         return () => {
-            console.log("리렌더링");
             unsubscribe();
             clearInterval(interval);
         };
-    }, [editor, amIDrawer, roomId]);
+    }, [editor, amIDrawer, roomId, userId]);
 
     // ✅ 6. 라운드가 바뀌면 캔버스 초기화
     useEffect(() => {
@@ -228,14 +314,14 @@ export default function CatchMind() {
     // 게임 시작 요청
     const handleStartGame = () => {
         if (gamersList !== undefined && gamersList?.length < 2) {
-            alert("게임시작을위해선 최소 두명 이상의 플레이어가 있어야 합니다.")
-            queryClient.invalidateQueries({ queryKey: ['gamersList'] });
+            toast.error("게임시작을위해선 최소 두명 이상의 플레이어가 있어야 합니다.")
+            queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
             return;
         }
         if (stompClient.current && stompClient.current.connected) {
             stompClient.current.publish({ destination: `/pub/game/${roomId}/start` });
         } else {
-            alert("서버와 연결이 끊겼습니다. 잠시 후 다시 시도해주세요.");
+            toast.error("서버와 연결이 끊겼습니다. 잠시 후 다시 시도하거나 재입장해주세요.");
             console.error("STOMP connection is not active while trying to start game.");
         }
     };
@@ -257,59 +343,220 @@ export default function CatchMind() {
         });
     };
 
-    // 방 나가기
-    const handleExitRoom = async () => {
-        const confirmExit = window.confirm("게임을 종료하시겠습니까?\n게임 종료시, 대기방 목록으로 이동합니다.");
-        if (confirmExit) {
-            await api.post("/leaveRoom", { roomId, userId });
-            queryClient.invalidateQueries({ queryKey: ['gamersList'] });
-            queryClient.invalidateQueries({ queryKey: ['gamingRoomList'] });
-            navigate("/miniGame/OnlineGame");
+    // 플레이어 목록을 상태에 따라 정렬하기 위해 useMemo 사용
+    const sortedGamers = useMemo(() => {
+        if (!gameState.gamers) return [];
+        if (gameState.status === "start") {
+            return gameState.gamers;
         }
+        return [...gameState.gamers].sort((a, b) => b.points - a.points);
+    }, [gameState.gamers, gameState.status]);
+
+    // 방 나가기
+    const handleExitRoom = () => {
+        toast.custom((t) => (
+            <div
+                style={{
+                    padding: '16px',
+                    backgroundColor: 'white',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '12px',
+                    minWidth: '300px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}
+            >
+                <div style={{ fontWeight: 'bold', marginBottom: '8px', textAlign: 'center' }}>
+                    게임을 종료하시겠습니까?
+                </div>
+                <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                    <button
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'red',
+                            color: 'white',
+                            padding: '8px 0',
+                            borderRadius: '4px',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={async () => {
+                            await api.post("/leaveRoom", { roomId, userId, isKickedOut: 0 });
+                            queryClient.invalidateQueries({ queryKey: ['gamersList'] });
+                            queryClient.invalidateQueries({ queryKey: ['gamingRoomList'] });
+                            toast.dismiss(t.id);
+                            toast.success("방을 퇴장하였습니다.");
+                            navigate("/miniGame/OnlineGame");
+                        }}
+                    >
+                        종료
+                    </button>
+                    <button
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'gray',
+                            color: 'white',
+                            padding: '8px 0',
+                            borderRadius: '4px',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        ));
     };
 
     return (
         <div className={styles.container}>
-            {/* 상단 바 */}
             <div className={styles.topBar}>
-                {(status === "drawing") && <div className={styles.timer}>⏰ {timeLeft}s Round {round} of {maxRounds}</div>}
-                <div className={styles.question}>
-                    {status === "drawing" && amIDrawer && <span className={styles.word}>"{answer}"을(를) 묘사해주세요.</span>}
-                    {status === "drawing" && !amIDrawer && <span className={styles.word}>{answerLength ? "_ ".repeat(answerLength) : ""} ({answerLength}글자)</span>}
+                <div className={styles.roomTitle}>
+                    <button
+                        className={styles.clickableTitle}
+                        disabled={gameRoomInfo?.creatorId !== userId}
+                        onClick={() => {
+                            if (status !== "start") {
+                                toast.error("게임 시작 후 방 설정은 변경할 수 없습니다!", {
+                                    duration: 3000,
+                                });
+                                return;
+                            }
+                            setIsRoomModalOpen(true);
+                        }}
+                    >
+                        <span className={styles.shakeText}>{gameRoomInfo?.roomName}</span>
+                    </button>
                 </div>
-                <button className={styles.closeBtn} onClick={handleExitRoom}>X</button>
+                <div className={styles.question}>
+                    {status === "drawing" && amIDrawer && <span>"{answer}"을(를) 묘사해주세요.</span>}
+                    {status === "drawing" && !amIDrawer && <span>{answerLength ? "_ ".repeat(answerLength) : ""} ({answerLength}글자)</span>}
+                </div>
+                <div
+                    className={`${styles.timer} ${(timeLeft <= 10 && status === "drawing") ? styles.bounce : ''}`}
+                >
+                    {(status === "drawing" || status === "waiting") &&
+                        `⏱️ ${timeLeft}s Round ${round} of ${maxRounds}`}
+                </div>
+                <button className={styles.closeBtn} onClick={handleExitRoom}>
+                    <img src={exitImg} className={styles.exitImg} />
+                </button>
             </div>
 
+            {/* 플레이어 리스트 */}
             <div className={styles.main}>
-                {/* 좌측 영역 */}
                 <div className={styles.leftPanel}>
-                    <div className={styles.roomTitle}>{gameRoomInfo?.roomName}</div>
-                    {status === "start" && ( // 방장만 시작할 수 있도록 로직 변경
-                        <button className={styles.startBtn} onClick={handleStartGame} disabled={!isConnected}>
-                            {isConnected ? "START" : "연결 중..."}
-                        </button>
-                    )}
-                    {gamers && gamers.map((gamer, index) => (
-                        <div key={gamer.userId} className={styles.ranking}>
-                            <div className={styles.rankItem}>
-                                <div>
-                                    {status !== "start" && (<div>#{index + 1}</div>)}
-                                    <img src={`/profile/default/${gamer.profile}`} alt={`${gamer.nickname} profile`} className={styles.profile} />
-                                    <div>{gamer.nickname} {gamer.mbtiName}</div>
-                                    <div className={styles.points}>{gamer.points} points {gamer.userId == gameRoomInfo?.creatorId && "  방장"}</div>
-                                </div>
+                    {sortedGamers.map((gamer, index) => (
+                        <div key={gamer.userId} className={styles.rankItem}>
+                            {status !== "start" && (<div>#{index + 1}</div>)}
+                            <div className={styles.profileContainer}>
+                                <img
+                                    src={`/profile/default/${gamer.profile}`}
+                                    alt={gamer.nickname}
+                                    className={styles.profile}
+                                    onClick={(e) => {
+                                        setHoveredGamer(gamer);
+                                        const rect = e.currentTarget.getBoundingClientRect();
+                                        setPopupPos({ x: rect.right + 10, y: rect.top }); // 오른쪽으로 살짝 띄우기
+                                    }}
+                                />
+                                {gamer.userId === gameRoomInfo?.creatorId && <div className={styles.crownIcon}></div>}
+                            </div>
+                            <div className={styles.gamerInfo}>
+                                <span className={styles.nickname}>
+                                    <div>
+                                        {gamer.userId === userId
+                                            ? <span className={styles.you}>{gamer.nickname} (you)</span>
+                                            : <span>{gamer.nickname}</span>
+                                        }
+                                        {" "}{gamer.mbtiName}
+                                    </div>
+                                </span>
+                                <span className={styles.points}>{gamer.points} points</span>
                             </div>
                         </div>
                     ))}
+
+                    {hoveredGamer && (
+                        <div
+                            className={styles.gamerPopup}
+                            style={{
+                                position: "absolute",
+                                top: popupPos.y,
+                                left: popupPos.x,
+                                zIndex: 999,
+                            }}
+                        >
+                            <img
+                                src={`/profile/default/${hoveredGamer.profile}`}
+                                alt={hoveredGamer.nickname}
+                                className={styles.popupProfile}
+                            />
+                            {/* 방장만 강퇴시킬 수 있음 */}
+                            {hoveredGamer.userId === gameRoomInfo?.creatorId && <div style={{ color: "red" }}>방장<br /></div>}
+                            <div><b>{hoveredGamer.nickname}</b></div>
+                            <div>MBTI: {hoveredGamer.mbtiName}</div>
+                            <div>Points: {hoveredGamer.points}</div>
+                            {(userId === gameRoomInfo?.creatorId && hoveredGamer.userId !== userId) && (
+                                <button
+                                    onClick={() => {
+                                        toast(
+                                            t => (
+                                                <div>
+                                                    <p>{hoveredGamer.nickname}님을 정말 강퇴하시겠습니까?</p>
+                                                    <div style={{ marginTop: "5px" }}>
+                                                        <button
+                                                            onClick={() => {
+                                                                kickOut(hoveredGamer.userId);
+                                                                setHoveredGamer(null);
+                                                                toast.dismiss(t.id); // toast 닫기
+                                                            }}
+                                                        >
+                                                            확인
+                                                        </button>
+                                                        <button
+                                                            onClick={() => toast.dismiss(t.id)}
+                                                            style={{ marginLeft: "5px" }}
+                                                        >
+                                                            취소
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ),
+                                            { duration: Infinity } // 유저가 버튼 누를 때까지 유지
+                                        );
+                                    }}
+                                >
+                                    강퇴
+                                </button>)}
+                            <button onClick={() => setHoveredGamer(null)}>닫기</button>
+                        </div>
+                    )}
                 </div>
 
                 {/* 중앙 그림 영역 */}
-                <div className={styles.centerPanel}>
+                < div className={styles.centerPanel} >
+                    {status === "start" && (
+                        <div className={styles.overlayContainer}>
+                            {userId === gameRoomInfo?.creatorId ? (
+                                <button className={styles.startBtn} onClick={handleStartGame} disabled={!isConnected || (gamers?.length ?? 0) < 2}>
+                                    {(gamers?.length ?? 0) < 2 ? "두 명 이상 필요!!" : (isConnected ? "게임 시작" : "연결 중...")}
+                                </button>
+                            ) : (
+                                <h2 className={styles.waitingCaptain}> 방장이 게임을 시작하기를 기다리는 중...</h2>
+                            )}
+                        </div>
+                    )}
                     {status === "waiting" && (
-                        <>
+                        <div className={styles.overlayContainer}>
                             {amIDrawer ? (
-                                <div>
-                                    <h2>제한시간이 지나면 무작위로 단어 선택 됩니다. (남은 시간: {timeLeft}초)</h2>
+                                <div className={styles.wordPickContainer}>
+                                    <h2 className={styles.wordSelection}>단어를 선택하세요! ({timeLeft}초)</h2>
                                     {words?.map(word => (
                                         <button key={word} className={styles.userPick} onClick={() => handleSelectWord(word)}>
                                             {word}
@@ -317,61 +564,93 @@ export default function CatchMind() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className={styles.wordPickWaiting}>{drawer?.nickname}님이 단어를 선택 중입니다...
-                                    <img src={`/profile/default/${drawer?.profile}`} alt={`${drawer?.nickname} profile`} className={styles.profile} />
-                                </div>
+                                <h2 className={styles.wordSelection}>{drawer?.nickname}님이 단어를 선택 중입니다...</h2>
                             )}
-                        </>
+                        </div>
                     )}
-
-                    {/* 그림 그리는 영역 */}
                     {status === "drawing" && (
                         <div className={styles.drawingArea}>
-                            {status === "drawing" && (
-                                <Tldraw onMount={handleMount}
-                                    hideUi={!amIDrawer}
-                                />
-                            )}
+                            <Tldraw onMount={handleMount} hideUi={!amIDrawer} />
                         </div>
                     )}
-
+                    {/* 라운드 결과 화면 */}
                     {status === "result" && (
-                        <div className={styles.resultContainer}>
-                            <div className={styles.roundTitle}>Round {round} <span>정답 : {answer} <br /> {timeLeft}초 후에 라운드 시작!</span></div>
-                            {gamers?.map((gamer) => (
-                                <div key={gamer.userId} className={styles.resultPerRound}>
-                                    {gamer.nickname} {gamer.points} POINTS
-                                </div>
-                            ))}
+                        <div className={`${styles.overlayContainer} ${styles.result}`}>
+                            <h2 className={styles.resultTitle}>Round {round} 결과</h2>
+                            <p className={styles.resultAnswer}>정답: {answer}</p>
+                            {gamers
+                                ?.sort((a, b) => b.points - a.points)
+                                .map((gamer) => (
+                                    <div key={gamer.userId} className={styles.resultPlayer}>
+                                        {gamer.nickname}: {gamer.points} POINTS
+                                    </div>
+                                ))}
+                            {round !== maxRounds ? (<div>{timeLeft}초 후에 다음 라운드를 시작합니다.</div>) :
+                                (<div>{timeLeft}초 후에 최종 결과화면으로 이동합니다.</div>)}
                         </div>
                     )}
 
+                    {/* 최종 결과 화면 */}
                     {status === "final" && (
-                        <div className={styles.finalResultContainer}>
-                            <div className={styles.roundTitle}>최종 결과</div>
-                            {/* points 높은 순으로 정렬 */}
-                            {gamers?.sort((a, b) => b.points - a.points).map((gamer) => (
-                                <div key={gamer.userId} className={styles.resultPerRound}>
-                                    {gamer.nickname} {gamer.points} POINTS
-                                </div>
-                            ))}
-                            <div>{timeLeft}초 후에 초기화면으로 이동합니다.</div>
+                        <div className={`${styles.overlayContainer} ${styles.final}`}>
+                            <h2 className={styles.resultTitle}>🏆 우승자는 {<b className={styles.winnerName}>{sortedGamers[0].nickname}</b>} 입니다! 🏆</h2>
+                            <div className={styles.podium}>
+                                {/* 2위 */}
+                                {sortedGamers[1] && (
+                                    <div className={`${styles.podiumSlot} ${styles.second}`}>
+                                        <img src={`/profile/default/${sortedGamers[1].profile}`} className={styles.avatar} />
+                                        <span>{sortedGamers[1].nickname}</span>
+                                        <p>{sortedGamers[1].points} pts</p>
+                                    </div>
+                                )}
+
+                                {/* 1위 */}
+                                {sortedGamers[0] && (
+                                    <div className={`${styles.podiumSlot} ${styles.first}`}>
+                                        <img src={`/profile/default/${sortedGamers[0].profile}`} className={styles.avatar} />
+                                        <span>{sortedGamers[0].nickname}</span>
+                                        <p>{sortedGamers[0].points} pts</p>
+                                    </div>
+                                )}
+
+                                {/* 3위 */}
+                                {sortedGamers[2] && (
+                                    <div className={`${styles.podiumSlot} ${styles.third}`}>
+                                        <img src={`/profile/default/${sortedGamers[2].profile}`} className={styles.avatar} />
+                                        <span>{sortedGamers[2].nickname}</span>
+                                        <p>{sortedGamers[2].points} pts</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 4위 이하 */}
+                            <div className={styles.others}>
+                                {sortedGamers.slice(3).map((gamer, idx) => (
+                                    <div key={gamer.userId} className={styles.otherPlayer}>
+                                        #{idx + 4} {gamer.nickname} - {gamer.points} pts
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className={styles.countdown}>
+                                {timeLeft}초 후 게임이 종료됩니다.
+                            </div>
                         </div>
                     )}
+
                 </div>
 
                 {/* 우측 채팅창 */}
                 <div className={styles.rightPanel}>
-                    <div className={styles.chatBox}>
+                    <div className={styles.chatBox} ref={chatBoxRef}>
                         {chatMessages.map((msg, idx) => (
-                            <div key={idx} className={styles.chatMessage}>
-                                {msg.user} : {msg.message}
+                            <div key={idx} className={msg.user ? styles.chatMessage : styles.systemMessage}>
+                                {msg.user ? `${msg.user}: ${msg.message}` : msg.message}
                             </div>
                         ))}
                     </div>
                     <input
                         className={styles.chatInput}
-                        placeholder="정답을 입력하세요."
                         onKeyDown={(e) => {
                             if (e.key === "Enter" && userAnswerRef.current.trim() !== "") {
                                 handleSendMessage(userAnswerRef.current);
@@ -379,10 +658,81 @@ export default function CatchMind() {
                                 userAnswerRef.current = "";
                             }
                         }}
-                        onChange={(e) => userAnswerRef.current = e.target.value}
+                        placeholder="정답을 입력해주세요"
+                        onChange={(e) => (userAnswerRef.current = e.target.value)}
                     />
                 </div>
             </div>
-        </div>
+            {/* 방속성 변경 */}
+            {isRoomModalOpen && (
+                <div className={styles.overlay}>
+                    <div className={`${styles.modal} ${isClosing ? styles.modalClosing : ""}`}>
+                        <button
+                            className={styles.closeBtn}
+                            onClick={() => {
+                                setIsClosing(true);
+                                setTimeout(() => {
+                                    setIsClosing(false);
+                                    setIsRoomModalOpen(false);
+                                }, 500);
+                            }}
+                        >
+                            ✖
+                        </button>
+
+                        <h2>방 속성 변경</h2>
+
+                        {/* 방 이름 변경 */}
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.label}>방 제목</label>
+                            <input
+                                type="text"
+                                className={styles.input}
+                                value={newRoomName}
+                                onChange={(e) => setNewRoomName(e.target.value)}
+                            />
+                        </div>
+
+                        {/* 인원 제한 */}
+                        <div className={styles.inputWrapper}>
+                            <label className={styles.label}>최대 인원</label>
+                            <input
+                                type="number"
+                                className={styles.input}
+                                min={2}
+                                max={5}
+                                value={newMaxCount}
+                                onChange={(e) => setNewMaxCount(Number(e.target.value))}
+                            />
+                        </div>
+
+                        <button
+                            className={styles.createBtn}
+                            onClick={() => {
+                                if (newMaxCount < gameRoomInfo!.playerCount) {
+                                    toast.error("최대인원 수는 접속중인 플레이어의 수보다 높게 설정해야합니다!");
+                                    return;
+                                }
+                                else {
+                                    api.post("/changeRoomInfo", {
+                                        roomId: gameRoomInfo?.roomId,
+                                        roomName: newRoomName,
+                                        maxCount: newMaxCount
+                                    }).then(() => {
+                                        queryClient.invalidateQueries({ queryKey: ["gameRoomInfo", roomId] });
+                                        setIsRoomModalOpen(false);
+                                        toast.success("방 속성 변경 완료!", { duration: 3000 });
+                                    }).catch((err) => {
+                                        toast.error("변경 실패: " + err.message, { duration: 3000 });
+                                    });
+                                }
+                            }}
+                        >
+                            저장하기
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div >
     );
 }

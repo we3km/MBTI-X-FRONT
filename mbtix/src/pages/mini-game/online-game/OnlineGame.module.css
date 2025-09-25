@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 .lobbyContainer {
-    height: 90vh;
+    height: 80vh;
     width: 1200px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    gap: 10px;
+    padding: 60px 0;
     background: linear-gradient(135deg, #667eea 0%, #6a8cff 100%);
     font-family: 'Jua', sans-serif;
     position: relative;
@@ -14,14 +16,14 @@
     opacity: 0;
     animation: fadeSlideUpContainer 0.8s ease-out forwards;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    /* padding-top: 100px; 타이틀 + 여유 공간 확보 */
+    align-items: center;
 }
 
 .lobbyBox {
-    width: 80%;
+    width: 70%;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 24px;
-    padding: 30px 40px;
+    padding: 20px 40px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -38,10 +40,6 @@
 }
 
 .title {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
     font-size: 70px;
     font-weight: 700;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -50,7 +48,6 @@
     align-items: center;
     color: white;
     animation: floatUpDown 3s ease-in-out infinite;
-    z-index: 50;
 }
 
 /* --- 버튼 --- */
@@ -303,9 +300,6 @@
     animation-delay: 0.7s;
 }
 
-
-
-/* ✨ 새 방 하이라이트 효과 */
 @keyframes glow {
     0% {
         box-shadow: 0 0 0px rgba(106, 140, 255, 0.5);
@@ -337,13 +331,11 @@
 }
 
 @keyframes floatUpDown {
-
     0%,
     100% {
-        transform: translateX(-50%) translateY(0);
+        transform: translateY(0);
     }
-
     50% {
-        transform: translateX(-50%) translateY(-20px);
+        transform: translateY(-20px);
     }
 }

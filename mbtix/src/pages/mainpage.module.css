@@ -19,15 +19,13 @@
     width: 400px;
     height: 100px;
     object-fit: contain;
-    /* 이미지 비율 깨지지 않게 */
+    animation: floatUpDown 2s ease-in-out infinite;
 }
 
 .headerLeft {
     display: flex;
     flex-direction: column;
-    /* 세로 배치 */
     gap: 10px;
-    /* 버튼 사이 간격 */
 }
 
 .userInfo {
@@ -67,6 +65,7 @@
 .authButtons {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .authButton {
@@ -95,19 +94,22 @@
 }
 
 .card {
-    background-color: #6A8CFF;
-    border-radius: 20px;
-    padding: 100px 30px;
-    text-align: center;
-    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.2);
-    color: white;
-    cursor: pointer;
-    transition: transform 0.2s, height 0.2s;
-    overflow: hidden;
+  background-color: #6A8CFF;
+  border-radius: 20px;
+  padding: 100px 30px;
+  text-align: center;
+  box-shadow: 10px 14px 20px rgba(0, 0, 0, 0.2);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 0.6s ease-out forwards;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+  box-shadow: 20px 28px 40px rgba(0, 0, 0, 0.4);
 }
 
 .card img {
@@ -159,12 +161,25 @@
     margin-top: 5px;
 }
 
+.profileWrapper {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    gap: 5px;              
+}
+
 .profileImage {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     border: 2px solid #ddd;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
+.profileImage:hover {
+    transform: scale(1.2);
+    border-color: #6a8dff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .nickname {
@@ -172,4 +187,28 @@
     font-weight: 500;
     color: hsl(0, 0%, 59%);
     margin-top: 15px;
+}
+
+@keyframes floatUpDown {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

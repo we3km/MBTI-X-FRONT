@@ -78,8 +78,8 @@
 
 /* 카드 */
 .card {
-  width: 300px;
-  height: 500px;
+  width: 250px;
+  height: 450px;
   background-color: #6a8cff;
   color: white;
   border-radius: 20px;
@@ -169,7 +169,7 @@
   width: 400px;
   height: 100px;
   position: relative;
-  /* 이동하려면 relative 필요 */
+  margin-bottom: 50px;
   animation: smoothUpDown 1s infinite alternate;
 }
 

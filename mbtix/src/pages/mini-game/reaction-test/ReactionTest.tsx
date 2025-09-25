@@ -295,7 +295,7 @@ export default function ReactionTest() {
                                 {i < stars && (
                                     <span
                                         className={Reaction.reactionStarFilled}
-                                        style={{ animationDelay: `${i * 0.3}s` }} // 왼쪽부터 순차적
+                                        style={{ animationDelay: `${i * 0.5}s` }} // 왼쪽부터 순차적
                                     >
                                         ★
                                     </span>

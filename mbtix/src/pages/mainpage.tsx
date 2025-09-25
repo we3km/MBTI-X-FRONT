@@ -12,7 +12,6 @@ import { clearAuth, setAuth } from "../features/authSlice";
 import { authApi } from "../api/authApi";
 import { store } from "../store/store"
 import toast from "react-hot-toast";
-import { useTodayGame } from "../hooks/useTodayGame";
 
 export default function Home() {
 
@@ -20,7 +19,6 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const today = useTodayGame();
 
   const userId = useSelector((state: RootState) => state.auth.userId);
   const user = useSelector((state: RootState) => state.auth.user);
@@ -33,7 +31,6 @@ export default function Home() {
     setIsLoggedIn(!!userId);
     console.log("회원번호", userId);
 
-
     dispatch(
       setAuth({
         accessToken,
@@ -43,10 +40,7 @@ export default function Home() {
         retestAllowed: false,
       })
     );
-
-    // 오늘의 밸런스 게임 제목 얻어오기 추후에 Mapper 변경해야됨
-   
-  }, [userId,dispatch]);
+  }, [userId, dispatch]);
 
   const handleLogout = async () => {
     const token = store.getState().auth.accessToken;
@@ -79,47 +73,51 @@ export default function Home() {
         )}
         {isLoggedIn && (
           <div className={styles.authButtons}>
-
-            <Link to={`/mypage`}>
-              <img
-
-                //                 src={`/profile/default/${user?.profileFileName || "default.jpg"}`}
-                //                 alt="프로필"
-                //                 className={styles.profileImage}
-                //               />
-                //               {/* <div className={styles.nickname}>"{user?.nickname}"님 환영합니다.</div>
-                //             src={`/profile/default/${mbtiMap[user?.mbtiId || 0] || "default"}.jpg`}
-                //             alt="프로필"
-                //             className={styles.profileImage}
-                //             /> */}
-
-                src={
-                  user?.profileType === "UPLOAD"
+            <div className={styles.profileWrapper}>
+              <Link to={`/mypage`}>
+                <img
+                  src={user?.profileType === "UPLOAD"
                     ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
                     : `/profile/default/${user?.profileFileName || "default.jpg"}`
-                }
-                alt="프로필"
-                className={styles.profileImage}
-              />
-            </Link>
+                  }
+                  alt="프로필"
+                  className={styles.profileImage}
+                />
+              </Link>
+            </div>
             <button className={styles.authButton} onClick={handleLogout}>로그아웃</button>
           </div>
         )}
+
       </div>
       <h1 className={styles.logo}><img src={mainIcon} /></h1>
       <div className={styles.cardWrapper}>
         <div className={styles.card}
           onClick={() => navigate("/chatbot")}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            opacity: 0,
+            transform: "translateY(20px)",
+            animation: "fadeSlideUp 0.6s ease-out forwards",
+            animationDelay: "0s",
+          }}
         >
           <div className={styles.cardTitle}>MBTI 챗봇</div>
-          <div className={styles.cardDesc}>다른 MBTI와 대화해보자!</div>
+          <div className={styles.cardDesc}>
+            {isLoggedIn ? "다른 MBTI와 대화해보자!" : "로그인 후 이용 가능"}
+          </div>
           <img src={chatIcon} alt="MBTI 챗봇" />
         </div>
         <div
           className={!isBoardOpen ? styles.card : styles.boardCard}
           onMouseEnter={() => setIsBoardOpen(true)}
           onMouseLeave={() => setIsBoardOpen(false)}
+          style={{
+            opacity: 0,
+            transform: "translateY(20px)",
+            animation: "fadeSlideUp 0.6s ease-out forwards",
+            animationDelay: "0.2s",
+          }}
         >
           {!isBoardOpen ? (
             <>
@@ -141,26 +139,40 @@ export default function Home() {
             </div>
           )}
         </div>
-        {isLoggedIn ? (
-          <Link to="/miniGame" className={styles.card}>
-            <div className={styles.cardTitle}>미니게임</div>
-            <div className={styles.cardDesc}>다른 MBTI와 경쟁해보세요!</div>
-            <img src={miniIcon} alt="미니게임" />
-          </Link>
-        ) : (
-          <div
-            className={styles.card}
-            onClick={() => toast.error("로그인 후 이용 가능합니다.")}
-          >
-            <div className={styles.cardTitle}>미니게임</div>
-            <div className={styles.cardDesc}>로그인 후 이용 가능</div>
-            <img src={miniIcon} alt="미니게임" />
+        <div
+          className={styles.card}
+          onClick={() =>
+            isLoggedIn
+              ? navigate("/miniGame")
+              : toast.error("로그인 후 이용 가능합니다.")
+          }
+          style={{
+            opacity: 0,
+            transform: "translateY(20px)",
+            animation: "fadeSlideUp 0.6s ease-out forwards",
+            animationDelay: "0.4s",
+            cursor: "pointer",
+          }}
+        >
+          <div className={styles.cardTitle}>미니게임</div>
+          <div className={styles.cardDesc}>
+            {isLoggedIn ? "다른 MBTI와 경쟁해보세요!" : "로그인 후 이용 가능"}
           </div>
-        )}
+          <img src={miniIcon} alt="미니게임" />
+        </div>
 
-        <div className={styles.card} onClick={() => navigate("/BalanceList")}>
+        <div
+          className={styles.card}
+          onClick={() => isLoggedIn ? navigate("/BalanceList") : toast.error("로그인 후 이용 가능합니다.")}
+          style={{
+            opacity: 0,
+            transform: "translateY(20px)",
+            animation: "fadeSlideUp 0.6s ease-out forwards",
+            animationDelay: "0.6s",
+          }}
+        >
           <div className={styles.cardTitle}>오늘의 밸런스 게임</div>
-          <div className={styles.cardDesc}>{today?.title || "게임 없음"}</div>
+          <div className={styles.cardDesc}>{"다른 사람들과 토론해보세요!"}</div>
           <img src={balanceIcon} alt="밸런스 게임" />
         </div>
 

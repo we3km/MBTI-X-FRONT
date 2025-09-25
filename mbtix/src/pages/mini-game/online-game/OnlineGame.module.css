@@ -11,6 +11,9 @@
     position: relative;
     border-radius: 5%;
     color: white;
+    opacity: 0;
+    animation: fadeSlideUpContainer 0.8s ease-out forwards;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 .lobbyBox {
@@ -304,6 +307,16 @@
     animation-delay: 0.5s;
 }
 
+.roomList .roomItemContainer:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.roomList .roomItemContainer:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+
+
 /* ✨ 새 방 하이라이트 효과 */
 @keyframes glow {
     0% {
@@ -321,4 +334,15 @@
 
 .newRoom {
     animation: glow 1s ease-in-out, fadeSlideUp 0.4s ease forwards;
+}
+
+@keyframes fadeSlideUpContainer {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

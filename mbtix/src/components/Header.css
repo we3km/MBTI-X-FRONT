@@ -163,29 +163,43 @@
     white-space: nowrap;
 }
 
+/* 드롭다운 메뉴의 모든 항목은 기본적으로 가운데 정렬 (원래대로 복구) */
 .dropdown-menu a,
 .dropdown-menu .notification-item {
     color: #333;
     padding: 10px 20px;
     text-decoration: none;
     font-size: 14px;
-    text-align: center;
+    text-align: center; /* 기본은 가운데 정렬 */
     white-space: nowrap;
     display: block;
 }
 
 .dropdown-menu a:hover,
 .notification-item:hover {
-    background-color: #f5f5f5;
+    background-color: #f0f0f0;
+}
+
+/* [수정] 댓글/대댓글 알림만 왼쪽 정렬하고 줄바꿈을 허용합니다. */
+.notification-item.notification-NEW_COMMENT,
+.notification-item.notification-NEW_REPLY {
+    text-align: left;
+    white-space: normal;
+}
+
+/* 나머지 notification-item 관련 스타일은 기존과 동일 */
+.notification-item {
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
 }
 
 .notification-item.unread {
     font-weight: bold;
     background-color: #e6f7ff;
-}
-
-.notification-item {
-    cursor: pointer;
 }
 
 .notification-header button {

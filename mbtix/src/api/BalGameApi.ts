@@ -22,10 +22,7 @@ const j = <T>(p: Promise<{ data: T; status: number }>) =>
 
 /** -------- API -------- */
 
-// 현재 로그인한 사용자 정보 (권한 포함)
-export async function getMe(): Promise<{ userId: string; roles: string[] }> {
-  return j(http.get<{ userId: string; roles: string[] }>("/balance/me"));
-}
+
 
 
 // 오늘의 게임 (페이징)

@@ -140,7 +140,8 @@ export default function Detail() {
         parentId: null,
       };
       const res = await api.post("/board/comments", newComment);
-      getComments();
+      getComments();          
+
       setCommentInput("");
     } catch (err) {
       console.error(err);
@@ -169,7 +170,8 @@ export default function Detail() {
         parentId,
       };
       const res = await api.post("/board/comments", newReply);
-      getComments();
+      getComments();    
+
       setReplyInput("");
       setReplyTarget(null);
     } catch (err) {
@@ -301,6 +303,7 @@ export default function Detail() {
           {comments
             .filter((c) => !c.parentId)
             .map((cmt, idx) => {
+              console.log(cmt , comments)
               const replyCount = comments.filter((r) => r.parentId === cmt.commentId).length;
               return (
               <div key={idx} className={styles.commentItem}>

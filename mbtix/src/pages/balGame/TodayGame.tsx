@@ -130,7 +130,7 @@ export default function TodayGame() {
                         <>
                           <div className={styles.donutBox}>
                             <h4>MBTI 분포</h4>
-                            <Donut data={o.label === "A" ? pieA : pieB} />
+                            <Donut data={o.label === "A" ? pieA : pieB} size={100} stroke={20} />
                             <div className={styles.legend}>
                               {(o.label === "A" ? pieA : pieB).map((d) => {
                                 const color = MBTI_COLORS[d.label] || "#ADB5BD";

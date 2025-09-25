@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./css/BalanceList.module.css";
-import { getToday, getPastDates, getPastByDate, getMe } from "../../api/BalGameApi";
+import { getToday, getPastDates, getPastByDate } from "../../api/BalGameApi";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 
 export default function BalanceList() {
   const [today, setToday] = useState<any>(null);
   const [dates, setDates] = useState<{ date: string; games: any[] }[]>([]);
-  const [roles, setRoles] = useState<string[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const nav = useNavigate();
 
@@ -36,11 +38,7 @@ export default function BalanceList() {
   }, []);
 
   // ✅ 현재 사용자 권한 확인
-  useEffect(() => {
-    getMe()
-      .then((res) => setRoles(res.roles))
-      .catch(() => setRoles([]));
-  }, []);
+  
 
   // ✅ 아코디언 토글
   const toggleExpand = (date: string) => {
@@ -113,7 +111,7 @@ export default function BalanceList() {
       </section>
 
       {/* 관리자 전용 버튼 */}
-      {roles.includes("ROLE_ADMIN") && (
+      {user?.roles?.includes("ROLE_ADMIN") && (
         <button className={styles.fab} onClick={() => nav("/balance/new")}>
           게임생성
         </button>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './AdminQuizSubmit.module.css';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../../api/apiClient';
+import toast from 'react-hot-toast';
 
 const AdminQuizSubmit = () => {
     // 스피드 퀴즈 입력값을 위한 state
@@ -27,12 +28,12 @@ const AdminQuizSubmit = () => {
                 answer: speedQuizAnswer
             };
             await apiClient.post('/admin/insertGameData', quizData);
-            alert('스피드 퀴즈 문제가 성공적으로 제출되었습니다.');
+            toast.success('스피드 퀴즈 문제가 성공적으로 제출되었습니다.');
             setSpeedQuizProblem('');
             setSpeedQuizAnswer('');
         } catch (error) {
             console.error('스피드 퀴즈 제출 실패:', error);
-            alert('제출에 실패했습니다.');
+            toast.error("제출에 실패했습니다.")
         }
     };
 
@@ -40,7 +41,7 @@ const AdminQuizSubmit = () => {
     const handleCatchMindSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!catchMindWord.trim()) {
-            alert('캐치마인드 단어를 입력해주세요.');
+            toast.error('캐치마인드 단어를 입력해주세요.');
             return;
         }
         try {
@@ -49,11 +50,11 @@ const AdminQuizSubmit = () => {
                 type: "catchMind"
             };
             await apiClient.post('/admin/insertGameData', wordData);
-            alert('캐치마인드 단어가 성공적으로 제출되었습니다.');
+            toast.success('캐치마인드 단어가 성공적으로 제출되었습니다.');
             setCatchMindWord('');
         } catch (error) {
             console.error('캐치마인드 단어 제출 실패:', error);
-            alert('제출에 실패했습니다.');
+            toast.error("제출에 실패했습니다.")
         }
     };
     return (
@@ -102,7 +103,7 @@ const AdminQuizSubmit = () => {
                     <button type="submit" className={styles.submitButton}>
                         캐치마인드 문제 제출
                     </button>
-                </form>
+                </form>            
             </div>
         </div>
     );

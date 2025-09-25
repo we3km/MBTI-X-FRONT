@@ -430,7 +430,7 @@ export default function CatchMind() {
                             setIsRoomModalOpen(true);
                         }}
                     >
-                        {gameRoomInfo?.roomName}
+                        <span className={styles.shakeText}>{gameRoomInfo?.roomName}</span>
                     </button>
                 </div>
                 <div className={styles.question}>

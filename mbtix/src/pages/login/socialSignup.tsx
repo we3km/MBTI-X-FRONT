@@ -31,7 +31,7 @@ export default function SocialSignup() {
     setError(null);
 
     try {
-       await axios.post("http://localhost:8085/api/auth/social-signup", {
+       await axios.post("/api/auth/social-signup", {
         loginId: email,  // 이메일을 loginId로 사용
         email,
         name,

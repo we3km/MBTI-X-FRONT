@@ -241,7 +241,7 @@ export default function Detail() {
               {board.images.map((img: string, idx: number) => (
                 <img
                   key={idx}
-                  src={`http://localhost:8085/api/uploads/${img}`}
+                  src={`/api/uploads/${img}`}
                   alt={`첨부이미지-${idx}`}
                   className={styles.postImage}
                 />

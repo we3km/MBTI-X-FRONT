@@ -83,7 +83,7 @@ const handleSendCode = async () => {
   }
 
   try {
-    const res = await axios.post("http://localhost:8085/api/auth/pw-send-code", null, {
+    const res = await axios.post("/api/auth/pw-send-code", null, {
       params: { name, loginId, email },
     });
 
@@ -180,7 +180,7 @@ const updatePW = async () => {
 
   try {
     // ✅ params 방식으로 전달
-    const res = await axios.put("http://localhost:8085/api/auth/updatePW", null, {
+    const res = await axios.put("/api/auth/updatePW", null, {
       params: { name, loginId, email, password },
     });
 

@@ -18,7 +18,7 @@ export default function MBTIGraph() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:8085/api/getUserMBTI")
+        fetch("/api/getUserMBTI")
             .then(res => res.json())
             .then((rawData: any[]) => {
                 const formattedData: PieData[] = rawData.map(item => ({

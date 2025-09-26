@@ -69,6 +69,7 @@ function App() {
     <AuthGate>
       <section id="content">
         <Routes>
+          {/* <Route path='/MBTI'> */}
           {/* --- 헤더가 없는 페이지들 --- */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
@@ -139,6 +140,7 @@ function App() {
               <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} />
             </Route>
           </Route>
+          {/* </Route> */}
         </Routes>
       </section>
     </AuthGate>

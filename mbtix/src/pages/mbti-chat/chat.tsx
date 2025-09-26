@@ -69,7 +69,7 @@ export default function Chat({ roomId, state }: ChatProps) {
       // 4. 봇 타이핑 시작 표시
       setIsBotTyping(true);
       // 5. FastAPI 서버에 요청 (스트리밍 응답)
-      const response = await fetch(`http://localhost:8000/chat/${roomId}`, {
+      const response = await fetch(`/fastapi/chat/${roomId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -150,7 +150,7 @@ export default function Chat({ roomId, state }: ChatProps) {
               <div className={styles.botHeader}>
                 {state.botProfileImageUrl && (
                   // 수정: /api 대신 /uploads 경로 사용
-                  <img src={`http://localhost:8085/api${state.botProfileImageUrl}`}
+                  <img src={`/api${state.botProfileImageUrl}`}
                    alt="Profile" className={styles.profileImage}/> 
                 )}
                 <div className={styles.botName}>{state.botName}</div>
@@ -172,7 +172,7 @@ export default function Chat({ roomId, state }: ChatProps) {
             <div className={styles.botHeader}>
               {state.botProfileImageUrl && (
                 // 수정: /api 대신 /uploads 경로 사용
-                <img src={`http://localhost:8085/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> 
+                <img src={`/api${state.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/> 
               )}
               <div className={styles.botName}>{state.botName}</div>
             </div>

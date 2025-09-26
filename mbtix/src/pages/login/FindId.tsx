@@ -51,7 +51,7 @@ export default function Findid() {
 
     try {
       // 이름+이메일 일치 확인 & 인증코드 발송 API
-      await axios.post("http://localhost:8085/api/auth/send-code-if-match", null, {
+      await axios.post("/api/auth/send-code-if-match", null, {
         params: { name, email },
       });
 
@@ -99,7 +99,7 @@ export default function Findid() {
     }
 
     try {
-      const res = await axios.get("http://localhost:8085/api/auth/find-id", {
+      const res = await axios.get("/api/auth/find-id", {
         params: { name, email},
       });
       setFoundId(res.data); // 마스킹된 아이디 or 소셜 안내 메시지

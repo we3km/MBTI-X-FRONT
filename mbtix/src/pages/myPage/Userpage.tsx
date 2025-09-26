@@ -31,7 +31,7 @@ export default function UserPage() {
           <img
             src={
               user?.profileType === "UPLOAD"
-                ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
+                ? `/api/mypage/profile/images/${user?.profileFileName}`
                 : `/profile/default/${user?.profileFileName || "default.jpg"}`
             }
             alt="프로필"

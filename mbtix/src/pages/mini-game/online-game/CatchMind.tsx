@@ -115,7 +115,6 @@ export default function CatchMind() {
         queryKey: ["gamersList", roomId],
         queryFn: async () => {
             const res = await api.get("/selectGamers", { params: { roomId } });
-            console.log("플레이어들 :", res.data);
             return res.data;
         },
         retry: 1,
@@ -127,7 +126,6 @@ export default function CatchMind() {
         queryKey: ["gameRoomInfo", roomId, gameState.gamers],
         queryFn: async () => {
             const res = await api.get("/selectGameRoomInfo", { params: { roomId } });
-            console.log("방 정보 :", res.data);
             return res.data;
         },
         retry: 1,
@@ -167,7 +165,7 @@ export default function CatchMind() {
             return;
         }
         // const socket = new SockJS("http://localhost:8085/api/ws", null, {
-        const socket = new SockJS("http://192.168.10.230:8085/api/ws", null, {
+        const socket = new SockJS("/api/ws", null, {
             transports: ["websocket", "xhr-streaming", "xhr-polling"]
         });
         const client = new Client({
@@ -191,6 +189,7 @@ export default function CatchMind() {
                         ...prevState,
                         ...receivedState
                     }));
+                    console.log("전달 메세지 :", receivedState);
                     if (receivedState.kickedOutId) {
                         console.log("강퇴 당하는 사람 ID :", receivedState.kickedOutId);
                         if (receivedState.kickedOutId === currentUserId) {
@@ -198,10 +197,15 @@ export default function CatchMind() {
                             stompClient.current?.deactivate();
                             navigate("/miniGame/OnlineGame");
                         } else {
-                            toast("플레이어가 강퇴되었습니다.");
                             queryClient.invalidateQueries({ queryKey: ["gamersList", roomId] });
                         }
                     }
+                    if (receivedState.roomName) {
+                        queryClient.invalidateQueries({ queryKey: ["gameRoomInfo", roomId] });
+                    }
+                    // if (receivedState.gamers) {
+                    //     queryClient.invalidateQueries({ queryKey: ["gamersList", roomId] });
+                    // }
                 });
                 // 타이머용 구독
                 client.subscribe(`/sub/game/${roomId}/timer`, (message: IMessage) => {
@@ -313,6 +317,7 @@ export default function CatchMind() {
 
     // 게임 시작 요청
     const handleStartGame = () => {
+        console.log("플레이어 리스트 :", gamersList);
         if (gamersList !== undefined && gamersList?.length < 2) {
             toast.error("게임시작을위해선 최소 두명 이상의 플레이어가 있어야 합니다.")
             queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
@@ -429,7 +434,7 @@ export default function CatchMind() {
                             }
                             setIsRoomModalOpen(true);
                         }}
-                    >
+                    >   
                         <span className={styles.shakeText}>{gameRoomInfo?.roomName}</span>
                     </button>
                 </div>
@@ -438,7 +443,7 @@ export default function CatchMind() {
                     {status === "drawing" && !amIDrawer && <span>{answerLength ? "_ ".repeat(answerLength) : ""} ({answerLength}글자)</span>}
                 </div>
                 <div
-                    className={`${styles.timer} ${(timeLeft <= 10 && status === "drawing") ? styles.bounce : ''}`}
+                    className={`${styles.timer} ${(timeLeft <= 20 && status === "drawing") ? styles.bounce : ''}`}
                 >
                     {(status === "drawing" || status === "waiting") &&
                         `⏱️ ${timeLeft}s Round ${round} of ${maxRounds}`}
@@ -468,16 +473,17 @@ export default function CatchMind() {
                                 {gamer.userId === gameRoomInfo?.creatorId && <div className={styles.crownIcon}></div>}
                             </div>
                             <div className={styles.gamerInfo}>
-                                <span className={styles.nickname}>
-                                    <div>
-                                        {gamer.userId === userId
-                                            ? <span className={styles.you}>{gamer.nickname} (you)</span>
-                                            : <span>{gamer.nickname}</span>
-                                        }
-                                        {" "}{gamer.mbtiName}
-                                    </div>
-                                </span>
-                                <span className={styles.points}>{gamer.points} points</span>
+                                <div className={styles.nickname}>
+                                    {gamer.userId === userId
+                                        ? <span className={styles.you}>{gamer.nickname} (you)</span>
+                                        : <span>{gamer.nickname}</span>
+                                    }
+                                    {" "}{gamer.mbtiName}
+                                </div>
+                                <div className={styles.points}>
+                                    {gamer.points} points
+                                    {drawer?.userId === gamer.userId && <b className={styles.iAmDrawer}>{" "}{" "}Drawer!!!</b>}
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -679,21 +685,18 @@ export default function CatchMind() {
                         >
                             ✖
                         </button>
-
                         <h2>방 속성 변경</h2>
-
-                        {/* 방 이름 변경 */}
                         <div className={styles.inputWrapper}>
                             <label className={styles.label}>방 제목</label>
                             <input
                                 type="text"
                                 className={styles.input}
                                 value={newRoomName}
+                                maxLength={10}
+                                placeholder="방 제목 최대 10글자"
                                 onChange={(e) => setNewRoomName(e.target.value)}
                             />
                         </div>
-
-                        {/* 인원 제한 */}
                         <div className={styles.inputWrapper}>
                             <label className={styles.label}>최대 인원</label>
                             <input
@@ -708,23 +711,23 @@ export default function CatchMind() {
 
                         <button
                             className={styles.createBtn}
-                            onClick={() => {
-                                if (newMaxCount < gameRoomInfo!.playerCount) {
-                                    toast.error("최대인원 수는 접속중인 플레이어의 수보다 높게 설정해야합니다!");
-                                    return;
-                                }
-                                else {
-                                    api.post("/changeRoomInfo", {
+                            onClick={async () => {
+                                try {
+                                    if (newMaxCount < gameRoomInfo!.playerCount) {
+                                        toast.error("최대인원 수는 접속중인 플레이어의 수보다 높게 설정해야합니다!");
+                                        return;
+                                    }
+
+                                    await api.post("/changeRoomInfo", {
                                         roomId: gameRoomInfo?.roomId,
                                         roomName: newRoomName,
                                         maxCount: newMaxCount
-                                    }).then(() => {
-                                        queryClient.invalidateQueries({ queryKey: ["gameRoomInfo", roomId] });
-                                        setIsRoomModalOpen(false);
-                                        toast.success("방 속성 변경 완료!", { duration: 3000 });
-                                    }).catch((err) => {
-                                        toast.error("변경 실패: " + err.message, { duration: 3000 });
                                     });
+                                    // queryClient.invalidateQueries({ queryKey: ["gameRoomInfo", roomId] });
+                                    setIsRoomModalOpen(false);
+                                    toast.success("방 속성 변경 완료!", { duration: 3000 });
+                                } catch (err: any) {
+                                    toast.error("변경 실패: " + err.message, { duration: 3000 });
                                 }
                             }}
                         >

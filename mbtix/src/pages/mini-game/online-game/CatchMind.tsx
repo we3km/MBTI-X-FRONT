@@ -203,9 +203,9 @@ export default function CatchMind() {
                     if (receivedState.roomName) {
                         queryClient.invalidateQueries({ queryKey: ["gameRoomInfo", roomId] });
                     }
-                    if (receivedState.gamers) {
-                        queryClient.invalidateQueries({ queryKey: ["gamersList", roomId] });
-                    }
+                    // if (receivedState.gamers) {
+                    //     queryClient.invalidateQueries({ queryKey: ["gamersList", roomId] });
+                    // }
                 });
                 // 타이머용 구독
                 client.subscribe(`/sub/game/${roomId}/timer`, (message: IMessage) => {
@@ -434,7 +434,7 @@ export default function CatchMind() {
                             }
                             setIsRoomModalOpen(true);
                         }}
-                    >
+                    >   
                         <span className={styles.shakeText}>{gameRoomInfo?.roomName}</span>
                     </button>
                 </div>
@@ -473,16 +473,17 @@ export default function CatchMind() {
                                 {gamer.userId === gameRoomInfo?.creatorId && <div className={styles.crownIcon}></div>}
                             </div>
                             <div className={styles.gamerInfo}>
-                                <span className={styles.nickname}>
-                                    <div>
-                                        {gamer.userId === userId
-                                            ? <span className={styles.you}>{gamer.nickname} (you)</span>
-                                            : <span>{gamer.nickname}</span>
-                                        }
-                                        {" "}{gamer.mbtiName}
-                                    </div>
-                                </span>
-                                <span className={styles.points}>{gamer.points} points</span>
+                                <div className={styles.nickname}>
+                                    {gamer.userId === userId
+                                        ? <span className={styles.you}>{gamer.nickname} (you)</span>
+                                        : <span>{gamer.nickname}</span>
+                                    }
+                                    {" "}{gamer.mbtiName}
+                                </div>
+                                <div className={styles.points}>
+                                    {gamer.points} points
+                                    {drawer?.userId === gamer.userId && <b className={styles.iAmDrawer}>{" "}{" "}Drawer!!!</b>}
+                                </div>
                             </div>
                         </div>
                     ))}

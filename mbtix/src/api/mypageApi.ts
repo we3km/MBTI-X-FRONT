@@ -1,7 +1,7 @@
 import axios, { AxiosHeaders } from "axios";
 import { store } from "../store/store";
 
-const API_BASE = "http://localhost:8085/api/mypage/";
+const API_BASE = "/api/mypage/";
 const getAccessToken = () => store.getState().auth.accessToken;
 
 export const mypageApi = axios.create({

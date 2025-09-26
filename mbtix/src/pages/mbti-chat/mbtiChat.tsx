@@ -127,7 +127,7 @@ export default function MbtiChat() {
             <div className={styles.currentBotInfo}>
                 <div className={styles.currentBotDetail}>
                     <img
-                        src={`http://localhost:8085/api${currentBot.botProfileImageUrl}`}
+                        src={`/api${currentBot.botProfileImageUrl}`}
                         alt="Profile"
                         className={styles.currentBotImage}
                         onClick={handleOpenImageModal}
@@ -164,7 +164,7 @@ export default function MbtiChat() {
                         }}
                         className={styles.roomLinkContent}
                       >
-                        <img src={`http://localhost:8085/api${r.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/>
+                        <img src={`/api${r.botProfileImageUrl}`} alt="Profile" className={styles.profileImage}/>
                         <div>
                           {r.botName} <span className={styles.mbti}>({r.botMbti})</span>
                         </div>
@@ -217,7 +217,7 @@ export default function MbtiChat() {
         <div className={styles.fullImageModal} onClick={handleCloseImageModal}>
             <div className={styles.fullImageContent} onClick={e => e.stopPropagation()}>
                 <img
-                    src={`http://localhost:8085/api${currentBot.botProfileImageUrl}`}
+                    src={`/api${currentBot.botProfileImageUrl}`}
                     alt="Full-size Profile"
                 />
             </div>

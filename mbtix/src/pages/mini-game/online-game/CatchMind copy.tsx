@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CatchMind.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { store } from "../../../store/store";
-import SockJS from "sockjs-client";
+import * as SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import type { IMessage } from "@stomp/stompjs";
 import api from "../../../api/mainPageApi";

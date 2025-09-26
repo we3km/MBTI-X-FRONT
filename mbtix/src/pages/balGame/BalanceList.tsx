@@ -110,11 +110,6 @@ export default function BalanceList() {
         </div>
       </section>
 
-      {/* 메인으로 버튼 */}
-      <Link to="/">
-        <button className={styles.topLeftFab}>메인으로</button>
-      </Link>
-
       {/* 관리자 전용 버튼 */}
       {user?.roles?.includes("ROLE_ADMIN") && (
         <button className={styles.fab} onClick={() => nav("/balance/new")}>

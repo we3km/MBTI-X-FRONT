@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
 
   const handleKakaoLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    location.href = "http://localhost:8085/api/oauth2/authorization/kakao";
+    location.href = "http://52.65.147.249/api/oauth2/authorization/kakao";
   };
 
 
@@ -80,7 +80,6 @@ const LoginPage: React.FC = () => {
 
         <div className={styles.formGroup}>
           <label>비밀번호</label>
-          <div className={styles.passwordWrapper}>
             <input
               type="password"
               value={password}
@@ -88,7 +87,6 @@ const LoginPage: React.FC = () => {
               placeholder="비밀번호"
               autoComplete="current-password"
             />
-          </div>
           <div className={styles.checkboxRow}>
             <span>로그인 상태 유지</span>
             <input

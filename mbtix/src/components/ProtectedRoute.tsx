@@ -18,6 +18,7 @@ export default function ProtectedRoute({
 
   if (!isAuthenticated) {
     if (!hasShownToast.current) {
+
       toast.error("로그인 후 이용 가능합니다.");
       hasShownToast.current = true;
     }
@@ -29,7 +30,6 @@ export default function ProtectedRoute({
     : user?.roles
       ? [user.roles]
       : [];
-
   if (requiredRoles.length > 0 && !roles.some((role: string) => requiredRoles.includes(role))) {
     toast.error("접근 권한이 없습니다.");
     return <Navigate to="/" replace />;

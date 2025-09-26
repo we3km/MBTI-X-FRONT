@@ -3,7 +3,7 @@ import { store } from "../store/store";
 
 /** -------- Axios instance -------- */
 const http = axios.create({
-  baseURL: "http://localhost:8085/api",
+  baseURL: "/api",
   // baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000
 });

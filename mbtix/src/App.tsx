@@ -69,6 +69,7 @@ function App() {
     <AuthGate>
       <section id="content">
         <Routes>
+          {/* <Route path='/MBTI'> */}
           {/* --- 헤더가 없는 페이지들 --- */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
@@ -111,7 +112,7 @@ function App() {
             <Route path="/admin/inquiries" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryListPage /></ProtectedRoute>} />
             <Route path="/admin/inquiries/:inquiryId" element={<ProtectedRoute requiredRoles={['ROLE_ADMIN']}><AdminInquiryDetailPage /></ProtectedRoute>} />
             {/* 마이페이지 */}
-            <Route path='/mypage' element={<ProtectedRoute requiredRoles={['ROLE_USER']}><MyPage /></ProtectedRoute>} />
+            <Route path='/mypage' element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
             <Route path="/user/:userId" element={<UserPage />} />
             {/* 밸런스 게임 */}
             <Route path="/balance/today" element={<TodayGame />} />
@@ -139,6 +140,7 @@ function App() {
               <Route path=":id" element={<ProtectedRoute><Detail /></ProtectedRoute>} />
             </Route>
           </Route>
+          {/* </Route> */}
         </Routes>
       </section>
     </AuthGate>

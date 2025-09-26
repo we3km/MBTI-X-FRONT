@@ -4,15 +4,15 @@
 
 /* ── Palette ── */
 :root{
-  --primary: #5B7CFF;
-  --primary-700: #3E61FF;
+  --primary2: #5B7CFF;
+  --primary2-700: #3E61FF;
   --accent-2: #8AA3FF;
-  --bg: #F5F7FB;
-  --card: #FFFFFF;
-  --line: #E6ECF5;
-  --text: #0F172A;
-  --muted: #64748B;
-  --hover: #F3F6FF;
+  --bg2: #F5F7FB;
+  --card2: #FFFFFF;
+  --line2: #E6ECF5;
+  --text2: #0F172A;
+  --muted2: #64748B;
+  --hover2: #F3F6FF;
 }
 
 /* =====================================
@@ -39,14 +39,14 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--line);
+  border: 2px solid var(--line2);
   background: #fff;
   box-shadow: 0 1px 2px rgba(16,24,40,.06);
   position: relative;
   transition: all .18s ease;
 }
 .completed .circle{
-  background: linear-gradient(135deg, var(--primary), var(--accent-2));
+  background: linear-gradient(135deg, var(--primary2), var(--accent-2));
   border-color: transparent;
   box-shadow: 0 6px 14px rgba(91,124,255,.25);
 }
@@ -58,7 +58,7 @@
 }
 /* (옵션) 현재 스텝 강조: JSX에서 styles.current를 추가하면 적용 */
 .current .circle{
-  border-color: var(--primary);
+  border-color: var(--primary2);
   box-shadow: 0 0 0 4px rgba(91,124,255,.18);
   background: #fff;
 }
@@ -66,22 +66,22 @@
 .step span{
   font-size: 14px;
   font-weight: 700;
-  color: var(--muted);
+  color: var(--muted2);
   white-space: nowrap;
 }
 .completed span{ color: #1E2B5A; }
-.current span{ color: var(--primary-700); }
+.current span{ color: var(--primary2-700); }
 
 .line{
   width: 56px;
   height: 2px;
   border-radius: 4px;
-  background: var(--line);
+  background: var(--line2);
   transition: background .18s ease;
 }
 /* 완료된 스텝 뒤 라인 파란색 */
 .completed + .line{
-  background: linear-gradient(to right, var(--primary), var(--accent-2));
+  background: linear-gradient(to right, var(--primary2), var(--accent-2));
 }
 /* 현재 스텝 뒤 라인 은은한 파랑(옵션) */
 .current + .line{
@@ -92,13 +92,13 @@
    Shared Card Wrapper (약관 / 폼 공통)
    ===================================== */
 .signupBox{
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--card2);
+  border: 1px solid var(--line2);
   border-radius: 16px;
   padding: 24px 24px 28px;
   margin: 18px auto 28px;
   max-width: 740px;
-  color: var(--text);
+  color: var(--text2);
   box-shadow: 0 8px 24px rgba(17,25,40,.06);
 }
 .signupBox h2{
@@ -116,7 +116,7 @@
   bottom: -8px;
   width: 56px; height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--primary), var(--accent-2));
+  background: linear-gradient(90deg, var(--primary2), var(--accent-2));
 }
 
 /* =====================================
@@ -124,7 +124,7 @@
    ===================================== */
 .termsGroup{
   background: #FAFBFF;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line2);
   border-radius: 12px;
   padding: 14px;
   margin: 14px 0;
@@ -146,11 +146,11 @@
   overflow: auto;             /* 내용 많으면 스크롤 */
   resize: none;               /* 리사이즈 금지 */
   white-space: pre-wrap;      /* 줄바꿈 유지 */
-  border: 1px solid var(--line);
+  border: 1px solid var(--line2);
   border-radius: 12px;
   padding: 14px;
   background: #fff;
-  color: var(--text);
+  color: var(--text2);
   line-height: 1.6;
   outline: none;
   transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
@@ -174,14 +174,14 @@
 .checkBoxRow span{
   order: 1;                    /* 텍스트 왼쪽 */
   user-select: none;
-  color: var(--muted);
+  color: var(--muted2);
   font-weight: 600;
 }
 .checkBoxRow input[type="checkbox"]{
   order: 2;                    /* 체크박스 오른쪽 */
   width: 18px;
   height: 18px;
-  accent-color: var(--primary);
+  accent-color: var(--primary2);
   transform: translateY(1px);
 }
 /* 컨테이너 하단의 '모두 동의' 줄 구분 */
@@ -203,8 +203,8 @@
 
   /* 전역 오버라이드 대비 + 폴백 */
   background: none;
-  background-image: linear-gradient(135deg, var(--primary), var(--accent-2));
-  background-color: var(--primary);
+  background-image: linear-gradient(135deg, var(--primary2), var(--accent-2));
+  background-color: var(--primary2);
 
   color: #fff;
   font-size: 15px;
@@ -248,9 +248,9 @@
   height: 44px;
   padding: 0 14px;
   border-radius: 12px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line2);
   background: #fff;
-  color: var(--text);
+  color: var(--text2);
   outline: none;
   transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
 }
@@ -271,7 +271,7 @@
   height: 44px; min-width: 128px;
   padding: 0 14px;
   border-radius: 12px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line2);
   background: #FFF;
   color: #1F2937;
   font-weight: 800;
@@ -313,8 +313,8 @@
   padding:12px 16px; border-radius:12px; border:1px solid transparent;
 
   background: none;
-  background-image: linear-gradient(135deg, var(--primary), var(--accent-2));
-  background-color: var(--primary);
+  background-image: linear-gradient(135deg, var(--primary2), var(--accent-2));
+  background-color: var(--primary2);
 
   color:#fff; font-size:15px; font-weight:900; cursor:pointer;
 

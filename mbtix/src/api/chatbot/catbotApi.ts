@@ -1,7 +1,7 @@
 import axios, { AxiosHeaders } from "axios";
 import { store } from "../../store/store";
 
-const API_BASE = "http://localhost:8085/api/chatbot";
+const API_BASE = "/api/chatbot";
 const getAccessToken = () => store.getState().auth.accessToken;
 export const chatbotApi = axios.create({
     baseURL:API_BASE,

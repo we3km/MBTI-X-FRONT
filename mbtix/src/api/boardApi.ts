@@ -9,7 +9,7 @@ const getUserId = () => store.getState().auth.userId;
 const getUser = (): User | null => store.getState().auth.user;
 
 export const api =  axios.create({
-    baseURL: 'http://localhost:8085/api',
+    baseURL: '/api',
     //withCredentials: true
     withCredentials: false
 });

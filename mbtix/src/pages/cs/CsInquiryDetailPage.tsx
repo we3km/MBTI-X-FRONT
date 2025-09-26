@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getMyInquiryById, type Inquiry } from '../../api/csApi';
 import './CsInquiry.css';
 
-const UPLOADS_BASE_URL = "http://localhost:8085/api/uploads/cs/";
+const UPLOADS_BASE_URL = "/api/uploads/cs/";
 
 const CsInquiryDetailPage = () => {
     const { inquiryId } = useParams<{ inquiryId: string }>();

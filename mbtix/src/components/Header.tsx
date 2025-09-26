@@ -3,16 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { store, type RootState } from '../store/store';
+
 import { authApi, doLogout } from '../api/authApi';
 import { getMyAlarms, markAlarmAsRead, deleteAllAlarms, type Alarm } from '../api/alarmApi';
 import { FaRegBell } from 'react-icons/fa';
 import { clearAuth } from '../features/authSlice';
 
+
 const Header = () => {
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [alarms, setAlarms] = useState<Alarm[]>([]);
 
@@ -65,6 +67,7 @@ const Header = () => {
       navigate("/");
     }
   }
+
     const handleAlarmClick = async (alarm: Alarm) => {
         setOpenMenu(null);
         if (alarm.isRead !== 'Y') {
@@ -127,7 +130,7 @@ const Header = () => {
                                       <img
                                       src={
                                         user?.profileType === "UPLOAD"
-                                          ? `http://localhost:8085/api/mypage/profile/images/${user?.profileFileName}`
+                                          ? `/api/mypage/profile/images/${user?.profileFileName}`
                                           : `/profile/default/${user?.profileFileName || "default.jpg"}`
                                       }
                                       alt="프로필"
@@ -143,7 +146,7 @@ const Header = () => {
                                 ) : (
                                     <Link to="/cs-center" onClick={() => setOpenMenu(null)}>고객센터</Link>
                                 )}
-                                <a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>로그아웃</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }} style={{ cursor: 'pointer' }}>로그아웃</a>
                             </div>
                         </div>
                         <div className="nav-item">

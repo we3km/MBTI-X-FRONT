@@ -4,7 +4,7 @@ import { fetchInquiryById, submitAnswer, type Inquiry } from '../../api/inquiryA
 import toast from 'react-hot-toast';
 import './AdminInquiry.css';
 
-const UPLOADS_BASE_URL = "http://localhost:8085/api/uploads/cs/";
+const UPLOADS_BASE_URL = "/api/uploads/cs/";
 
 const AdminInquiryDetailPage = () => {
     const { inquiryId } = useParams<{ inquiryId: string }>();

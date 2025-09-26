@@ -38,7 +38,7 @@ export default function BalanceList() {
   }, []);
 
   // ✅ 현재 사용자 권한 확인
-  
+
 
   // ✅ 아코디언 토글
   const toggleExpand = (date: string) => {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./CatchMind.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { store } from "../../../store/store";
-import SockJS from "sockjs-client";
+import * as SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import type { IMessage } from "@stomp/stompjs";
 import api from "../../../api/mainPageApi";
@@ -165,7 +165,7 @@ export default function CatchMind() {
             return;
         }
         // const socket = new SockJS("http://localhost:8085/api/ws", null, {
-        const socket = new SockJS("http://192.168.10.230:8085/api/ws", null, {
+        const socket = new SockJS("/api/ws", null, {
             transports: ["websocket", "xhr-streaming", "xhr-polling"]
         });
         const client = new Client({

@@ -4,7 +4,8 @@ import { store } from "../store/store";
 // axios 인스턴스 생성
 const api = axios.create({
     // baseURL: "http://localhost:8085/api", // 백엔드 기본 주소
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    // baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: "/api", // 백엔드 기본 주소
     withCredentials: true, // 쿠키도 같이 보낼 때 사용 (JWT 쿠키 기반이면 필요)
 });
 

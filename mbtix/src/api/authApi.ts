@@ -4,10 +4,9 @@ import type { SignupRequest, AuthResult, User } from "../type/logintype";
 import { store } from "../store/store";
 import { setAuth, logout as logoutAction } from "../features/authSlice";
 
-const API_BASE = "http://192.168.10.230:8085/api/auth";
+// const API_BASE = "http://192.168.10.230:8085/api/auth";
 // const API_BASE = "http://localhost:8085/api/auth";
-// 테스트용
-
+const API_BASE = "/api/auth";
 const getAccessToken = () => store.getState().auth.accessToken;
 const getUserId = () => store.getState().auth.userId;
 const getUser = (): User | null => store.getState().auth.user;

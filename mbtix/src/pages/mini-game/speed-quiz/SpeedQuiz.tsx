@@ -226,7 +226,7 @@ export default function SpeedQuiz() {
                         value={userAnswer}
                         onChange={(e) => {
                             setUserAnswer(e.target.value)
-                            userAnswerRef.current = e.target.value // ref 업데이트
+                            userAnswerRef.current = e.target.value 
                         }}
                     />
                 </div>

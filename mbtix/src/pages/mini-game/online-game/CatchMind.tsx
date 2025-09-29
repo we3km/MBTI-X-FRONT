@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./CatchMind.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { store } from "../../../store/store";
-import * as SockJS from "sockjs-client";
+import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import type { IMessage } from "@stomp/stompjs";
 import api from "../../../api/mainPageApi";
@@ -15,16 +15,15 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { debounce } from 'lodash';
 import toast from 'react-hot-toast';
 
-// --- 백엔드의 Gamer DTO와 일치하는 타입 정의 ---
 type Gamer = {
     userId: number;
     nickname: string;
     points: number;
     mbtiName: string;
     profile: string;
+    profileType: string;
 };
 
-// --- 백엔드의 GameStateMessage DTO와 일치하는 타입 정의 ---
 type GameStateMessage = {
     status: "start" | "waiting" | "result" | "drawing" | "final" | "player_left";
     round?: number;
@@ -135,18 +134,6 @@ export default function CatchMind() {
     const [newRoomName, setNewRoomName] = useState(gameRoomInfo?.roomName || "");
     const [newMaxCount, setNewMaxCount] = useState(gameRoomInfo?.maxCount || 5);
 
-    // 사용자 강퇴시키기
-    const kickOut = async (userIdOut: number) => {
-        try {
-            // isKickedOut = 1이면 강퇴, 0이면 자진 퇴소!!
-            await api.post("/leaveRoom", { roomId, userId: userIdOut, isKickedOut: 1 });
-            toast.success("강퇴 처리 완료");
-            queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
-        } catch (err) {
-            toast.error("강퇴 처리에 실패했습니다.");
-        }
-    };
-
     useEffect(() => {
         if (gamersList && gameRoomInfo && !gameState.gamers) {
             const captain = gamersList.find(g => g.userId === gameRoomInfo.creatorId);
@@ -164,8 +151,7 @@ export default function CatchMind() {
             console.log("Client is already active.");
             return;
         }
-        // const socket = new SockJS("http://localhost:8085/api/ws", null, {
-        const socket = new SockJS("/api/ws", null, {
+        const socket = new SockJS("http://52.65.147.249/api/ws", null, {
             transports: ["websocket", "xhr-streaming", "xhr-polling"]
         });
         const client = new Client({
@@ -255,21 +241,18 @@ export default function CatchMind() {
     }, [roomId]);
 
     // ================== 그림판 ==================
-    // ✅ 4. tldraw 에디터가 준비되면 state에 저장하는 함수
+    // tldraw 에디터가 준비되면 state에 저장하는 함수
     const handleMount = (editor: Editor) => { setEditor(editor); };
-    // ✅ 5. 그림이 변경될 때마다 서버에 '분할' 전송하는 로직
+    // 그림이 변경될 때마다 서버에 '분할' 전송하는 로직
     useEffect(() => {
         if (!editor || !amIDrawer) return;
-
         let lastSnapshot: ReturnType<typeof getSnapshot> | null = null;
         const unsubscribe = editor.store.listen(() => { lastSnapshot = getSnapshot(editor.store); },
             { source: 'user', scope: 'document' });
-
         const interval = setInterval(() => {
             if (lastSnapshot && stompClient.current?.connected) {
                 const snapshotString = JSON.stringify(lastSnapshot);
-
-                // ✅ [수정] 추가 메타데이터(id, index 등)를 위한 여유 공간(약 200바이트) 확보
+                // 추가 메타데이터(id, index 등)를 위한 여유 공간(약 200바이트) 확보
                 const overhead = 200;
                 const chunkSize = (10 * 1024) - overhead; // 실제 청크 크기를 10KB보다 작게 설정
 
@@ -278,7 +261,6 @@ export default function CatchMind() {
 
                 for (let i = 0; i < totalChunks; i++) {
                     const chunk = snapshotString.substring(i * chunkSize, (i + 1) * chunkSize);
-
                     stompClient.current.publish({
                         destination: `/pub/draw/${roomId}`,
                         body: JSON.stringify({
@@ -293,14 +275,13 @@ export default function CatchMind() {
                 lastSnapshot = null;
             }
         }, 100);
-
         return () => {
             unsubscribe();
             clearInterval(interval);
         };
     }, [editor, amIDrawer, roomId, userId]);
 
-    // ✅ 6. 라운드가 바뀌면 캔버스 초기화
+    // 라운드가 바뀌면 캔버스 초기화
     useEffect(() => {
         if (editor && (status === 'start' || status === 'waiting')) {
             editor.deleteShapes(editor.getCurrentPageShapes());
@@ -357,37 +338,28 @@ export default function CatchMind() {
         return [...gameState.gamers].sort((a, b) => b.points - a.points);
     }, [gameState.gamers, gameState.status]);
 
+    // 사용자 강퇴시키기
+    const kickOut = async (userIdOut: number) => {
+        try {
+            await api.post("/kickOut", { roomId, userId: userIdOut });
+            await api.post("/leaveRoom", { roomId, userId: userIdOut, isKickedOut: 1 });
+            toast.success("강퇴 처리 완료");
+            queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
+        } catch (err) {
+            toast.error("강퇴 처리에 실패했습니다.");
+        }
+    };
     // 방 나가기
     const handleExitRoom = () => {
         toast.custom((t) => (
             <div
-                style={{
-                    padding: '16px',
-                    backgroundColor: 'white',
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '12px',
-                    minWidth: '300px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                }}
-            >
+                style={{ padding: '16px', backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', minWidth: '300px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
                 <div style={{ fontWeight: 'bold', marginBottom: '8px', textAlign: 'center' }}>
                     게임을 종료하시겠습니까?
                 </div>
                 <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
                     <button
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'red',
-                            color: 'white',
-                            padding: '8px 0',
-                            borderRadius: '4px',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
+                        style={{ flex: 1, backgroundColor: 'red', color: 'white', padding: '8px 0', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
                         onClick={async () => {
                             await api.post("/leaveRoom", { roomId, userId, isKickedOut: 0 });
                             queryClient.invalidateQueries({ queryKey: ['gamersList'] });
@@ -395,22 +367,12 @@ export default function CatchMind() {
                             toast.dismiss(t.id);
                             toast.success("방을 퇴장하였습니다.");
                             navigate("/miniGame/OnlineGame");
-                        }}
-                    >
+                        }} >
                         종료
                     </button>
                     <button
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'gray',
-                            color: 'white',
-                            padding: '8px 0',
-                            borderRadius: '4px',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
-                        onClick={() => toast.dismiss(t.id)}
-                    >
+                        style={{ flex: 1, backgroundColor: 'gray', color: 'white', padding: '8px 0', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+                        onClick={() => toast.dismiss(t.id)} >
                         취소
                     </button>
                 </div>
@@ -434,7 +396,7 @@ export default function CatchMind() {
                             }
                             setIsRoomModalOpen(true);
                         }}
-                    >   
+                    >
                         <span className={styles.shakeText}>{gameRoomInfo?.roomName}</span>
                     </button>
                 </div>
@@ -461,7 +423,11 @@ export default function CatchMind() {
                             {status !== "start" && (<div>#{index + 1}</div>)}
                             <div className={styles.profileContainer}>
                                 <img
-                                    src={`/profile/default/${gamer.profile}`}
+                                    src={
+                                        gamer?.profileType === "UPLOAD"
+                                            ? `/api/mypage/profile/images/${gamer?.profile}`
+                                            : `/profile/default/${gamer?.profile || "default.jpg"}`
+                                    }
                                     alt={gamer.nickname}
                                     className={styles.profile}
                                     onClick={(e) => {
@@ -499,10 +465,14 @@ export default function CatchMind() {
                             }}
                         >
                             <img
-                                src={`/profile/default/${hoveredGamer.profile}`}
+                                src={
+                                    hoveredGamer?.profileType === "UPLOAD"
+                                        ? `/api/mypage/profile/images/${hoveredGamer?.profile}`
+                                        : `/profile/default/${hoveredGamer?.profile}`
+                                }
                                 alt={hoveredGamer.nickname}
-                                className={styles.popupProfile}
-                            />
+                                className={styles.popupProfile} />
+
                             {/* 방장만 강퇴시킬 수 있음 */}
                             {hoveredGamer.userId === gameRoomInfo?.creatorId && <div style={{ color: "red" }}>방장<br /></div>}
                             <div><b>{hoveredGamer.nickname}</b></div>
@@ -604,7 +574,13 @@ export default function CatchMind() {
                                 {/* 2위 */}
                                 {sortedGamers[1] && (
                                     <div className={`${styles.podiumSlot} ${styles.second}`}>
-                                        <img src={`/profile/default/${sortedGamers[1].profile}`} className={styles.avatar} />
+                                        <img
+                                            src={
+                                                sortedGamers[1]?.profileType === "UPLOAD"
+                                                    ? `/api/mypage/profile/images/${sortedGamers[1]?.profile}`
+                                                    : `/profile/default/${sortedGamers[1]?.profile || "default.jpg"}`
+                                            }
+                                            className={styles.avatar} />
                                         <span>{sortedGamers[1].nickname}</span>
                                         <p>{sortedGamers[1].points} pts</p>
                                     </div>
@@ -613,7 +589,13 @@ export default function CatchMind() {
                                 {/* 1위 */}
                                 {sortedGamers[0] && (
                                     <div className={`${styles.podiumSlot} ${styles.first}`}>
-                                        <img src={`/profile/default/${sortedGamers[0].profile}`} className={styles.avatar} />
+                                        <img
+                                            src={
+                                                sortedGamers[0]?.profileType === "UPLOAD"
+                                                    ? `/api/mypage/profile/images/${sortedGamers[0]?.profile}`
+                                                    : `/profile/default/${sortedGamers[0]?.profile || "default.jpg"}`
+                                            }
+                                            className={styles.avatar} />
                                         <span>{sortedGamers[0].nickname}</span>
                                         <p>{sortedGamers[0].points} pts</p>
                                     </div>
@@ -622,7 +604,13 @@ export default function CatchMind() {
                                 {/* 3위 */}
                                 {sortedGamers[2] && (
                                     <div className={`${styles.podiumSlot} ${styles.third}`}>
-                                        <img src={`/profile/default/${sortedGamers[2].profile}`} className={styles.avatar} />
+                                        <img
+                                            src={
+                                                sortedGamers[2]?.profileType === "UPLOAD"
+                                                    ? `/api/mypage/profile/images/${sortedGamers[2]?.profile}`
+                                                    : `/profile/default/${sortedGamers[2]?.profile || "default.jpg"}`
+                                            }
+                                            className={styles.avatar} />
                                         <span>{sortedGamers[2].nickname}</span>
                                         <p>{sortedGamers[2].points} pts</p>
                                     </div>

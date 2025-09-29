@@ -18,6 +18,7 @@ type gameRoom = {
     mbtiName: string;
     profile: string;
     maxCount: number;
+    profileType: string;
 };
 
 export default function OnlineGame() {
@@ -41,6 +42,8 @@ export default function OnlineGame() {
         retry: 1,
     });
 
+    console.log(gameRooms);
+
     // 새로 생긴 방 찾기
     useEffect(() => {
         if (gameRooms && prevRooms.length > 0) {
@@ -56,16 +59,23 @@ export default function OnlineGame() {
 
     const enterGameRoom = async (roomId: number) => {
         try {
-            const response = await api.post("/joinGameRoom", { roomId, userId });
-            if (response.data.status === 'success') {
-                queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
-                navigate(`/miniGame/CatchMind/${roomId}`);
+            // 만약 강퇴당한 사람이라면
+            const checkKick = await api.post("/checkKickOut", { roomId, userId });
+            if (checkKick.data === 0) {
+                const response = await api.post("/joinGameRoom", { roomId, userId });
+                if (response.data.status === 'success') {
+                    queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
+                    navigate(`/miniGame/CatchMind/${roomId}`);
+                } else {
+                    toast.error("이미 게임이 시작된 방입니다.", {
+                        duration: 1500,
+                        position: "top-center",
+                    });
+                }
             } else {
-                toast.error("이미 게임이 시작된 방입니다.", {
-                    duration: 1500,
-                    position: "top-center",
-                });
+                toast.error("강퇴 당한 방은 재입장이 불가합니다.");
             }
+
         } catch (err) {
             toast.error("이미 삭제된 방입니다.");
             console.error("API 요청 실패:", err);
@@ -116,15 +126,20 @@ export default function OnlineGame() {
                                         enterGameRoom(room.roomId);
                                     }}
                                 >
+
                                     <div className={styles.userInfo}>
                                         <img
-                                            src={`/profile/default/${room.profile}`}
+                                            src={
+                                                room?.profileType === "UPLOAD"
+                                                    ? `/api/mypage/profile/images/${room?.profile}`
+                                                    : `/profile/default/${room?.profile || "default.jpg"}`
+                                            }
                                             alt={`${room.nickname} profile`}
                                             className={styles.profile}
                                             onClick={
                                                 (e) => {
                                                     e.stopPropagation();
-                                                    navigate("/user/"+ room.creatorId);
+                                                    navigate("/user/" + room.creatorId);
                                                 }
                                             }
                                         />

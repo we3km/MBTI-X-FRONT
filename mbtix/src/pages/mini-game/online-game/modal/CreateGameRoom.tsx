@@ -62,7 +62,8 @@ const CreateGameRoom: React.FC<ModalProps> = ({ onClose }) => {
                         type="text"
                         className={styles.input}
                         value={title}
-                        placeholder="게임방 제목 입력"
+                        placeholder="게임방 제목은 최대 10글자 입니다."
+                        maxLength={10}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>

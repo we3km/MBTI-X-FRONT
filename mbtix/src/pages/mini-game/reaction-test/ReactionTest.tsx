@@ -104,7 +104,6 @@ export default function ReactionTest() {
             handleStart();
             return;
         }
-
         if (status === "waiting") {
             if (timeoutRef.current !== null) {
                 clearTimeout(timeoutRef.current);
@@ -112,7 +111,6 @@ export default function ReactionTest() {
             setStatus("fail");
             return;
         }
-
         if (status === "ready") {
             const end = performance.now();
             const reaction = Math.round(end - startRef.current);
@@ -124,7 +122,6 @@ export default function ReactionTest() {
             setStatus("result");
             return;
         }
-
         if (status === "result") {
             if (round >= 5) {
                 setStatus("final");
@@ -133,8 +130,6 @@ export default function ReactionTest() {
                 handleStart();
             }
         }
-
-        // fail 상태에서는 라운드를 증가시키지 않고 재시도만 가능
         if (status === "fail") {
             setStatus("waiting");
             const delay = Math.floor(Math.random() * 2000) + 1000;
@@ -169,7 +164,6 @@ export default function ReactionTest() {
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
     }, [status]);
-
 
     // 마지막 포인트 넣기
     const handleFinalClick = () => {

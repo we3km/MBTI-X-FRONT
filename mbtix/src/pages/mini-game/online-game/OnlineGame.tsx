@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { store } from '../../../store/store';
 import Modal from "./modal/CreateGameRoom";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../../api/mainPageApi';
 import toast from 'react-hot-toast';
 
@@ -18,12 +18,14 @@ type gameRoom = {
     mbtiName: string;
     profile: string;
     maxCount: number;
+    profileType: string;
 };
 
 export default function OnlineGame() {
     const navigate = useNavigate();
     const getUserId = () => store.getState().auth.user?.userId;
     const userId = getUserId();
+    const queryClient = useQueryClient();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [prevRooms, setPrevRooms] = useState<gameRoom[]>([]); // 이전 방 리스트 저장
@@ -39,7 +41,8 @@ export default function OnlineGame() {
         staleTime: 1000 * 60 * 5,
         retry: 1,
     });
-    console.log("게임방 리스트 각 속성", gameRooms);
+
+    console.log(gameRooms);
 
     // 새로 생긴 방 찾기
     useEffect(() => {
@@ -56,15 +59,23 @@ export default function OnlineGame() {
 
     const enterGameRoom = async (roomId: number) => {
         try {
-            const response = await api.post("/joinGameRoom", { roomId, userId });
-            if (response.data.status === 'success') {
-                navigate(`/miniGame/CatchMind/${roomId}`);
+            // 만약 강퇴당한 사람이라면
+            const checkKick = await api.post("/checkKickOut", { roomId, userId });
+            if (checkKick.data === 0) {
+                const response = await api.post("/joinGameRoom", { roomId, userId });
+                if (response.data.status === 'success') {
+                    queryClient.invalidateQueries({ queryKey: ['gamersList', roomId] });
+                    navigate(`/miniGame/CatchMind/${roomId}`);
+                } else {
+                    toast.error("이미 게임이 시작된 방입니다.", {
+                        duration: 1500,
+                        position: "top-center",
+                    });
+                }
             } else {
-                toast.error("이미 게임이 시작된 방입니다.", {
-                    duration: 1500,
-                    position: "top-center",
-                });
+                toast.error("강퇴 당한 방은 재입장이 불가합니다.");
             }
+
         } catch (err) {
             toast.error("이미 삭제된 방입니다.");
             console.error("API 요청 실패:", err);
@@ -109,21 +120,26 @@ export default function OnlineGame() {
                                         }`}
                                     onClick={() => {
                                         if (room.playerCount + 1 > room.maxCount) {
-                                            toast.error("방이 꽉찼습니다!", { duration: 3000 });
+                                            toast.error("방이 꽉찼습니다!", { duration: 2000 });
                                             return;
                                         }
                                         enterGameRoom(room.roomId);
                                     }}
                                 >
+
                                     <div className={styles.userInfo}>
                                         <img
-                                            src={`/profile/default/${room.profile}`}
+                                            src={
+                                                room?.profileType === "UPLOAD"
+                                                    ? `/api/mypage/profile/images/${room?.profile}`
+                                                    : `/profile/default/${room?.profile || "default.jpg"}`
+                                            }
                                             alt={`${room.nickname} profile`}
                                             className={styles.profile}
                                             onClick={
                                                 (e) => {
                                                     e.stopPropagation();
-                                                    navigate("/user/"+ room.creatorId);
+                                                    navigate("/user/" + room.creatorId);
                                                 }
                                             }
                                         />

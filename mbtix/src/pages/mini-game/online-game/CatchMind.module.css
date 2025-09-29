@@ -32,6 +32,8 @@
     font-size: 35px;
     font-weight: bold;
     color: #333;
+    display: inline-block; /* transform 적용 위해 필요 */
+    animation: bounceUpDown 1.5s ease-in-out infinite;
 }
 
 .closeBtn {
@@ -72,7 +74,8 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
+    padding-top: 10px;
     border-bottom: 3px solid #eee;
 }
 
@@ -362,7 +365,7 @@
 }
 
 .roomTitle {
-    font-size: 60px;
+    font-size: 45px;
     font-weight: 900;
     color: #667eea;
     display: inline-block;
@@ -651,13 +654,59 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
+.iAmDrawer {
+    font-weight: bold;
+    font-weight: 30px;
+    color: #667eea;
+}
+
 @keyframes shakePause {
-  0%, 30%, 100% { transform: translateX(0); }
-  10% { transform: translateX(-6px); }
-  20% { transform: translateX(6px); }
+   0%, 100% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-8px);
+  }
+  20% {
+    transform: translateX(8px);
+  }
+  30% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  50% {
+    transform: translateX(-2px);
+  }
+  60% {
+    transform: translateX(2px);
+  }
+  70% {
+    transform: translateX(0);
+  }
 }
 
 .shakeText {
   display: inline-block;
-  animation: shakePause 3.5s ease-in-out infinite;
+  animation: shakePause 5s ease-in-out infinite;
+}
+
+@keyframes bounceUpDown {
+    0% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-15px); /* 위로 튀는 높이 */
+    }
+    50% {
+        transform: translateY(0); /* 내려옴 */
+    }
+    75% {
+        transform: translateY(-7px); /* 살짝 튀는 반동 */
+    }
+    100% {
+        transform: translateY(0);
+    }
+
 }

@@ -10,5 +10,8 @@ export default defineConfig({
     host: true,        // LAN 내 다른 PC 접속 허용
     port: 5173,
     strictPort: true
-  }
+  },
+   build: {
+    sourcemap: true,   // ✅ 배포 시 원본 코드 위치 추적
+  },
 })
